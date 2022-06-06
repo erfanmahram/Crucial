@@ -1,1 +1,1 @@
-string = 'hello'
+print('hello')
