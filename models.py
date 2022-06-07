@@ -64,8 +64,8 @@ class Category(Base):
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
-class Model(Base):
-    __tablename__ = 'Models'
+class ModelRam(Base):
+    __tablename__ = 'Models (Ram)'
     Id = Column(INT, primary_key=True)
     CategoryId = Column(INT, nullable=False)
     ModelName = Column(String, default=None)
@@ -73,6 +73,19 @@ class Model(Base):
     MaximumMemory = Column(String, default=None)
     Slots = Column(String, default=None)
     StandardMemory = Column(String, default=None)
+    MemSuggestInfo = Column(String, default=None)
+    MemSuggestCL = Column(String, default=None)
+    LastUpdate = Column(DateTime, default=datetime.utcnow())
+
+
+class ModelStorage(Base):
+    __tablename__ = 'Models (Storage)'
+    Id = Column(INT, primary_key=True)
+    CategoryId = Column(INT, nullable=False)
+    ModelName = Column(String, default=None)
+    ModelUrl = Column(String, default=None)
+    StrgType = Column(String, default=None)
+    StrgSuggestInfo = Column(String, default=None)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
@@ -89,5 +102,6 @@ if __name__ == '__main__':
     print(CreateTable(Resource.__table__).compile(dialect=mssql.dialect()))
     print(CreateTable(Brand.__table__).compile(dialect=mssql.dialect()))
     print(CreateTable(Category.__table__).compile(dialect=mssql.dialect()))
-    print(CreateTable(Model.__table__).compile(dialect=mssql.dialect()))
+    print(CreateTable(ModelRam.__table__).compile(dialect=mssql.dialect()))
+    print(CreateTable(ModelStorage.__table__).compile(dialect=mssql.dialect()))
     create_db()
