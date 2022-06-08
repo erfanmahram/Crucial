@@ -10,11 +10,11 @@ soup_brands = BeautifulSoup(req_brands.content, "lxml")
 
 def extract_main(soup):
 
-    with open(f'./main.html', 'w') as writer:
+    with open(f'./html/main.html', 'w') as writer:
 
         writer.write(str(soup))
 
-    with open(f'./main.html', 'r') as reader:
+    with open(f'./html/main.html', 'r') as reader:
 
         brand_links = reader.read()
         inspector = BeautifulSoup(brand_links, 'lxml')
