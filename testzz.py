@@ -10,4 +10,5 @@ def test_suggestion_extract():
         result = extract_main(soup)
         print(result)
 
+
 test_suggestion_extract()
