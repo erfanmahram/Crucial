@@ -7,7 +7,8 @@ def test_suggestion_extract():
     path = pathlib.Path.cwd().joinpath('test')
     for pth in path.glob('main.html'):
         soup = BeautifulSoup(pth.read_text(), 'lxml')
-        extract_main(soup)
+        result = extract_main(soup)
+        print(result)
 
 
 test_suggestion_extract()

@@ -1,5 +1,4 @@
 def extract_main(soup):
-
     main_brand_list = list()
     main_brand_name = list()
 
@@ -9,5 +8,4 @@ def extract_main(soup):
         main_brand_list.append('https://www.crucial.com' + iterator["href"])
         main_brand_name.append(iterator.text)
 
-    print(main_brand_name)
-    print(main_brand_list)
+    return main_brand_name, main_brand_list
