@@ -1,12 +1,13 @@
-from main import suggestion_extract
+from main import extract_main
 import pathlib
 from bs4 import BeautifulSoup
 
 
 def test_suggestion_extract():
     path = pathlib.Path.cwd().joinpath('test')
-    for pth in path.glob('model_*.html'):
+    for pth in path.glob('main.html'):
         soup = BeautifulSoup(pth.read_text(), 'lxml')
-        result = suggestion_extract(soup)
+        extract_main(soup)
 
 
+test_suggestion_extract()

@@ -1,5 +1,13 @@
+def extract_main(soup):
 
+    main_brand_list = list()
+    main_brand_name = list()
 
-def suggestion_extract(soup):
-    pass
+    tag = soup.find_all("a", {"class": "small text-left button hollow secondary element_item"})
 
+    for iterator in tag:
+        main_brand_list.append('https://www.crucial.com' + iterator["href"])
+        main_brand_name.append(iterator.text)
+
+    print(main_brand_name)
+    print(main_brand_list)
