@@ -167,3 +167,8 @@ cython_debug/
 # End of https://www.toptal.com/developers/gitignore/api/python
 /crucial_db.sqlite
 /j.json
+/memorycow_main.py
+/test.json
+/table-of-details.json
+/sandisk-plus-2tb.html
+/testzz.py
