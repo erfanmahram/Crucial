@@ -1,9 +1,9 @@
 from logzero import logger
 
 
-def suggestion_json_fixer(json_file):
+def suggestion_json_fixer(json_file, source_id):
     fixed_json = list()
-    if isinstance(json_file, list):
+    if source_id == 1:
         for item in json_file:
             if 'Product Type/Family' not in item:
                 continue
@@ -20,7 +20,8 @@ def suggestion_json_fixer(json_file):
                                                                item['Form Factor'],
                                                                item['Speed (Data Rate)']],
                                                         Category=item['Product Type/Family'])
-                except:
+                except Exception as e:
+                    logger.exception(e)
                     integrated_memory_suggestion = dict(Title=item['title'], Status='This item has Error')
                 fixed_json.append(integrated_memory_suggestion)
             elif item['Product Type/Family'] == 'SSD':
@@ -40,19 +41,20 @@ def suggestion_json_fixer(json_file):
                                                                     item['Read Speed'], item['Write Speed']],
                                                              Category=item['Product Type/Family'])
                         fixed_json.append(integrated_storage_suggestion)
-                except:
+                except Exception as e:
+                    logger.exception(e)
                     integrated_storage_suggestion = dict(Title=item['title'], Status='This item has Error',
-                                                         log=logger.error('Errorrrrrrrrrrrrrrrr'),
                                                          Category=item['Product Type/Family'])
                     fixed_json.append(integrated_storage_suggestion)
-    elif isinstance(json_file, dict):
+    elif source_id == 2:
         for item in json_file['memory']:
             try:
                 integrated_memory_suggestion = dict(Title=item['title'], Capacity=item['total-capacity'],
                                                     Speed=item['speed'], ManufactureTech=item['technology'],
                                                     ModuleType=item['module-type'], Voltage=item['voltage'],
                                                     Specs=item['specs'], Category='memory')
-            except:
+            except Exception as e:
+                logger.exception(e)
                 integrated_memory_suggestion = dict(Title=item['title'], Status='This item has Error')
             fixed_json.append(integrated_memory_suggestion)
         for item in json_file['ssd']:
@@ -60,11 +62,14 @@ def suggestion_json_fixer(json_file):
                 integrated_storage_suggestion = dict(Title=item['title'], Capacity=item['density-ssd'],
                                                      Interface=item['interface'], FormFactor=item['form-factor'],
                                                      Specs=item['specs'], Category='ssd')
-            except:
+            except Exception as e:
+                logger.exception(e)
                 integrated_storage_suggestion = dict(Title=item['title'], Status='This item has Error')
             fixed_json.append(integrated_storage_suggestion)
         for item in json_file['Externalssd']:
             integrated_portable_suggestion = dict(Title=item['title'], Capacity=item['density-ssd'],
                                                   Specs=item['specs'], Category='Externalssd')
             fixed_json.append(integrated_portable_suggestion)
+    else:
+        raise NotImplementedError
     return fixed_json

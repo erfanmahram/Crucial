@@ -55,10 +55,10 @@ def decider():
 
         if item['sourceId'] == 1:
             items = get_suggestion_memorycow(item['soup'])
-            print(suggestion_json_fixer(items))
+            print(suggestion_json_fixer(items, 1))
         elif item['sourceId'] == 2:
             items = get_suggestion_crucial(item['soup'])
-            print(suggestion_json_fixer(items))
+            print(suggestion_json_fixer(items, 2))
         else:
             raise NotImplementedError
 
