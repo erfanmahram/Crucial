@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import packer
 import enum
 import arrow
+from db_config import connection_string
 
 Base = declarative_base()
 
@@ -62,14 +63,14 @@ class Politeness(Base):
 
 
 def create_db():
-    connection_string = 'sqlite:///crucial_db.sqlite'
     engine = create_engine(connection_string)
     Base.metadata.create_all(engine)
 
 
 if __name__ == '__main__':
+
     create_db()
-    connection_string = 'sqlite:///crucial_db.sqlite'
+
     engine = create_engine(connection_string)
     with Session(engine) as session:
         im = Politeness(TaskName='fetchCrucial', Interval=2)
