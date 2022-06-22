@@ -9,7 +9,6 @@ import packer
 import enum
 import arrow
 
-
 Base = declarative_base()
 
 
@@ -54,6 +53,14 @@ class Model(Base):
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
+class Politeness(Base):
+    __tablename__ = "Politeness"
+    TaskName = Column(String(32), primary_key=True)
+    Interval = Column(INT, default=5)
+    LastRun = Column(DateTime, default=datetime.utcnow())
+    NextRun = Column(DateTime, default=datetime.utcnow() + timedelta(minutes=1))
+
+
 def create_db():
     connection_string = 'sqlite:///crucial_db.sqlite'
     engine = create_engine(connection_string)
@@ -62,3 +69,23 @@ def create_db():
 
 if __name__ == '__main__':
     create_db()
+    connection_string = 'sqlite:///crucial_db.sqlite'
+    engine = create_engine(connection_string)
+    with Session(engine) as session:
+        im = Politeness(TaskName='fetchCrucial', Interval=2)
+        var1 = Politeness(TaskName='fetchMemorycow', Interval=1)
+        if session.query(Politeness).filter(Politeness.TaskName == im.TaskName).first() is None:
+            session.add(im)
+        if session.query(Politeness).filter(Politeness.TaskName == var1.TaskName).first() is None:
+            session.add(var1)
+        r1 = Resource(Id=1, ResourceName='Memorycow', ResourceUrl='https://www.memorycow.co.uk/laptop')
+        r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://eu.crucial.com/upgrades')
+        if session.query(Resource).filter(Resource.Id == r1.Id).first() is None:
+            session.add(r1)
+        else:
+            assert r1.ResourceUrl == session.query(Resource).filter(Resource.Id == r1.Id).first().ResourceUrl
+        if session.query(Resource).filter(Resource.Id == r2.Id).first() is None:
+            session.add(r2)
+        else:
+            assert r2.ResourceUrl == session.query(Resource).filter(Resource.Id == r2.Id).first().ResourceUrl
+        session.commit()
