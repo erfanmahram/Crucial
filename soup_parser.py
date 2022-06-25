@@ -4,6 +4,40 @@ import json
 import requests
 
 
+def get_memorycow_brands(soup):
+    """
+    Returns brand name and url as a list of dicts.
+    :param soup:
+    :return: [{"brand_name": "Asus", "brand_url": "https://www.memorycow.co.uk/laptop/asus"}]
+    """
+    links = list()
+    brands = soup.find_all('a', class_='device-grid-item block text-center font-size-14 line-height-1pt4')
+    for i in brands:
+        links.append({"brand_name": i.find('div', class_='table-cell').text, "brand_url": i['href']})
+
+    return links
+
+
+def get_crucial_brands(soup):
+    raise NotImplementedError
+
+
+def get_memorycow_category(soup):
+    raise NotImplementedError
+
+
+def get_crucial_category(soup):
+    raise NotImplementedError
+
+
+def get_memorycow_models(soup):
+    raise NotImplementedError
+
+
+def get_crucial_models(soup):
+    raise NotImplementedError
+
+
 def get_suggestion_memorycow(soup):
     def get_details_memorycow(url):
         response = requests.get(url)
@@ -17,9 +51,10 @@ def get_suggestion_memorycow(soup):
         for row in table.find_all('tr'):
             toc[f"{row.find_all('td')[0].text.strip()}"] = row.find_all('td')[1].text.strip()
         return toc
+
     target_box = soup.find_all("a", {"class": "block font-size-18 fixed-font-size line-height-1pt3 colour-black "
                                               "font-weight-600 underline-on-hover"})
-    tod = list()    # table of details
+    tod = list()  # table of details
     for i in target_box:
         tod.append(get_details_memorycow(i['href']))
     return tod
@@ -42,8 +77,3 @@ def get_suggestion_crucial(soup):
             #     [f.strip() for f in ad.split(a)]
         result[json_file[0][0]] = js
     return result
-
-
-
-
-
