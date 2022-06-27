@@ -23,7 +23,17 @@ def get_crucial_brands(soup):
 
 
 def get_memorycow_category(soup):
-    raise NotImplementedError
+    """
+        Returns category name and url as a list of dicts.
+        :param soup:
+        :return: [{"category_name": "Chromebook Series", "category_url": "https://www.memorycow.co.uk/laptop/toshiba/chromebook-series"}]
+        """
+    category = list()
+    categories = soup.find_all('div', class_='columns margin-10 end')
+    for i in categories:
+        category.append({"category_name": i['data-title'], "category_url": i.contents[1]['href']})
+
+    return category
 
 
 def get_crucial_category(soup):

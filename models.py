@@ -13,6 +13,14 @@ from db_config import connection_string
 Base = declarative_base()
 
 
+class PageStatus(enum.IntEnum):
+    ReadyToCrawl = 0
+    UnFinished = 50
+    Finished = 100
+    ServerError = 500
+    NotFound = 404
+
+
 class Resource(Base):
     __tablename__ = 'Resources'
     Id = Column(INT, primary_key=True)
@@ -27,6 +35,8 @@ class Brand(Base):
     ResourceId = Column(INT, nullable=False)
     BrandName = Column(String, default=None)
     BrandUrl = Column(String, default=None)
+    Status = Column(INT, default=PageStatus.ReadyToCrawl)
+    RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
@@ -36,6 +46,8 @@ class Category(Base):
     BrandId = Column(INT, nullable=False)
     CategoryName = Column(String, default=None)
     CategoryUrl = Column(String, default=None)
+    Status = Column(INT, default=PageStatus.ReadyToCrawl)
+    RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
@@ -48,9 +60,10 @@ class Model(Base):
     MaximumMemory = Column(String, default=None)
     Slots = Column(String, default=None)
     StandardMemory = Column(String, default=None)
-    MemSuggestInfo = Column(String, default=None)
     StrgType = Column(String, default=None)
-    StrgSuggestInfo = Column(String, default=None)
+    SuggestInfo = Column(String, default=None)
+    Status = Column(INT, default=PageStatus.ReadyToCrawl)
+    RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
 
