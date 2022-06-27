@@ -1,6 +1,6 @@
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
-from sqlalchemy import create_engine, desc
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from models import Politeness
 from datetime import timedelta
@@ -33,16 +33,14 @@ def update_scheduler(connection_string):
 
 
 @politeness_checker(scheduler=scheduler)
-def fetchCrucial(url, source_id):
-    assert source_id == 2, ValueError('Source Id mismatch')
+def fetchCrucial(url):
     response = requests.get(url, timeout=60)
     response.raise_for_status()
     return BeautifulSoup(response.content, 'lxml')
 
 
 @politeness_checker(scheduler=scheduler)
-def fetchMemorycow(url, source_id):
-    assert source_id == 1, ValueError('Source Id mismatch')
+def fetchMemorycow(url):
     response = requests.get(url, timeout=60)
     response.raise_for_status()
     return BeautifulSoup(response.content, 'lxml')
@@ -65,7 +63,7 @@ def main():
     for resource in resources:
         if resource.Id == 1:
             try:
-                soup = handler.call('fetch', resource.Id, resource.ResourceUrl, resource.Id)
+                soup = handler.call('fetch', resource.Id, resource.ResourceUrl)
                 brands = handler.call('get_brands', resource.Id, soup)
                 with Session(engine) as session:
                     for brand in brands:
@@ -88,14 +86,14 @@ def main():
     with Session(engine) as session:
         brands = session.query(Brand).filter(
             Brand.LastUpdate + timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL < datetime.utcnow()).filter(
-            Brand.Status != PageStatus.Finished).order_by(desc(Brand.RetryCount)).limit(5).all()
+            Brand.Status != PageStatus.Finished).order_by(Brand.RetryCount.desc()).limit(5).all()
     for brand in brands:
         try:
             with Session(engine) as session:
                 session.query(Brand).filter(brand.Id == Brand.Id).update({Brand.RetryCount: brand.RetryCount + 1})
                 session.commit()
             try:
-                soup = handler.call('fetch', brand.ResourceId, brand.BrandUrl, brand.ResourceId)
+                soup = handler.call('fetch', brand.ResourceId, brand.BrandUrl)
             except HTTPError as he:
                 if he.response.status_code == 404:
                     brand.Status = PageStatus.NotFound
@@ -123,39 +121,53 @@ def main():
             logger.exception(np)
             continue
 
-    # # Crawling on Models
-    # with Session(engine) as session:
-    #     resources = session.query(Model).filter(
-    #         Model.LastUpdate + timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL < datetime.utcnow()).filter(
-    #         Model.Status != PageStatus.Finished).all()
-    # for resource in resources:
-    #     try:
-    #         soup = handler.call('fetch', resource.Id, resource.ResourceUrl, resource.Id)
-    #         brands = handler.call('get_brands', resource.Id, soup)
-    #         with Session(engine) as session:
-    #             for brand in brands:
-    #                 _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower(),
-    #                            BrandUrl=brand['brand_url'])
-    #                 if session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
-    #                         Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first() is None:
-    #                     session.add(_b)
-    #                 else:
-    #                     continue
-    #             session.query(Resource).filter(Resource.Id == resource.Id).update(
-    #                 {Resource.LastUpdate: datetime.utcnow()})
-    #             session.commit()
-    #
-    #     except NotPolite as np:
-    #         logger.exception(np)
-    #         continue
+    # Crawling on Categories for Models
+    with Session(engine) as session:
+        categories = session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+            Category.LastUpdate + timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL < datetime.utcnow()).filter(
+            Category.Status != PageStatus.Finished).order_by(Category.Id, Category.RetryCount.desc()).limit(5).all()
+    for category in categories:
+        try:
+            with Session(engine) as session:
+                session.query(Category).filter(category.Category.Id == Category.Id).update(
+                    {Category.RetryCount: category.Category.RetryCount + 1})
+                session.commit()
+            try:
+                soup = handler.call('fetch', category.Brand.ResourceId, category.Category.CategoryUrl)
+            except HTTPError as he:
+                if he.response.status_code == 404:
+                    category.Status = PageStatus.NotFound
+                elif he.response.status_code == 500:
+                    category.Status = PageStatus.ServerError
+                else:
+                    raise he
+
+            models = handler.call('get_models', category.Brand.ResourceId, soup)
+            with Session(engine) as session:
+                for model in models:
+                    _m = Model(CategoryId=category.Category.Id, ModelName=model['model_name'].lower(),
+                               ModelUrl=model['model_url'], Status=PageStatus.ReadyToCrawl)
+                    if session.query(Model).filter(Model.CategoryId == _m.CategoryId).filter(
+                            Model.ModelName == _m.ModelName).filter(
+                        Model.ModelUrl == _m.ModelUrl).first() is None:
+                        session.add(_m)
+                    else:
+                        continue
+                session.query(Category).filter(Category.Id == category.Category.Id).update(
+                    {Category.LastUpdate: datetime.utcnow(), Category.Status: PageStatus.Finished})
+                session.commit()
+
+        except NotPolite as np:
+            logger.exception(np)
+            continue
 
 
 if __name__ == '__main__':
     handler.register('fetch', 1, fetchMemorycow)
     # handler.register('fetch', 2, fetchCrucial)
     handler.register('get_brands', 1, soup_parser.get_memorycow_brands)
-
     handler.register('get_categories', 1, soup_parser.get_memorycow_category)
+    handler.register('get_models', 1, soup_parser.get_memorycow_models)
     main()
     # update_scheduler(db_config.connection_string)
     # try:

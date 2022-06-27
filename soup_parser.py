@@ -32,7 +32,6 @@ def get_memorycow_category(soup):
     categories = soup.find_all('div', class_='columns margin-10 end')
     for i in categories:
         category.append({"category_name": i['data-title'], "category_url": i.contents[1]['href']})
-
     return category
 
 
@@ -41,7 +40,17 @@ def get_crucial_category(soup):
 
 
 def get_memorycow_models(soup):
-    raise NotImplementedError
+    """
+            Returns model name and url as a list of dicts.
+            :param soup:
+            :return: [{"model_name": "apple macbook pro early 2011 - 13-inch 2.3ghz core i5", "model_url":
+             "https://www.memorycow.co.uk/laptop/apple/2011-macbook-pro/apple-macbook-pro-early-2011-13-inch-2.3ghz-core-i5-laptop"}]
+            """
+    model = list()
+    models = soup.find_all('div', class_='columns margin-b10 end')
+    for i in models:
+        model.append({"model_name": i['data-title'], "model_url": i.contents[1]['href']})
+    return model
 
 
 def get_crucial_models(soup):
