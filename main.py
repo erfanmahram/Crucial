@@ -1,6 +1,6 @@
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import Session
 from models import Politeness
 from datetime import timedelta
@@ -12,6 +12,7 @@ from datetime import datetime
 from logzero import logger
 import soup_parser
 from events import Event
+from requests.exceptions import HTTPError
 
 scheduler = Scheduler()
 handler = Event()
@@ -87,10 +88,22 @@ def main():
     with Session(engine) as session:
         brands = session.query(Brand).filter(
             Brand.LastUpdate + timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL < datetime.utcnow()).filter(
-            Brand.Status != PageStatus.Finished).limit(5).all()
+            Brand.Status != PageStatus.Finished).order_by(desc(Brand.RetryCount)).limit(5).all()
     for brand in brands:
         try:
-            soup = handler.call('fetch', brand.ResourceId, brand.BrandUrl, brand.ResourceId)
+            with Session(engine) as session:
+                session.query(Brand).filter(brand.Id == Brand.Id).update({Brand.RetryCount: brand.RetryCount + 1})
+                session.commit()
+            try:
+                soup = handler.call('fetch', brand.ResourceId, brand.BrandUrl, brand.ResourceId)
+            except HTTPError as he:
+                if he.response.status_code == 404:
+                    brand.Status = PageStatus.NotFound
+                elif he.response.status_code == 500:
+                    brand.Status = PageStatus.ServerError
+                else:
+                    raise he
+
             categories = handler.call('get_categories', brand.ResourceId, soup)
             with Session(engine) as session:
                 for category in categories:

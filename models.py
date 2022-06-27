@@ -15,10 +15,9 @@ Base = declarative_base()
 
 class PageStatus(enum.IntEnum):
     ReadyToCrawl = 0
-    UnFinished = 50
     Finished = 100
-    ServerError = 500
     NotFound = 404
+    ServerError = 500
 
 
 class Resource(Base):
