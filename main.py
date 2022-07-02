@@ -1,3 +1,4 @@
+import time
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
 from sqlalchemy import create_engine
@@ -115,6 +116,7 @@ def main():
                     logger.error(f"Error 500 for brandId: {brand.Id} - ResourceId: {brand.ResourceId}")
                     brand.Status = PageStatus.ServerError
                 else:
+                    logger.exception(he)
                     raise he
 
             categories = handler.call('get_categories', brand.ResourceId, soup)
@@ -164,6 +166,7 @@ def main():
                     logger.error(f"Error 500 for CategoryId: {category.Id} - ResourceId: {category.ResourceId}")
                     category.Status = PageStatus.ServerError
                 else:
+                    logger.exception(he)
                     raise he
 
             models = handler.call('get_models', category.Brand.ResourceId, soup)
@@ -260,7 +263,10 @@ if __name__ == '__main__':
     handler.register('get_models_info', 2, soup_parser.get_crucial_model_info)
     handler.register('get_models_suggestion', 1, soup_parser.get_suggestion_memorycow)
     handler.register('get_models_suggestion', 2, soup_parser.get_suggestion_crucial)
-    main()
+    while True:
+        main()
+        time.sleep(120)
+
     # update_scheduler(db_config.connection_string)
     # try:
     #     fetchMemorycow('https://www.memorycow.co.uk/laptop/alienware/m15-series/alienware-m15-r3-laptop')
