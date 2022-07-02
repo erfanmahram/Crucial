@@ -2,6 +2,8 @@ import re
 from bs4 import BeautifulSoup
 import json
 import requests
+import time
+from logzero import logger
 
 
 def get_memorycow_brands(soup):
@@ -41,11 +43,11 @@ def get_crucial_category(soup):
 
 def get_memorycow_models(soup):
     """
-            Returns model name and url as a list of dicts.
-            :param soup:
-            :return: [{"model_name": "apple macbook pro early 2011 - 13-inch 2.3ghz core i5", "model_url":
-             "https://www.memorycow.co.uk/laptop/apple/2011-macbook-pro/apple-macbook-pro-early-2011-13-inch-2.3ghz-core-i5-laptop"}]
-            """
+        Returns model name and url as a list of dicts.
+        :param soup:
+        :return: [{"model_name": "apple macbook pro early 2011 - 13-inch 2.3ghz core i5", "model_url":
+         "https://www.memorycow.co.uk/laptop/apple/2011-macbook-pro/apple-macbook-pro-early-2011-13-inch-2.3ghz-core-i5-laptop"}]
+        """
     model = list()
     models = soup.find_all('div', class_='columns margin-b10 end')
     for i in models:
@@ -57,8 +59,22 @@ def get_crucial_models(soup):
     raise NotImplementedError
 
 
+def get_memorycow_model_info(soup):
+    table = soup.find(id="large-table")
+    base_info = dict()
+    if table:
+        rows = table.find_all('td')
+        for i in range(len(rows)):
+            if 'Maximum Memory Per Slot' in rows[i] or 'Maximum Memory' in rows[i] or 'SSD Interface' in rows[i] or \
+                    'Number Of Memory Sockets' in rows[i]:
+                base_info[rows[i].text] = rows[i + 1].text
+    return base_info
+
+
 def get_suggestion_memorycow(soup):
     def get_details_memorycow(url):
+        logger.info(f"getting json of this url: ({url})")
+        time.sleep(2.5)
         response = requests.get(url)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'lxml')
