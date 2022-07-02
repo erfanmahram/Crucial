@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import requests
 import time
+
 from logzero import logger
 
 
@@ -69,6 +70,10 @@ def get_memorycow_model_info(soup):
                     'Number Of Memory Sockets' in rows[i]:
                 base_info[rows[i].text] = rows[i + 1].text
     return base_info
+
+
+def get_crucial_model_info(soup):
+    raise NotImplementedError
 
 
 def get_suggestion_memorycow(soup):

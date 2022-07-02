@@ -64,30 +64,30 @@ def main():
             Resource.LastUpdate + timedalta_store.POLITENESS_RESOURCE_CRAWL_INTERVAL < datetime.utcnow()).all()
     logger.info(f"{len(resources)} Resources are ready to crawl")
     for resource in resources:
-        if resource.Id == 1:
-            try:
-                logger.debug(f'getting soup for {resource.ResourceName}({resource.ResourceUrl})')
-                soup = handler.call('fetch', resource.Id, resource.ResourceUrl)
-                brands = handler.call('get_brands', resource.Id, soup)
-                with Session(engine) as session:
-                    for brand in brands:
-                        _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower(),
-                                   BrandUrl=brand['brand_url'])
-                        if session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
-                                Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first() is None:
-                            session.add(_b)
-                            logger.debug(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} added")
-                        else:
-                            logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
-                            continue
-                    session.query(Resource).filter(Resource.Id == resource.Id).update(
-                        {Resource.LastUpdate: datetime.utcnow()})
-                    session.commit()
-                    logger.warning('Session added to database')
-
-            except NotPolite as np:
-                logger.exception(np)
-                continue
+        try:
+            logger.debug(f'getting soup for {resource.ResourceName}({resource.ResourceUrl})')
+            soup = handler.call('fetch', resource.Id, resource.ResourceUrl)
+            brands = handler.call('get_brands', resource.Id, soup)
+            with Session(engine) as session:
+                for brand in brands:
+                    _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower(),
+                               BrandUrl=brand['brand_url'])
+                    if session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
+                            Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first() is None:
+                        session.add(_b)
+                        logger.debug(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} added")
+                    else:
+                        logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
+                        continue
+                session.query(Resource).filter(Resource.Id == resource.Id).update(
+                    {Resource.LastUpdate: datetime.utcnow()})
+                session.commit()
+                logger.warning('Session added to database')
+        except NotImplementedError:
+            pass
+        except NotPolite as np:
+            logger.exception(np)
+            continue
 
     # Crawling on Brands for Categories
     logger.info('Crawling on Brands table to get Categories')
@@ -211,6 +211,7 @@ def main():
                     logger.error(f"Error 500 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
                     model.Status = PageStatus.ServerError
                 else:
+                    logger.exception(he)
                     raise he
 
             model_info = handler.call('get_models_info', model.ResourceId, soup)
@@ -228,7 +229,10 @@ def main():
                     _model.MaximumMemory = model_info['Maximum Memory'].lower()
                     _model.Slots = model_info['Number Of Memory Sockets'].lower()
                     _model.StandardMemory = model_info['Maximum Memory Per Slot'].lower()
-                    _model.StrgType = model_info['SSD Interface'].lower()
+                    try:
+                        _model.StrgType = model_info['SSD Interface'].lower()
+                    except:
+                        _model.StrgType = 'no info'
                     _model.SuggestInfo = suggestion_info
                 else:
                     logger.error(f"No Info was found for modelId {model.Id}")
@@ -243,12 +247,17 @@ def main():
 
 if __name__ == '__main__':
     handler.register('fetch', 1, fetchMemorycow)
-    # handler.register('fetch', 2, fetchCrucial)
+    handler.register('fetch', 2, fetchCrucial)
     handler.register('get_brands', 1, soup_parser.get_memorycow_brands)
+    handler.register('get_brands', 2, soup_parser.get_crucial_brands)
     handler.register('get_categories', 1, soup_parser.get_memorycow_category)
+    handler.register('get_categories', 2, soup_parser.get_crucial_category)
     handler.register('get_models', 1, soup_parser.get_memorycow_models)
+    handler.register('get_models', 2, soup_parser.get_crucial_models)
     handler.register('get_models_info', 1, soup_parser.get_memorycow_model_info)
+    handler.register('get_models_info', 2, soup_parser.get_crucial_model_info)
     handler.register('get_models_suggestion', 1, soup_parser.get_suggestion_memorycow)
+    handler.register('get_models_suggestion', 2, soup_parser.get_suggestion_crucial)
     main()
     # update_scheduler(db_config.connection_string)
     # try:

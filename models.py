@@ -80,7 +80,7 @@ class Model(Base):
         if isinstance(a, str):
             self._SuggestInfo = a
         else:
-            self._SuggestInfo = json.dumps(a)
+            self._SuggestInfo = json.dumps(a, ensure_ascii=False)
 
 
 class Politeness(Base):
