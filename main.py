@@ -83,8 +83,9 @@ def main():
                     {Resource.LastUpdate: datetime.utcnow()})
                 session.commit()
                 logger.warning('Session added to database')
-        except NotImplementedError:
-            pass
+        except NotImplementedError as nie:
+            logger.exception(nie)
+            continue
         except NotPolite as np:
             logger.exception(np)
             continue
@@ -99,8 +100,9 @@ def main():
     for brand in brands:
         try:
             with Session(engine) as session:
-                logger.warning(f"add one more retry count to {brand.Id}")
-                session.query(Brand).filter(brand.Id == Brand.Id).update({Brand.RetryCount: brand.RetryCount + 1})
+                logger.warning(f"add one more retry count to brandId {brand.Id}")
+                session.query(Brand).filter(brand.Id == Brand.Id).update(
+                    {Brand.RetryCount: brand.RetryCount + 1, Brand.LastUpdate: datetime.utcnow()})
                 session.commit()
             try:
                 logger.debug(f'getting soup for {brand.BrandName}({brand.BrandUrl})')
@@ -147,9 +149,9 @@ def main():
     for category in categories:
         try:
             with Session(engine) as session:
-                logger.warning(f"add one more retry count to {category.Category.Id}")
+                logger.warning(f"add one more retry count to categoryId {category.Category.Id}")
                 session.query(Category).filter(category.Category.Id == Category.Id).update(
-                    {Category.RetryCount: category.Category.RetryCount + 1})
+                    {Category.RetryCount: category.Category.RetryCount + 1, Category.LastUpdate: datetime.utcnow()})
                 session.commit()
             try:
                 logger.debug(f'getting soup for {category.Category.CategoryName}({category.Category.CategoryUrl})')
