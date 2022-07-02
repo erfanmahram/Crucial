@@ -9,12 +9,16 @@ import packer
 import enum
 import arrow
 from db_config import connection_string
+from sqlalchemy.ext.hybrid import hybrid_property
+from logzero import logger
+
 
 Base = declarative_base()
 
 
 class PageStatus(enum.IntEnum):
     ReadyToCrawl = 0
+    NoInfo = 50
     Finished = 100
     NotFound = 404
     ServerError = 500
@@ -42,6 +46,7 @@ class Brand(Base):
 class Category(Base):
     __tablename__ = 'Category'
     Id = Column(INT, primary_key=True)
+    ResourceId = Column(INT, nullable=False)
     BrandId = Column(INT, nullable=False)
     CategoryName = Column(String, default=None)
     CategoryUrl = Column(String, default=None)
@@ -53,6 +58,7 @@ class Category(Base):
 class Model(Base):
     __tablename__ = 'Models'
     Id = Column(INT, primary_key=True)
+    ResourceId = Column(INT, nullable=False)
     CategoryId = Column(INT, nullable=False)
     ModelName = Column(String, default=None)
     ModelUrl = Column(String, default=None)
@@ -60,10 +66,21 @@ class Model(Base):
     Slots = Column(String, default=None)
     StandardMemory = Column(String, default=None)
     StrgType = Column(String, default=None)
-    SuggestInfo = Column(String, default=None)
+    _SuggestInfo = Column('SuggestInfo', String, default=None)
     Status = Column(INT, default=PageStatus.ReadyToCrawl)
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
+
+    @property
+    def SuggestInfo(self):
+        return json.loads(self._SuggestInfo)
+
+    @SuggestInfo.setter
+    def SuggestInfo(self, a):
+        if isinstance(a, str):
+            self._SuggestInfo = a
+        else:
+            self._SuggestInfo = json.dumps(a, ensure_ascii=False)
 
 
 class Politeness(Base):
@@ -75,6 +92,7 @@ class Politeness(Base):
 
 
 def create_db():
+    logger.info('Creating Database')
     engine = create_engine(connection_string)
     Base.metadata.create_all(engine)
 
@@ -85,12 +103,14 @@ if __name__ == '__main__':
 
     engine = create_engine(connection_string)
     with Session(engine) as session:
+        logger.info('Setting Politeness')
         im = Politeness(TaskName='fetchCrucial', Interval=2)
         var1 = Politeness(TaskName='fetchMemorycow', Interval=1)
         if session.query(Politeness).filter(Politeness.TaskName == im.TaskName).first() is None:
             session.add(im)
         if session.query(Politeness).filter(Politeness.TaskName == var1.TaskName).first() is None:
             session.add(var1)
+        logger.info('Adding Sources into Resource table!')
         r1 = Resource(Id=1, ResourceName='Memorycow', ResourceUrl='https://www.memorycow.co.uk/laptop')
         r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://eu.crucial.com/upgrades')
         if session.query(Resource).filter(Resource.Id == r1.Id).first() is None:
