@@ -112,15 +112,26 @@ def get_crucial_model_info(soup):
     """
     Returns model's info as a dictionary.
     :param soup:
-    :return: {'Slots:': ' 2', 'Maximum memory:': ' 3GB', 'Standard memory:': ' 1GB/2GB'}
+    :return: {'Slots:': '2', 'Maximum memory:': ' 3GB', 'Standard memory:': ' 1GB/2GB'}
     """
     table = soup.find(class_="table")
     base_info = dict()
     if table:
         rows = table.find_all('div', class_="small-6 colummns cell")
         for i in range(len(rows)):
-            if 'Maximum memory:' in rows[i] or 'Slots:' in rows[i] or 'Standard memory:' in rows[i]:
-                base_info[rows[i]] = rows[i + 1].text
+            if 'Maximum memory:' in rows[i]:
+                base_info['Maximum Memory'] = rows[i + 1].text
+            if 'Slots:' in rows[i]:
+                base_info['Number Of Memory Sockets'] = rows[i + 1].text
+            if 'Standard memory:' in rows[i]:
+                base_info['Maximum Memory Per Slot'] = rows[i + 1].text
+    storage_table = soup.find('div', class_='small-12 large-5 columns')
+    if storage_table:
+        storage = storage_table.find_all('p')[1].find('b').text.strip()
+    else:
+        storage = 'no info'
+    base_info['SSD Interface'] = storage
+
     return base_info
 
 

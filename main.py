@@ -71,7 +71,7 @@ def main():
             brands = handler.call('get_brands', resource.Id, soup)
             with Session(engine) as session:
                 for brand in brands:
-                    _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower(),
+                    _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower().strip(),
                                BrandUrl=brand['brand_url'])
                     if session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
                             Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first() is None:
@@ -122,7 +122,7 @@ def main():
             categories = handler.call('get_categories', brand.ResourceId, soup)
             with Session(engine) as session:
                 for category in categories:
-                    _c = Category(BrandId=brand.Id, CategoryName=category['category_name'].lower(),
+                    _c = Category(BrandId=brand.Id, CategoryName=category['category_name'].lower().strip(),
                                   CategoryUrl=category['category_url'], ResourceId=brand.ResourceId)
                     if session.query(Category).filter(Category.BrandId == _c.BrandId).filter(
                             Category.CategoryName == _c.CategoryName).filter(
@@ -172,7 +172,7 @@ def main():
             models = handler.call('get_models', category.Brand.ResourceId, soup)
             with Session(engine) as session:
                 for model in models:
-                    _m = Model(CategoryId=category.Category.Id, ModelName=model['model_name'].lower(),
+                    _m = Model(CategoryId=category.Category.Id, ModelName=model['model_name'].lower().strip(),
                                ModelUrl=model['model_url'], ResourceId=category.Category.ResourceId)
                     if session.query(Model).filter(Model.CategoryId == _m.CategoryId).filter(
                             Model.ModelName == _m.ModelName).filter(
@@ -234,11 +234,11 @@ def main():
                     logger.info(f"adding/updating model info for modelId {model.Id}")
                     _model.LastUpdate = datetime.utcnow()
                     _model.Status = PageStatus.Finished
-                    _model.MaximumMemory = model_info['Maximum Memory'].lower()
-                    _model.Slots = model_info['Number Of Memory Sockets'].lower()
-                    _model.StandardMemory = model_info['Maximum Memory Per Slot'].lower()
+                    _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
+                    _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
+                    _model.StandardMemory = model_info['Maximum Memory Per Slot'].lower().strip()
                     try:
-                        _model.StrgType = model_info['SSD Interface'].lower()
+                        _model.StrgType = model_info['SSD Interface'].lower().strip()
                     except:
                         _model.StrgType = 'no info'
                     _model.SuggestInfo = suggestion_info
