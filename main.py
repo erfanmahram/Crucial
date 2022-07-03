@@ -11,11 +11,14 @@ import timedalta_store
 from models import Resource, Model, Category, Brand, PageStatus
 from datetime import datetime
 from logzero import logger
+import logzero
 import soup_parser
 from events import Event
 from requests.exceptions import HTTPError, RequestException
 from unifier import suggestion_json_fixer
 
+
+logzero.logfile("rotating-logfile.log", maxBytes=1e7, backupCount=10)
 scheduler = Scheduler()
 handler = Event()
 
@@ -89,6 +92,7 @@ def main():
             continue
         except NotPolite as np:
             logger.exception(np)
+            time.sleep(61)
             continue
 
     # Crawling on Brands for Categories
@@ -139,6 +143,7 @@ def main():
 
         except NotPolite as np:
             logger.exception(np)
+            time.sleep(61)
             continue
 
     # Crawling on Categories for Models
@@ -189,6 +194,7 @@ def main():
 
         except NotPolite as np:
             logger.exception(np)
+            time.sleep(61)
             continue
 
     # Crawling on Models for info
@@ -250,6 +256,7 @@ def main():
                 logger.warning("session committed to database")
         except NotPolite as np:
             logger.exception(np)
+            time.sleep(61)
             continue
         except Exception as e:
             logger.exception(e)
@@ -270,6 +277,7 @@ if __name__ == '__main__':
     handler.register('get_models_suggestion', 1, soup_parser.get_suggestion_memorycow)
     handler.register('get_models_suggestion', 2, soup_parser.get_suggestion_crucial)
     counter = 1
+    update_scheduler(db_config.connection_string)
     while True:
         logger.info(f"run number {counter}")
         main()
