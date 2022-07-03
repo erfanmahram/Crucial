@@ -112,7 +112,7 @@ if __name__ == '__main__':
             session.add(var1)
         logger.info('Adding Sources into Resource table!')
         r1 = Resource(Id=1, ResourceName='Memorycow', ResourceUrl='https://www.memorycow.co.uk/laptop')
-        r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://eu.crucial.com/upgrades')
+        r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://www.crucial.com/upgrades')
         if session.query(Resource).filter(Resource.Id == r1.Id).first() is None:
             session.add(r1)
         else:

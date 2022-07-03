@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import json
 import requests
 import time
-
 from logzero import logger
 
 
@@ -22,15 +21,27 @@ def get_memorycow_brands(soup):
 
 
 def get_crucial_brands(soup):
-    raise NotImplementedError
+    """
+    Returns brand name and url as a list of dicts.
+    :param soup:
+    :return: [{"brand_name": "Asus", "brand_url": "https://www.crucial.com/upgrades/asus"}]
+    """
+    links = list()
+    brands = soup.find_all('a', class_='small text-left button hollow secondary element_item')
+    for i in brands:
+        links.append(
+            {"brand_name": i.text, "brand_url": 'https://www.crucial.com' + i['href']})
+
+    return links
 
 
 def get_memorycow_category(soup):
     """
-        Returns category name and url as a list of dicts.
-        :param soup:
-        :return: [{"category_name": "Chromebook Series", "category_url": "https://www.memorycow.co.uk/laptop/toshiba/chromebook-series"}]
-        """
+    Returns category name and url as a list of dicts.
+    :param soup:
+    :return: [{"category_name": "Chromebook Series", "category_url":
+               "https://www.memorycow.co.uk/laptop/toshiba/chromebook-series"}]
+    """
     category = list()
     categories = soup.find_all('div', class_='columns margin-10 end')
     for i in categories:
@@ -39,16 +50,26 @@ def get_memorycow_category(soup):
 
 
 def get_crucial_category(soup):
-    raise NotImplementedError
+    """
+    Returns category name and url as a list of dicts.
+    :param soup:
+    :return: [{"category_name": "ASUS All-in-One", "category_url":
+               "https://www.crucial.com/upgrades/asus/asus-all-in-one"}]
+    """
+    category = list()
+    categories = soup.find_all('a', class_='small text-left button hollow secondary element_item')
+    for i in categories:
+        category.append({"category_name": i.text, "category_url": 'https://www.crucial.com' + i['href']})
+    return category
 
 
 def get_memorycow_models(soup):
     """
-        Returns model name and url as a list of dicts.
-        :param soup:
-        :return: [{"model_name": "apple macbook pro early 2011 - 13-inch 2.3ghz core i5", "model_url":
-         "https://www.memorycow.co.uk/laptop/apple/2011-macbook-pro/apple-macbook-pro-early-2011-13-inch-2.3ghz-core-i5-laptop"}]
-        """
+    Returns model name and url as a list of dicts.
+    :param soup:
+    :return: [{"model_name": "apple macbook pro early 2011 - 13-inch 2.3ghz core i5", "model_url":
+     "https://www.memorycow.co.uk/laptop/apple/2011-macbook-pro/apple-macbook-pro-early-2011-13-inch-2.3ghz-core-i5-laptop"}]
+    """
     model = list()
     models = soup.find_all('div', class_='columns margin-b10 end')
     for i in models:
@@ -57,10 +78,25 @@ def get_memorycow_models(soup):
 
 
 def get_crucial_models(soup):
-    raise NotImplementedError
+    """
+    Returns model name and url as a list of dicts.
+    :param soup:
+    :return: [{"model_name": "1015E", "model_url":
+     "https://www.crucial.com/compatible-upgrade-for/asus/1015e"}]
+    """
+    model = list()
+    models = soup.find_all('a', class_='small text-left button hollow secondary element_item')
+    for i in models:
+        model.append({"model_name": i.text, "model_url": 'https://www.crucial.com' + i['href']})
+    return model
 
 
 def get_memorycow_model_info(soup):
+    """
+    Returns model's info as a dictionary.
+    :param soup:
+    :return: {'Number Of Memory Sockets': ' 2', 'Maximum Memory': ' 3GB', 'Maximum Memory Per Slot': ' 1GB/2GB'}
+    """
     table = soup.find(id="large-table")
     base_info = dict()
     if table:
@@ -73,7 +109,30 @@ def get_memorycow_model_info(soup):
 
 
 def get_crucial_model_info(soup):
-    raise NotImplementedError
+    """
+    Returns model's info as a dictionary.
+    :param soup:
+    :return: {'Slots:': '2', 'Maximum memory:': ' 3GB', 'Standard memory:': ' 1GB/2GB'}
+    """
+    table = soup.find(class_="table")
+    base_info = dict()
+    if table:
+        rows = table.find_all('div', class_="small-6 colummns cell")
+        for i in range(len(rows)):
+            if 'Maximum memory:' in rows[i]:
+                base_info['Maximum Memory'] = rows[i + 1].text
+            if 'Slots:' in rows[i]:
+                base_info['Number Of Memory Sockets'] = rows[i + 1].text
+            if 'Standard memory:' in rows[i]:
+                base_info['Maximum Memory Per Slot'] = rows[i + 1].text
+    storage_table = soup.find('div', class_='small-12 large-5 columns')
+    if storage_table:
+        storage = storage_table.find_all('p')[1].find('b').text.strip()
+    else:
+        storage = 'no info'
+    base_info['SSD Interface'] = storage
+
+    return base_info
 
 
 def get_suggestion_memorycow(soup):

@@ -9,17 +9,22 @@ def suggestion_json_fixer(json_file, source_id):
                 continue
             if item['Product Type/Family'] == 'RAM':
                 try:
-                    integrated_memory_suggestion = dict(Title=item['title'], Capacity=item['Memory Capacity'],
-                                                        Speed=item['Speed (Data Rate)'],
-                                                        ManufactureTech=item['Form Factor'],
-                                                        ModuleType=item['Module Type'],
-                                                        Voltage=item['Memory Voltage'],
-                                                        Specs=[item['CAS Latency'], item['Memory Voltage'],
-                                                               item['Module Type'], item['Error Check'], item['Pins'],
-                                                               item['Rank'], item['Chip Organization'],
-                                                               item['Form Factor'],
-                                                               item['Speed (Data Rate)']],
-                                                        Category=item['Product Type/Family'])
+                    integrated_memory_suggestion = dict(Title=item.get('title', "no info"),
+                                                        Capacity=item.get('Memory Capacity', "no info"),
+                                                        Speed=item.get('Speed (Data Rate)', "no info"),
+                                                        ManufactureTech=item.get('Form Factor', "no info"),
+                                                        ModuleType=item.get('Module Type', "no info"),
+                                                        Voltage=item.get('Memory Voltage', "no info"),
+                                                        Specs=[item.get('CAS Latency', "no info"),
+                                                               item.get('Memory Voltage', "no info"),
+                                                               item.get('Module Type', "no info"),
+                                                               item.get('Error Check', "no info"),
+                                                               item.get('Pins', "no info"),
+                                                               item.get('Rank', "no info"),
+                                                               item.get('Chip Organization', "no info"),
+                                                               item.get('Form Factor', "no info"),
+                                                               item.get('Speed (Data Rate)', "no info")],
+                                                        Category=item.get('Product Type/Family', "no info"))
                 except Exception as e:
                     logger.exception(e)
                     integrated_memory_suggestion = dict(Title=item['title'], Status='This item has Error')
