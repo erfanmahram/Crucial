@@ -1,13 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jun 26 01:57:18 2022
-
-@author: PC
-"""
-# -*- coding: utf-8 -*-
 #os level command
+#create/activate virtual envoirenment and install django
+#
 #Scripts\activate.bat
-# cd path
+# cd path project1
 #python manage.py makemigrations
 #python manage.py migrate 
 #python
@@ -73,7 +68,7 @@ prof_id_list=list(Professor.objects.all().values_list('id', flat=True))
 prof_id_seletion = random.choices(prof_id_list,k=c_num )
 
 
-#Filling Exam table
+
 for i in range (0, c_num):
     name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
     c= Course(course_name=name, p_ID = prof_id_seletion[i])    
@@ -84,53 +79,20 @@ student_id_seletion = random.choices(student_id_list,k=e_num )
 
 course_id_list=list(Course.objects.all().values_list('id', flat=True))
 course_id_seletion = random.choices(course_id_list,k=e_num )
-
+#Filling Exam table
 for i in range (0, e_num ):
     e=Exam (s_ID = student_id_seletion[i], c_ID=course_id_seletion[i], grade=round(random.uniform(0, 20), 2) )
     e.save()
           
             
-from django.db.models import Avg, F,Max, Window
-#from django.db.models.functions import RowNumber
-#exams=Exam.objects.annotate(row_number=Window(expression=RowNumber(), partition_by=[F('s_ID'), F('c_ID')], order_by=F('grade').desc(),),)
-exams=Exam.objects.annotate(max_grade=Window(expression=Max('grade'), partition_by=[F('s_ID'), F('c_ID')], order_by=F('grade').desc(),),)
-
-#Deleting dublicated records, Keep only the highest grade for each student's exam
-#borrowed from https://gist.github.com/victorono/cd9d14b013487b8b22975512225c5b4c
-unique_fields = ['s_ID', 'c_ID']
-duplicates = (
-    exams.all().values(*unique_fields)
-    .order_by()
-    .annotate(max_id=Max('id'), count_id=Count('id'))
-    .filter(count_id__gt=1)
-)
-
-for duplicate in duplicates:
-    (
-        exams.all()
-        .filter(**{x: duplicate[x] for x in unique_fields})
-        .exclude(id=duplicate['max_id'])
-        .delete()
-    )
-
-#Calculating the gpa for each student
-student_id_list = exams.all().values('s_ID').distinct() # getting the list of the available students IDs in exams queryset
-for item in student_id_list:
-    sid=item['s_ID']
-    x = exams.all().filter (s_ID=sid)
-    item=Student.objects.get(id=sid)
-    avg=x.all().aggregate(Avg('grade'))
-    item.gpa=round(avg['grade__avg'],2)
-    item.save()
-
-
-for x in Student.objects.all():
-    print(x.first_name,' ',x.family_name,' ', x.gpa, x.id )
-    
-#student_table = as_table(Student.objects.all().values("first_name", "family_name", "gpa","id")) 
-#display(student_table)     
-
-#Calculating pass percent for each professor
-#Eech professor has two courses. Pass_percent is calculated based on two courses 
-
-
+from django.db.models import Avg,F, Window
+from django.db.models.functions import RowNumber
+from django.db.models.expressions import RawSQL
+from django.db.models import OuterRef, Subquery
+queryset=Exam.objects.annotate(row_number=Window(expression=RowNumber(), partition_by=[F('s_ID'), F('c_ID')], order_by=F('grade').desc(),),)
+sql, params = queryset.query.sql_with_params()
+#exam_distinct= Exam.objects.filter(id__in=RawSQL(f"SELECT id FROM ({sql}) AS T WHERE row_number = 1", params))
+#calculating GPA for each student
+student_result=Exam.objects.filter(id__in=RawSQL(f"SELECT id FROM ({sql}) AS T WHERE row_number = 1", params))\
+.values('s_ID').annotate(gpa=Avg('grade')).values_list('gpa').filter(s_ID = OuterRef('id'))
+Student.objects.update(gpa=Subquery(student_result))
