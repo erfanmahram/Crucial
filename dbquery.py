@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #os level command
 #create/activate virtual envoirenment and install django
 #
@@ -85,14 +86,29 @@ for i in range (0, e_num ):
     e.save()
           
             
-from django.db.models import Avg,F, Window
+from django.db.models import Avg,F,Sum, Window,Q
 from django.db.models.functions import RowNumber
 from django.db.models.expressions import RawSQL
 from django.db.models import OuterRef, Subquery
 queryset=Exam.objects.annotate(row_number=Window(expression=RowNumber(), partition_by=[F('s_ID'), F('c_ID')], order_by=F('grade').desc(),),)
 sql, params = queryset.query.sql_with_params()
-#exam_distinct= Exam.objects.filter(id__in=RawSQL(f"SELECT id FROM ({sql}) AS T WHERE row_number = 1", params))
 #calculating GPA for each student
-student_result=Exam.objects.filter(id__in=RawSQL(f"SELECT id FROM ({sql}) AS T WHERE row_number = 1", params))\
-.values('s_ID').annotate(gpa=Avg('grade')).values_list('gpa').filter(s_ID = OuterRef('id'))
+exam_distinct=Exam.objects.filter(id__in=RawSQL(f"SELECT id FROM ({sql}) AS T WHERE row_number = 1", params))
+student_result=exam_distinct.values('s_ID').annotate(gpa=Avg('grade')).values_list('gpa').filter(s_ID = OuterRef('id'))
 Student.objects.update(gpa=Subquery(student_result))
+#Calculating pass_percent for each professor
+pass_num_ind = Count('id', filter=Q(grade__gte=10))
+prof_result=exam_distinct.values('c_ID').annotate(total=Count('id'), pass_num=pass_num_ind)
+   
+for p in Professor.objects.all():
+        course_for_prof= Course.objects.filter(p_ID=p.id)
+        nsum=0
+        dsum=0
+        for item in course_for_prof.all():
+            temp=prof_result.all().get(c_ID=item.id)
+            dsum+=temp['total'] 
+            nsum+=temp['pass_num']
+        if (dsum>0):    
+            p.pass_percent= round(nsum/dsum*100,2)
+            p.save()
+    
