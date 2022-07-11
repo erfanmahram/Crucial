@@ -2,6 +2,7 @@ import time
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
 from sqlalchemy import create_engine
+from sqlalchemy.sql.expression import func
 from sqlalchemy.orm import Session
 from models import Politeness
 from datetime import timedelta
@@ -16,7 +17,6 @@ import soup_parser
 from events import Event
 from requests.exceptions import HTTPError, RequestException
 from unifier import suggestion_json_fixer
-
 
 logzero.logfile("rotating-logfile.log", maxBytes=1e7, backupCount=10)
 scheduler = Scheduler()
@@ -39,6 +39,7 @@ def update_scheduler(connection_string):
 
 @politeness_checker(scheduler=scheduler)
 def fetchCrucial(url):
+    # url = 'https://httpstat.us/500'
     response = requests.get(url, timeout=60)
     response.raise_for_status()
     return BeautifulSoup(response.content, 'lxml')
@@ -46,6 +47,7 @@ def fetchCrucial(url):
 
 @politeness_checker(scheduler=scheduler)
 def fetchMemorycow(url):
+    # url = 'https://httpstat.us/500'
     response = requests.get(url, timeout=60)
     response.raise_for_status()
     return BeautifulSoup(response.content, 'lxml')
@@ -65,12 +67,13 @@ def main():
     logger.info('Crawling on Resource table to get Brands')
     with Session(engine) as session:
         resources = session.query(Resource).filter(
-            Resource.LastUpdate + timedalta_store.POLITENESS_RESOURCE_CRAWL_INTERVAL < datetime.utcnow()).all()
+            Resource.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_RESOURCE_CRAWL_INTERVAL).all()
     logger.info(f"{len(resources)} Resources are ready to crawl")
     for resource in resources:
         try:
             logger.debug(f'getting soup for {resource.ResourceName}({resource.ResourceUrl})')
             soup = handler.call('fetch', resource.Id, resource.ResourceUrl)
+
             brands = handler.call('get_brands', resource.Id, soup)
             with Session(engine) as session:
                 for brand in brands:
@@ -83,6 +86,7 @@ def main():
                     else:
                         logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
                         continue
+                    time.sleep(60)
                 session.query(Resource).filter(Resource.Id == resource.Id).update(
                     {Resource.LastUpdate: datetime.utcnow()})
                 session.commit()
@@ -90,6 +94,19 @@ def main():
         except NotImplementedError as nie:
             logger.exception(nie)
             continue
+        except HTTPError as he:
+            if he.response.status_code == 404:
+                logger.error(f"Error 404 for ResourceId: {resource.Id} - {resource.ResourceName}")
+                resource.Status = PageStatus.NotFound
+                continue
+            elif he.response.status_code == 500:
+                logger.error(f"Error 500 for ResourceId: {resource.Id} - {resource.ResourceName}")
+                resource.Status = PageStatus.ServerError
+                continue
+            else:
+                logger.exception(he)
+                time.sleep(60)
+                continue
         except NotPolite as np:
             logger.exception(np)
             time.sleep(61)
@@ -99,8 +116,9 @@ def main():
     logger.info('Crawling on Brands table to get Categories')
     with Session(engine) as session:
         brands = session.query(Brand).filter(
-            Brand.LastUpdate + timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL < datetime.utcnow()).filter(
-            Brand.Status != PageStatus.Finished).order_by(Brand.RetryCount.desc()).limit(5).all()
+            Brand.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL).filter(
+            Brand.Status != PageStatus.Finished).order_by(Brand.RetryCount.desc()).order_by(func.random()).limit(
+            5).all()
         logger.info(f"These brands {brands} are going to crawl")
     for brand in brands:
         try:
@@ -116,13 +134,15 @@ def main():
                 if he.response.status_code == 404:
                     logger.error(f"Error 404 for brandId: {brand.Id} - ResourceId: {brand.ResourceId}")
                     brand.Status = PageStatus.NotFound
+                    continue
                 elif he.response.status_code == 500:
                     logger.error(f"Error 500 for brandId: {brand.Id} - ResourceId: {brand.ResourceId}")
                     brand.Status = PageStatus.ServerError
+                    continue
                 else:
                     logger.exception(he)
-                    raise he
-
+                    time.sleep(60)
+                    continue
             categories = handler.call('get_categories', brand.ResourceId, soup)
             with Session(engine) as session:
                 for category in categories:
@@ -150,8 +170,9 @@ def main():
     logger.info('Crawling on Categories table to get Models Name and Url')
     with Session(engine) as session:
         categories = session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
-            Category.LastUpdate + timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL < datetime.utcnow()).filter(
-            Category.Status != PageStatus.Finished).order_by(Category.Id, Category.RetryCount.desc()).limit(5).all()
+            Category.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL).filter(
+            Category.Status != PageStatus.Finished).order_by(Category.RetryCount.desc()).order_by(
+            func.random()).limit(5).all()
         logger.info(f"These categories {categories} are going to crawl")
     for category in categories:
         try:
@@ -167,13 +188,15 @@ def main():
                 if he.response.status_code == 404:
                     logger.error(f"Error 404 for CategoryId: {category.Id} - ResourceId: {category.ResourceId}")
                     category.Status = PageStatus.NotFound
+                    continue
                 elif he.response.status_code == 500:
                     logger.error(f"Error 500 for CategoryId: {category.Id} - ResourceId: {category.ResourceId}")
                     category.Status = PageStatus.ServerError
+                    continue
                 else:
                     logger.exception(he)
-                    raise he
-
+                    time.sleep(60)
+                    continue
             models = handler.call('get_models', category.Brand.ResourceId, soup)
             with Session(engine) as session:
                 for model in models:
@@ -196,13 +219,17 @@ def main():
             logger.exception(np)
             time.sleep(61)
             continue
+        except Exception as e:
+            logger.exception(e)
+            time.sleep(60)
+            continue
 
     # Crawling on Models for info
     logger.info('Crawling on Models table to get Models info')
     with Session(engine) as session:
         models = session.query(Model).filter(
-            Model.LastUpdate + timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL < datetime.utcnow()).filter(
-            Model.Status != PageStatus.Finished).order_by(Model.RetryCount.asc()).limit(5).all()
+            Model.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL).filter(
+            Model.Status != PageStatus.Finished).order_by(Model.RetryCount.asc()).order_by(func.random()).limit(5).all()
         logger.info(f"These models {models} are going to crawl")
     for model in models:
         try:
@@ -218,15 +245,19 @@ def main():
                 if he.response.status_code == 404:
                     logger.error(f"Error 404 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
                     model.Status = PageStatus.NotFound
+                    continue
                 elif he.response.status_code == 500:
                     logger.error(f"Error 500 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
                     model.Status = PageStatus.ServerError
+                    continue
                 else:
                     logger.exception(he)
-                    raise he
+                    time.sleep(60)
+                    continue
             except RequestException as re:
                 logger.exception(re)
-                raise re
+                time.sleep(60)
+                continue
 
             model_info = handler.call('get_models_info', model.ResourceId, soup)
             model_suggestion = handler.call('get_models_suggestion', model.ResourceId, soup)
@@ -260,6 +291,7 @@ def main():
             continue
         except Exception as e:
             logger.exception(e)
+            time.sleep(60)
             continue
 
 
