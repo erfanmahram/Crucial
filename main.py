@@ -111,7 +111,7 @@ def main():
             logger.exception(np)
             time.sleep(61)
             continue
-
+        time.sleep(60)
     # Crawling on Brands for Categories
     logger.info('Crawling on Brands table to get Categories')
     with Session(engine) as session:
@@ -165,6 +165,7 @@ def main():
             logger.exception(np)
             time.sleep(61)
             continue
+        time.sleep(60)
 
     # Crawling on Categories for Models
     logger.info('Crawling on Categories table to get Models Name and Url')
@@ -214,7 +215,6 @@ def main():
                     {Category.LastUpdate: datetime.utcnow(), Category.Status: PageStatus.Finished})
                 session.commit()
                 logger.warning("Session Committed to database")
-
         except NotPolite as np:
             logger.exception(np)
             time.sleep(61)
@@ -223,7 +223,7 @@ def main():
             logger.exception(e)
             time.sleep(60)
             continue
-
+        time.sleep(60)
     # Crawling on Models for info
     logger.info('Crawling on Models table to get Models info')
     with Session(engine) as session:
@@ -293,6 +293,7 @@ def main():
             logger.exception(e)
             time.sleep(60)
             continue
+        time.sleep(60)
 
 
 if __name__ == '__main__':
