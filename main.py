@@ -79,10 +79,11 @@ def main():
                 for brand in brands:
                     _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower().strip(),
                                BrandUrl=brand['brand_url'])
-                    if session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
-                            Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first() is None:
+                    b = session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
+                            Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first()
+                    if b is None:
                         session.add(_b)
-                        logger.debug(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} added")
+                        logger.debug(f"Brand with brand_name: {_b.BrandName} added")
                     else:
                         logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
                         continue
@@ -148,11 +149,12 @@ def main():
                 for category in categories:
                     _c = Category(BrandId=brand.Id, CategoryName=category['category_name'].lower().strip(),
                                   CategoryUrl=category['category_url'], ResourceId=brand.ResourceId)
-                    if session.query(Category).filter(Category.BrandId == _c.BrandId).filter(
+                    c = session.query(Category).filter(Category.BrandId == _c.BrandId).filter(
                             Category.CategoryName == _c.CategoryName).filter(
-                        Category.CategoryUrl == _c.CategoryUrl).first() is None:
+                        Category.CategoryUrl == _c.CategoryUrl).first()
+                    if c is None:
                         session.add(_c)
-                        logger.debug(f"Category with id: {_c.Id} and category_name: {_c.CategoryName} added")
+                        logger.debug(f"Category with category_name: {_c.CategoryName} added")
                     else:
                         logger.error(f"Category with id: {_c.Id} and category_name: {_c.CategoryName} is not None")
                         continue
@@ -203,11 +205,12 @@ def main():
                 for model in models:
                     _m = Model(CategoryId=category.Category.Id, ModelName=model['model_name'].lower().strip(),
                                ModelUrl=model['model_url'], ResourceId=category.Category.ResourceId)
-                    if session.query(Model).filter(Model.CategoryId == _m.CategoryId).filter(
-                            Model.ModelName == _m.ModelName).filter(
-                        Model.ModelUrl == _m.ModelUrl).first() is None:
+                    m = session.query(Model).filter(Model.CategoryId == _m.CategoryId).filter(
+                        Model.ModelName == _m.ModelName).filter(
+                        Model.ModelUrl == _m.ModelUrl).first()
+                    if m is None:
                         session.add(_m)
-                        logger.debug(f"Model with id: {_m.Id} and model_name: {_m.ModelName} added")
+                        logger.debug(f"Model with model_name: {_m.ModelName} added")
                     else:
                         logger.error(f"Model with id: {_m.Id} and model_name: {_m.ModelName} is not None")
                         continue
