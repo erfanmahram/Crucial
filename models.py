@@ -27,6 +27,9 @@ class Resource(Base):
     ResourceUrl = Column(String, default=None)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
+    def __repr__(self):
+        return f"ID: {self.Id}, R_Name: {self.ResourceName}"
+
 
 class Brand(Base):
     __tablename__ = 'Brands'
@@ -37,6 +40,9 @@ class Brand(Base):
     Status = Column(INT, default=PageStatus.ReadyToCrawl)
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
+
+    def __repr__(self):
+        return f"ID: {self.Id}, B_Name: {self.BrandName}"
 
 
 class Category(Base):
@@ -49,6 +55,9 @@ class Category(Base):
     Status = Column(INT, default=PageStatus.ReadyToCrawl)
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
+
+    def __repr__(self):
+        return f"ID: {self.Id}, C_Name: {self.CategoryName}"
 
 
 class Model(Base):
@@ -66,6 +75,9 @@ class Model(Base):
     Status = Column(INT, default=PageStatus.ReadyToCrawl)
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
+
+    def __repr__(self):
+        return f"ID: {self.Id}, M_Name: {self.ModelName}"
 
     @property
     def SuggestInfo(self):
