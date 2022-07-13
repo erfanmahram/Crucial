@@ -104,7 +104,7 @@ def get_memorycow_model_info(soup):
         for i in range(len(rows)):
             if 'Maximum Memory Per Slot' in rows[i] or 'Maximum Memory' in rows[i] or 'SSD Interface' in rows[i] or \
                     'Number Of Memory Sockets' in rows[i]:
-                base_info[rows[i].text] = rows[i + 1].text
+                base_info[rows[i].text if 'Slot' not in rows[i].text else 'Standard memory'] = rows[i + 1].text
     return base_info
 
 
@@ -124,10 +124,15 @@ def get_crucial_model_info(soup):
             if 'Slots:' in rows[i]:
                 base_info['Number Of Memory Sockets'] = rows[i + 1].text
             if 'Standard memory:' in rows[i]:
-                base_info['Maximum Memory Per Slot'] = rows[i + 1].text
+                base_info['Standard memory'] = rows[i + 1].text
+        if 'Standard memory' in base_info and 'Maximum memory' not in base_info:
+            base_info['Maximum memory'] = 'no info'
+        if 'Standard memory' in base_info and 'Slots' not in base_info:
+            base_info['Slots'] = 'no info'
+
     storage_table = soup.find('div', class_='small-12 large-5 columns')
     if storage_table:
-        storage = storage_table.find_all('p')[1].find('b').text.strip()
+        storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
     else:
         storage = 'no info'
     base_info['SSD Interface'] = storage

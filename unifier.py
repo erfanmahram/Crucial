@@ -64,7 +64,9 @@ def suggestion_json_fixer(json_file, source_id):
             fixed_json.append(integrated_memory_suggestion)
         for item in json_file['ssd']:
             try:
-                integrated_storage_suggestion = dict(Title=item['title'], Capacity=item['density-ssd'],
+                integrated_storage_suggestion = dict(Title=item['title'],
+                                                     Capacity=item['density-ssd'] if 'density-ssd' in item else item[
+                                                         'density-range'],
                                                      Interface=item['interface'], FormFactor=item['form-factor'],
                                                      Specs=item['specs'], Category='ssd')
             except Exception as e:
@@ -72,7 +74,9 @@ def suggestion_json_fixer(json_file, source_id):
                 integrated_storage_suggestion = dict(Title=item['title'], Status='This item has Error')
             fixed_json.append(integrated_storage_suggestion)
         for item in json_file['Externalssd']:
-            integrated_portable_suggestion = dict(Title=item['title'], Capacity=item['density-ssd'],
+            integrated_portable_suggestion = dict(Title=item['title'],
+                                                  Capacity=item['density-ssd'] if 'density-ssd' in item else item[
+                                                      'density-range'],
                                                   Specs=item['specs'], Category='Externalssd')
             fixed_json.append(integrated_portable_suggestion)
     else:

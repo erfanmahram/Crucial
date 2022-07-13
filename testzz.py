@@ -1,9 +1,12 @@
 from soup_parser import get_suggestion_memorycow, get_suggestion_crucial
 from unifier import suggestion_json_fixer
-from main import extract_main
+# from main import extract_main
 import pathlib
 from bs4 import BeautifulSoup
 import requests
+from soup_parser import get_memorycow_model_info, get_crucial_model_info
+import click
+
 
 
 def test_suggestion_extract():
@@ -21,20 +24,20 @@ def test_extract_main():
         result = extract_main(soup)
         print(result)
 
+def get_soup(source):
+    if isinstance(source, str):
+        response = requests.get(source)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'lxml')
+        return soup
+    elif isinstance(source, pathlib.Path):
+        soup = BeautifulSoup(source.read_text(encoding='utf-8'), 'lxml')
+        return soup
+    else:
+        raise NotImplementedError
+
 
 def decider():
-    def get_soup(source):
-        if isinstance(source, str):
-            response = requests.get(source)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.content, 'lxml')
-            return soup
-        elif isinstance(source, pathlib.Path):
-            soup = BeautifulSoup(source.read_text(encoding='utf-8'), 'lxml')
-            return soup
-        else:
-            raise NotImplementedError
-
     test_cases = [
         {
             'sourceId': 1,
@@ -65,6 +68,18 @@ def decider():
 
 if __name__ == '__main__':
     # result = decider("https://www.memorycow.co.uk/laptop/dell/inspiron-11-3000-series/dell-inspiron-11-3158-laptop")
-    decider()
+    # decider()
     # with open('fixed-info.json', 'w') as w:
     #     w.write(json.dumps(final_json))
+    source_id = click.prompt('enter source id', type=int)
+    url = click.prompt('enter url', type=str)
+    soup = get_soup(url)
+    if source_id == 1:
+        var = get_memorycow_model_info(soup)
+        sugg = get_suggestion_memorycow(soup)
+    elif source_id == 2:
+        var = get_crucial_model_info(soup)
+        sugg = get_suggestion_crucial(soup)
+    print(var)
+    print(sugg)
+    print(suggestion_json_fixer(sugg, source_id))

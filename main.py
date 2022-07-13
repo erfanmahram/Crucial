@@ -274,9 +274,9 @@ def main():
                     logger.info(f"adding/updating model info for modelId {model.Id}")
                     _model.LastUpdate = datetime.utcnow()
                     _model.Status = PageStatus.Finished
+                    _model.StandardMemory = model_info['Standard memory'].lower().strip()
                     _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
                     _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
-                    _model.StandardMemory = model_info['Maximum Memory Per Slot'].lower().strip()
                     try:
                         _model.StrgType = model_info['SSD Interface'].lower().strip()
                     except:
