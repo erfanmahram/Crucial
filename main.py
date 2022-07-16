@@ -18,7 +18,7 @@ from events import Event
 from requests.exceptions import HTTPError, RequestException
 from unifier import suggestion_json_fixer
 
-logzero.logfile("rotating-logfile.log", maxBytes=1e7, backupCount=10)
+logzero.logfile("./logs/rotating-logfile.log", maxBytes=1e7, backupCount=10)
 scheduler = Scheduler()
 handler = Event()
 
