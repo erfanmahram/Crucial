@@ -1,0 +1,7 @@
+bs4==0.0.1
+logzero==1.7.0
+lxml==4.8.0
+requests==2.27.1
+SQLAlchemy==1.4.35
+psycopg2-binary==2.9.3
+python-dotenv
