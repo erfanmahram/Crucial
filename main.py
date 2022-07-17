@@ -189,11 +189,11 @@ def main():
                 soup = handler.call('fetch', category.Brand.ResourceId, category.Category.CategoryUrl)
             except HTTPError as he:
                 if he.response.status_code == 404:
-                    logger.error(f"Error 404 for CategoryId: {category.Id} - ResourceId: {category.ResourceId}")
+                    logger.error(f"Error 404 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
                     category.Status = PageStatus.NotFound
                     continue
                 elif he.response.status_code == 500:
-                    logger.error(f"Error 500 for CategoryId: {category.Id} - ResourceId: {category.ResourceId}")
+                    logger.error(f"Error 500 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
                     category.Status = PageStatus.ServerError
                     continue
                 else:
