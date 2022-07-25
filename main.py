@@ -80,7 +80,7 @@ def main():
                     _b = Brand(ResourceId=resource.Id, BrandName=brand['brand_name'].lower().strip(),
                                BrandUrl=brand['brand_url'])
                     b = session.query(Brand).filter(Brand.ResourceId == _b.ResourceId).filter(
-                            Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first()
+                        Brand.BrandName == _b.BrandName).filter(Brand.BrandUrl == _b.BrandUrl).first()
                     if b is None:
                         session.add(_b)
                         logger.debug(f"Brand with brand_name: {_b.BrandName} added")
@@ -118,7 +118,7 @@ def main():
     with Session(engine) as session:
         brands = session.query(Brand).filter(
             Brand.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL).filter(
-            Brand.Status != PageStatus.Finished).order_by(Brand.RetryCount.desc()).order_by(func.random()).limit(
+            Brand.Status != PageStatus.Finished).order_by(func.random()).order_by(Brand.RetryCount.asc()).limit(
             5).all()
         logger.info(f"These brands {brands} are going to crawl")
     for brand in brands:
@@ -150,7 +150,7 @@ def main():
                     _c = Category(BrandId=brand.Id, CategoryName=category['category_name'].lower().strip(),
                                   CategoryUrl=category['category_url'], ResourceId=brand.ResourceId)
                     c = session.query(Category).filter(Category.BrandId == _c.BrandId).filter(
-                            Category.CategoryName == _c.CategoryName).filter(
+                        Category.CategoryName == _c.CategoryName).filter(
                         Category.CategoryUrl == _c.CategoryUrl).first()
                     if c is None:
                         session.add(_c)
@@ -174,8 +174,8 @@ def main():
     with Session(engine) as session:
         categories = session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
             Category.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL).filter(
-            Category.Status != PageStatus.Finished).order_by(Category.RetryCount.desc()).order_by(
-            func.random()).limit(5).all()
+            Category.Status != PageStatus.Finished).order_by(func.random()).order_by(Category.RetryCount.asc()).limit(
+            5).all()
         logger.info(f"These categories {categories} are going to crawl")
     for category in categories:
         try:
@@ -188,18 +188,22 @@ def main():
                 logger.debug(f'getting soup for {category.Category.CategoryName}({category.Category.CategoryUrl})')
                 soup = handler.call('fetch', category.Brand.ResourceId, category.Category.CategoryUrl)
             except HTTPError as he:
-                if he.response.status_code == 404:
-                    logger.error(f"Error 404 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
-                    category.Status = PageStatus.NotFound
-                    continue
-                elif he.response.status_code == 500:
-                    logger.error(f"Error 500 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
-                    category.Status = PageStatus.ServerError
-                    continue
-                else:
-                    logger.exception(he)
-                    time.sleep(60)
-                    continue
+                with Session(engine) as session:
+                    session.query(Category).filter(category.Category.Id == Category.Id)
+                    if he.response.status_code == 404:
+                        logger.error(
+                            f"Error 404 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
+                        category.Category.Status = PageStatus.NotFound
+                        continue
+                    elif he.response.status_code == 500:
+                        logger.error(
+                            f"Error 500 for CategoryId: {category.Category.Id} - ResourceId: {category.Category.ResourceId}")
+                        category.Category.Status = PageStatus.ServerError
+                        continue
+                    else:
+                        logger.exception(he)
+                        time.sleep(60)
+                        continue
             models = handler.call('get_models', category.Brand.ResourceId, soup)
             with Session(engine) as session:
                 for model in models:
@@ -232,7 +236,7 @@ def main():
     with Session(engine) as session:
         models = session.query(Model).filter(
             Model.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL).filter(
-            Model.Status != PageStatus.Finished).order_by(Model.RetryCount.asc()).order_by(func.random()).limit(5).all()
+            Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(5).all()
         logger.info(f"These models {models} are going to crawl")
     for model in models:
         try:
@@ -245,18 +249,20 @@ def main():
                 logger.debug(f'getting soup for {model.ModelName}({model.ModelUrl})')
                 soup = handler.call('fetch', model.ResourceId, model.ModelUrl)
             except HTTPError as he:
-                if he.response.status_code == 404:
-                    logger.error(f"Error 404 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
-                    model.Status = PageStatus.NotFound
-                    continue
-                elif he.response.status_code == 500:
-                    logger.error(f"Error 500 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
-                    model.Status = PageStatus.ServerError
-                    continue
-                else:
-                    logger.exception(he)
-                    time.sleep(60)
-                    continue
+                with Session(engine) as session:
+                    session.query(Model).filter(model.Id == Model.Id)
+                    if he.response.status_code == 404:
+                        logger.error(f"Error 404 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
+                        model.Status = PageStatus.NotFound
+                        continue
+                    elif he.response.status_code == 500:
+                        logger.error(f"Error 500 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
+                        model.Status = PageStatus.ServerError
+                        continue
+                    else:
+                        logger.exception(he)
+                        time.sleep(60)
+                        continue
             except RequestException as re:
                 logger.exception(re)
                 time.sleep(60)
@@ -274,9 +280,13 @@ def main():
                     logger.info(f"adding/updating model info for modelId {model.Id}")
                     _model.LastUpdate = datetime.utcnow()
                     _model.Status = PageStatus.Finished
-                    _model.StandardMemory = model_info['Standard memory'].lower().strip()
-                    _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
-                    _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
+                    _model.MemoryGuess = model_info['MemoryGuess']
+                    if 'Standard memory' in model_info:
+                        _model.StandardMemory = model_info['Standard memory'].lower().strip()
+                    if 'Maximum Memory' in model_info:
+                        _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
+                    if 'Number Of Memory Sockets' in model_info:
+                        _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
                     try:
                         _model.StrgType = model_info['SSD Interface'].lower().strip()
                     except:

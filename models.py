@@ -70,6 +70,7 @@ class Model(Base):
     MaximumMemory = Column(String, default=None)
     Slots = Column(String, default=None)
     StandardMemory = Column(String, default=None)
+    MemoryGuess = Column(String, default=None)
     StrgType = Column(String, default=None)
     _SuggestInfo = Column('SuggestInfo', String, default=None)
     Status = Column(INT, default=PageStatus.ReadyToCrawl)

@@ -108,13 +108,26 @@ def get_memorycow_model_info(soup):
     return base_info
 
 
+def guess_crucial_memory(soup):
+    """
+
+    :param soup:
+    :return: [{"key": "240-pin DDR2 DIMM Banking", "value": "2 (2 banks of 1)"}]
+    """
+    table = soup.find_all('div', class_="small-6 colummns cell")
+    guessed_info = list()
+    for i in range(0, len(table), 2):
+        guessed_info.append(dict(key=table[i], value=table[i + 1]))
+    return guessed_info
+
+
 def get_crucial_model_info(soup):
     """
     Returns model's info as a dictionary.
     :param soup:
     :return: {'Slots:': '2', 'Maximum memory:': ' 3GB', 'Standard memory:': ' 1GB/2GB'}
     """
-    table = soup.find(class_="table")
+    table = soup.find(id="memorytabContainerId")
     base_info = dict()
     if table:
         rows = table.find_all('div', class_="small-6 colummns cell")
@@ -129,8 +142,10 @@ def get_crucial_model_info(soup):
             base_info['Maximum memory'] = 'no info'
         if 'Standard memory' in base_info and 'Slots' not in base_info:
             base_info['Slots'] = 'no info'
+        base_info['MemoryGuess'] = guess_crucial_memory(soup)
 
-    storage_table = soup.find('div', class_='small-12 large-5 columns')
+    table = soup.find(id="storagetabContainerId")
+    storage_table = table.find('div', class_='small-12 large-5 columns')
     if storage_table:
         storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
     else:
