@@ -281,10 +281,12 @@ def main():
                     logger.info(f"adding/updating model info for modelId {model.Id}")
                     _model.LastUpdate = datetime.utcnow()
                     _model.Status = PageStatus.Finished
+
                     _model.MemoryGuess = json.dumps(model_info['MemoryGuess'], ensure_ascii=False)
                     if 'Standard memory' in model_info:
-                        logger.error(f'Standard memory not found model_id: {model.Id}')
                         _model.StandardMemory = model_info['Standard memory'].lower().strip()
+                    else:
+                        logger.error(f'Standard memory not found model_id: {model.Id}')
                     if 'Maximum Memory' in model_info:
                         _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
                     if 'Number Of Memory Sockets' in model_info:
@@ -331,7 +333,7 @@ if __name__ == '__main__':
         main()
         counter += 1
         logger.info(f"!!! 120 Seconds sleep for next run !!!")
-        time.sleep(120)
+        time.sleep(20)
 
     # update_scheduler(db_config.connection_string)
     # try:

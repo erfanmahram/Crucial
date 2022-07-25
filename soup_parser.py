@@ -105,7 +105,21 @@ def get_memorycow_model_info(soup):
             if 'Maximum Memory Per Slot' in rows[i] or 'Maximum Memory' in rows[i] or 'SSD Interface' in rows[i] or \
                     'Number Of Memory Sockets' in rows[i]:
                 base_info[rows[i].text if 'Slot' not in rows[i].text else 'Standard memory'] = rows[i + 1].text
+    base_info['MemoryGuess'] = guess_memorycow_memory(table)
     return base_info
+
+
+def guess_memorycow_memory(soup):
+    guessed_info = list()
+    rows = soup.find_all('td')
+    for i in range(0, len(rows), 2):
+        if 'memory' in rows[i].lower():
+            key = rows[i].text.strip()
+            key = key if key[-1] != ':' else key[:-1]
+            value = rows[i + 1].text.strip()
+            value = value if value[-1] != ':' else value[:-1]
+            guessed_info.append(dict(key=key, value=value))
+    return guessed_info
 
 
 def guess_crucial_memory(soup):
