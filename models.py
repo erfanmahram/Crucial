@@ -78,7 +78,7 @@ class Model(Base):
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
     def __repr__(self):
-        return f"ID: {self.Id}, M_Name: {self.ModelName}"
+        return f"ID: {self.Id}, R_ID: {self.ResourceId}, M_Name: {self.ModelName}"
 
     @property
     def SuggestInfo(self):
