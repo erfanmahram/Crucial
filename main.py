@@ -332,7 +332,7 @@ if __name__ == '__main__':
         logger.info(f"run number {counter}")
         main()
         counter += 1
-        logger.info(f"!!! 120 Seconds sleep for next run !!!")
+        logger.info(f"!!! 20 Seconds sleep for next run !!!")
         time.sleep(20)
 
     # update_scheduler(db_config.connection_string)

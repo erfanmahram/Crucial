@@ -102,9 +102,10 @@ def get_memorycow_model_info(soup):
     if table:
         rows = table.find_all('td')
         for i in range(len(rows)):
-            if 'Maximum Memory Per Slot' in rows[i] or 'Maximum Memory' in rows[i] or 'SSD Interface' in rows[i] or \
-                    'Number Of Memory Sockets' in rows[i]:
-                base_info[rows[i].text if 'Slot' not in rows[i].text else 'Standard memory'] = rows[i + 1].text
+            txt = rows[i].text.strip()
+            if 'Maximum Memory Per Slot' in txt or 'Maximum Memory' in txt or 'SSD Interface' in txt or \
+                    'Number Of Memory Sockets' in txt:
+                base_info[txt if 'Slot' not in txt else 'Standard memory'] = rows[i + 1].text.strip()
     base_info['MemoryGuess'] = guess_memorycow_memory(table)
     return base_info
 
@@ -113,7 +114,7 @@ def guess_memorycow_memory(soup):
     guessed_info = list()
     rows = soup.find_all('td')
     for i in range(0, len(rows), 2):
-        if 'memory' in rows[i].lower():
+        if 'memory' in rows[i].text.lower():
             key = rows[i].text.strip()
             key = key if key[-1] != ':' else key[:-1]
             value = rows[i + 1].text.strip()
@@ -150,12 +151,12 @@ def get_crucial_model_info(soup):
     if table:
         rows = table.find_all('div', class_="small-6 colummns cell")
         for i in range(len(rows)):
-            if 'Maximum memory:' in rows[i]:
-                base_info['Maximum Memory'] = rows[i + 1].text
-            if 'Slots:' in rows[i]:
-                base_info['Number Of Memory Sockets'] = rows[i + 1].text
-            if 'Standard memory:' in rows[i]:
-                base_info['Standard memory'] = rows[i + 1].text
+            if 'Maximum memory:' in rows[i].text.strip():
+                base_info['Maximum Memory'] = rows[i + 1].text.strip()
+            if 'Slots:' in rows[i].text.strip():
+                base_info['Number Of Memory Sockets'] = rows[i + 1].text.strip()
+            if 'Standard memory:' in rows[i].text.strip():
+                base_info['Standard memory'] = rows[i + 1].text.strip()
         if 'Standard memory' in base_info and 'Maximum memory' not in base_info:
             base_info['Maximum memory'] = 'no info'
         if 'Standard memory' in base_info and 'Slots' not in base_info:
@@ -164,7 +165,7 @@ def get_crucial_model_info(soup):
 
     table = soup.find(id="storagetabContainerId")
     storage_table = table.find('div', class_='small-12 large-5 columns')
-    if storage_table:
+    if len(storage_table.find_all('p')) > 1:
         storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
     else:
         storage = 'no info'
