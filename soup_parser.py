@@ -117,7 +117,11 @@ def guess_crucial_memory(soup):
     table = soup.find_all('div', class_="small-6 colummns cell")
     guessed_info = list()
     for i in range(0, len(table), 2):
-        guessed_info.append(dict(key=table[i], value=table[i + 1]))
+        key = table[i].text.strip()
+        key = key if key[-1] != ':' else key[:-1]
+        value = table[i + 1].text.strip()
+        value = value if value[-1] != ':' else value[:-1]
+        guessed_info.append(dict(key=key, value=value))
     return guessed_info
 
 

@@ -1,3 +1,4 @@
+import json
 import time
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
@@ -280,8 +281,9 @@ def main():
                     logger.info(f"adding/updating model info for modelId {model.Id}")
                     _model.LastUpdate = datetime.utcnow()
                     _model.Status = PageStatus.Finished
-                    _model.MemoryGuess = model_info['MemoryGuess']
+                    _model.MemoryGuess = json.dumps(model_info['MemoryGuess'], ensure_ascii=False)
                     if 'Standard memory' in model_info:
+                        logger.error(f'Standard memory not found model_id: {model.Id}')
                         _model.StandardMemory = model_info['Standard memory'].lower().strip()
                     if 'Maximum Memory' in model_info:
                         _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
