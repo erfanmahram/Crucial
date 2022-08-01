@@ -16,3 +16,4 @@ if PYTHON_ENV == 'prod':
     connection_string = prod_connection_string
 else:
     connection_string = dev_connection_string
+

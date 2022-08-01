@@ -75,6 +75,7 @@ class Model(Base):
     _SuggestInfo = Column('SuggestInfo', String, default=None)
     Status = Column(INT, default=PageStatus.ReadyToCrawl)
     RetryCount = Column(INT, default=0)
+    Indexed = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
     def __repr__(self):
