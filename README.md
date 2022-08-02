@@ -28,3 +28,6 @@ or in `logs/` folder.
 ```shell
 sudo docker-compose --project-name crucial_crawler down
 ```
+
+## Todo
+- [ ] Category in json_fixer must fix
