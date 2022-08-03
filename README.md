@@ -31,3 +31,8 @@ sudo docker-compose --project-name crucial_crawler down
 
 ## Todo
 - [ ] Category in json_fixer must fix
+
+## Celery
+```shell
+celery -A app worker -l INFO -c1 -P solo -Q crucial,memorycow
+```

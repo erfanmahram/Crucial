@@ -18,6 +18,7 @@ import soup_parser
 from events import Event
 from requests.exceptions import HTTPError, RequestException
 from unifier import suggestion_json_fixer
+from app.tasks import fetchCrucial, fetchMemorycow
 
 logzero.logfile("./logs/rotating-logfile.log", maxBytes=1e7, backupCount=10)
 scheduler = Scheduler()
@@ -37,21 +38,21 @@ def update_scheduler(connection_string):
             updated_data[row.TaskName] = timedelta(minutes=row.Interval)
         scheduler.update_politeness(updated_data)
 
-
-@politeness_checker(scheduler=scheduler)
-def fetchCrucial(url):
-    # url = 'https://httpstat.us/500'
-    response = requests.get(url, timeout=60)
-    response.raise_for_status()
-    return BeautifulSoup(response.content, 'lxml')
-
-
-@politeness_checker(scheduler=scheduler)
-def fetchMemorycow(url):
-    # url = 'https://httpstat.us/500'
-    response = requests.get(url, timeout=60)
-    response.raise_for_status()
-    return BeautifulSoup(response.content, 'lxml')
+#
+# @politeness_checker(scheduler=scheduler)
+# def fetchCrucial(url):
+#     # url = 'https://httpstat.us/500'
+#     response = requests.get(url, timeout=60)
+#     response.raise_for_status()
+#     return BeautifulSoup(response.content, 'lxml')
+#
+#
+# @politeness_checker(scheduler=scheduler)
+# def fetchMemorycow(url):
+#     # url = 'https://httpstat.us/500'
+#     response = requests.get(url, timeout=60)
+#     response.raise_for_status()
+#     return BeautifulSoup(response.content, 'lxml')
 
 
 def main():
