@@ -15,12 +15,11 @@ app = Celery('app',
              backend=REDIS_CONNECTION_STRING + '/10',
              include=['app.tasks'])
 
-
 app.conf.update(
     result_serializer='pickle',
     accept_content=['application/json', 'application/x-python-serialize'],
-    # task_serializer='pickle',
-    task_default_queue='crucial'
+    task_default_queue='crucial',
+    task_annotations={'*': {'rate_limit': '1/m'}}
 )
 
 # two ques: [crucial and memorycow]

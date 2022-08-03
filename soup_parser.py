@@ -164,11 +164,15 @@ def get_crucial_model_info(soup):
         base_info['MemoryGuess'] = guess_crucial_memory(soup)
 
     table = soup.find(id="storagetabContainerId")
-    storage_table = table.find('div', class_='small-12 large-5 columns')
-    if len(storage_table.find_all('p')) > 1:
-        storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
-    else:
+    if table is None:
+        logger.warning('No Storage Found')
         storage = 'no info'
+    else:
+        storage_table = table.find('div', class_='small-12 large-5 columns')
+        if len(storage_table.find_all('p')) > 1:
+            storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
+        else:
+            storage = 'no info'
     base_info['SSD Interface'] = storage
 
     return base_info
@@ -178,7 +182,7 @@ def get_suggestion_memorycow(soup):
     def get_details_memorycow(url):
         logger.info(f"getting json of this url: ({url})")
         time.sleep(2.5)
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find(class_="technical-specification table width-100 border-1 colour-grey-light")
