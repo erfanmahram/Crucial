@@ -178,7 +178,7 @@ def get_suggestion_memorycow(soup):
     def get_details_memorycow(url):
         logger.info(f"getting json of this url: ({url})")
         time.sleep(2.5)
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find(class_="technical-specification table width-100 border-1 colour-grey-light")
