@@ -4,6 +4,9 @@ import json
 import requests
 import time
 from logzero import logger
+# from diskcache import FanoutCache
+
+# cache = FanoutCache()
 
 
 def get_memorycow_brands(soup):
@@ -162,19 +165,26 @@ def get_crucial_model_info(soup):
         if 'Standard memory' in base_info and 'Slots' not in base_info:
             base_info['Slots'] = 'no info'
         base_info['MemoryGuess'] = guess_crucial_memory(soup)
-
-    table = soup.find(id="storagetabContainerId")
-    storage_table = table.find('div', class_='small-12 large-5 columns')
-    if len(storage_table.find_all('p')) > 1:
-        storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
     else:
+        base_info['MemoryGuess'] = None
+    table = soup.find(id="storagetabContainerId")
+    if table is None:
+        logger.warning('No Storage Found')
         storage = 'no info'
+    else:
+        storage_table = table.find('div', class_='small-12 large-5 columns')
+        if len(storage_table.find_all('p')) > 1:
+            storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
+        else:
+            storage = 'no info'
     base_info['SSD Interface'] = storage
 
     return base_info
 
 
 def get_suggestion_memorycow(soup):
+    # @diskcache
+    # @cache.memoize(typed=True, tag='memorycowSuggestion')
     def get_details_memorycow(url):
         logger.info(f"getting json of this url: ({url})")
         time.sleep(2.5)
