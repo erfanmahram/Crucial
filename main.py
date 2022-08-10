@@ -242,6 +242,7 @@ def main(workers_count, model_deque):
         models = session.query(Model).filter(
             Model.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL).filter(
             Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(max_limit).all()
+        # models = session.query(Model).filter(Model.Id == 151131).all()
     logger.info(f"These models {models} are going to crawl")
     for model in models:
         with Session(engine) as session:
@@ -280,6 +281,7 @@ def main(workers_count, model_deque):
                                 time.sleep(60)
                                 continue
                     except RequestException as re:
+                        logger.error(f"Error occurred for {item['model'].Id}")
                         logger.exception(re)
                         time.sleep(60)
                         continue
