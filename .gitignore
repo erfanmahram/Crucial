@@ -175,4 +175,5 @@ cython_debug/
 /ssss.html
 /join sqlalchemy.txt
 /test.py
+/suggestionCache/
 /logs/
