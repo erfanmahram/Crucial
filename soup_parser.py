@@ -4,6 +4,9 @@ import json
 import requests
 import time
 from logzero import logger
+# from diskcache import FanoutCache
+
+# cache = FanoutCache()
 
 
 def get_memorycow_brands(soup):
@@ -179,6 +182,8 @@ def get_crucial_model_info(soup):
 
 
 def get_suggestion_memorycow(soup):
+    # @diskcache
+    # @cache.memoize(typed=True, tag='memorycowSuggestion')
     def get_details_memorycow(url):
         logger.info(f"getting json of this url: ({url})")
         time.sleep(2.5)

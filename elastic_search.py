@@ -1,11 +1,7 @@
 import time
-
-import db_config
 from sqlalchemy import create_engine
-from sqlalchemy.sql.expression import func
 from sqlalchemy.orm import Session
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search, SearchAsYouType, Document, Completion
 import db_config
 import es_config
 from logzero import logger

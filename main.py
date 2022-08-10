@@ -254,9 +254,10 @@ def main(workers_count, model_deque):
                 model_deque.appendleft(dict(result=fetchMemorycowModel.apply_async((model.ModelUrl,)), model=model))
             elif model.ResourceId == 2:
                 model_deque.appendleft(dict(result=fetchCrucialModel.apply_async((model.ModelUrl,)), model=model))
-    logger.info(model_deque)
+    logger.info(f"len deque is {len(model_deque)} {[i['model'].Id for i in model_deque]}")
     for i in range(len(model_deque)):
         item = model_deque.pop()
+        logger.info(f"model = {item['model']}")
         try:
             if item['result'].ready():
                 if item['result'].failed():
@@ -274,7 +275,7 @@ def main(workers_count, model_deque):
                                 item['model'].Status = PageStatus.ServerError
                                 continue
                             else:
-                                logger.exception(he)
+                                logger.exception(he, item['model'].Id)
                                 time.sleep(60)
                                 continue
                     except RequestException as re:
@@ -324,7 +325,7 @@ def main(workers_count, model_deque):
             time.sleep(61)
             continue
         except Exception as e:
-            logger.exception(e)
+            logger.exception(e, item['model'].Id)
             time.sleep(60)
             continue
 
