@@ -165,7 +165,8 @@ def get_crucial_model_info(soup):
         if 'Standard memory' in base_info and 'Slots' not in base_info:
             base_info['Slots'] = 'no info'
         base_info['MemoryGuess'] = guess_crucial_memory(soup)
-
+    else:
+        base_info['MemoryGuess'] = None
     table = soup.find(id="storagetabContainerId")
     if table is None:
         logger.warning('No Storage Found')

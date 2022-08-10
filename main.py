@@ -275,7 +275,8 @@ def main(workers_count, model_deque):
                                 item['model'].Status = PageStatus.ServerError
                                 continue
                             else:
-                                logger.exception(he, item['model'].Id)
+                                logger.error(f"Error occurred for {item['model'].Id}")
+                                logger.exception(he)
                                 time.sleep(60)
                                 continue
                     except RequestException as re:
@@ -297,7 +298,11 @@ def main(workers_count, model_deque):
                             logger.info(f"adding/updating model info for modelId {item['model'].Id}")
                             _model.LastUpdate = datetime.utcnow()
                             _model.Status = PageStatus.Finished
-                            _model.MemoryGuess = json.dumps(model_info['MemoryGuess'], ensure_ascii=False)
+                            if model_info['MemoryGuess'] is None:
+                                logger.error(f"memory table not found for {_model.Id}")
+                                _model.MemoryGuess = None
+                            else:
+                                _model.MemoryGuess = json.dumps(model_info['MemoryGuess'], ensure_ascii=False)
                             if 'Standard memory' in model_info:
                                 _model.StandardMemory = model_info['Standard memory'].lower().strip()
                             else:
@@ -325,7 +330,8 @@ def main(workers_count, model_deque):
             time.sleep(61)
             continue
         except Exception as e:
-            logger.exception(e, item['model'].Id)
+            logger.error(f"Error occurred for {item['model'].Id}")
+            logger.exception(e)
             time.sleep(60)
             continue
 
