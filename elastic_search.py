@@ -8,7 +8,7 @@ from logzero import logger
 from models import Model, Category, Brand
 
 
-def index_data():
+def index_data(engine):
     index_name = "crucial"
     es_client = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                               ssl_show_warn=False)
@@ -26,20 +26,21 @@ def index_data():
         return
     logger.info(f"{len(models)} Models are ready to add to index")
     actions = []
-    for row in models:
-        action = {"index": {"_index": 'crucial', "_id": row.Id}}
-        model_doc = {
-            "id": int(row.Id),
-            "name": row.ModelName,
-            "brand_name": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
-                Category.Id == row.CategoryId).first().Brand.BrandName,
-            "brand_id": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
-                Category.Id == row.CategoryId).first().Brand.Id,
-            "category_name": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
-                Category.Id == row.CategoryId).first().Category.CategoryName
-        }
-        actions.append(action)
-        actions.append(model_doc)
+    with Session(engine) as session:
+        for row in models:
+            action = {"index": {"_index": 'crucial', "_id": row.Id}}
+            model_doc = {
+                "id": int(row.Id),
+                "name": row.ModelName,
+                "brand_name": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+                    Category.Id == row.CategoryId).first().Brand.BrandName,
+                "brand_id": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+                    Category.Id == row.CategoryId).first().Brand.Id,
+                "category_name": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+                    Category.Id == row.CategoryId).first().Category.CategoryName
+            }
+            actions.append(action)
+            actions.append(model_doc)
     bulk = es_client.bulk(index=index_name, body=actions)
     indexed_update = list()
     for item in bulk['items']:
@@ -56,7 +57,8 @@ if __name__ == '__main__':
     engine = create_engine(db_config.connection_string)
     while True:
         try:
-            index_data()
+            index_data(engine)
+            print(engine.pool.status())
             time.sleep(61)
         except Exception as e:
             logger.exception(e)
