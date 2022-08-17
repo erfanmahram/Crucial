@@ -1,9 +1,6 @@
-from flask import Flask
-from flask import request, render_template
-
+from flask import request, render_template, Flask
 import requests
 import os
-import pandas as pd
 import json
 
 app = Flask(__name__)
@@ -12,10 +9,6 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    # json_file = file_dir + r'data_set_1.json'
-    # with open(json_file) as f:
-    #     js_object = json.load(f)
-    #     df = pd.read_json(json.dumps(js_object))
     return render_template('home.html')
 
 
@@ -32,13 +25,8 @@ def update_table():
     payload = {}
     headers = {}
     url = "http://127.0.0.1:4000/search?query="
-    response = requests.request("GET", url, headers=headers, data=payload, params=params)
-    my_json = response.content.decode('utf8').replace("'", '"').replace('None', '"?"').replace('""', '"').replace(', "],', '],')
-
-    data = json.loads(my_json)
-    json_file = json.dumps(data, sort_keys=False)
-    print(json_file)
-    return json_file
+    response = requests.request("GET", url, headers=headers, data=payload, params=params, timeout=60)
+    return json.dumps(response.json())
 
 
 @app.route('/pipe', methods=["GET", "POST"])
@@ -47,7 +35,7 @@ def pipe():
     payload = {}
     headers = {}
     url = "http://127.0.0.1:4000/brand-name?query=" + str(data)
-    response = requests.request("GET", url, headers=headers, data=payload)
+    response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
     return response.json()
 
 
@@ -59,7 +47,7 @@ def pipes():
     payload = {}
     headers = {}
     url = "http://127.0.0.1:4000/name?query="
-    response = requests.request("GET", url, headers=headers, data=payload, params=params)
+    response = requests.request("GET", url, headers=headers, data=payload, params=params, timeout=60)
     return response.json()
 
 

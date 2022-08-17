@@ -129,53 +129,22 @@ def search():
     name = request.args.get('name', None)
     brandName = request.args.get('brand', None)
     baseQuery = get_query(name, brandName)
-    res = es.search(index=NODE_NAME, size=15, body=baseQuery)
+    res = es.search(index=NODE_NAME, size=100, body=baseQuery)
     result = list()
     for index, item in enumerate(res['hits']['hits']):
         result.append(dict(doc_count=index, key=item['_source']['id']))
     json_result = list()
-    model_result = db.session.query(Model).filter(Model.Id.in_([i['key'] for i in result])).all()
+    model_result = db.session.query(Model, Brand, Category).join(
+        Category, Category.Id == Model.CategoryId).join(
+        Brand, Brand.Id == Category.BrandId).filter(Model.Id.in_([i['key'] for i in result])).all()
     for model in model_result:
-        category = db.session.query(Category).filter(Category.Id == model.CategoryId).first()
-        brand = db.session.query(Brand).filter(Brand.Id == category.BrandId).first()
         json_result.append(
-            dict(ModelName=model.ModelName, MaximumMemory=model.MaximumMemory, Slots=model.Slots,
-                 StandardMemory=model.StandardMemory, StrgType=model.StrgType, CategoryName=category.CategoryName,
-                 BrandName=brand.BrandName, ModelUrl=model.ModelUrl, MoreInfo=model.SuggestInfo))
+            dict(ModelName=model.Model.ModelName, MaximumMemory=model.Model.MaximumMemory, Slots=model.Model.Slots,
+                 StandardMemory=model.Model.StandardMemory, StrgType=model.Model.StrgType, CategoryName=model.Category.CategoryName,
+                 BrandName=model.Brand.BrandName, ModelUrl=model.Model.ModelUrl, MoreInfo=model.Model.SuggestInfo))
     print(json_result)
-    j = str(json_result)
-    return j
+    return json.dumps(json_result, ensure_ascii=False)
 
-
-project_dir = os.path.dirname(os.path.abspath(__file__))
-my_files = r'/static/data/'
-file_dir = project_dir + my_files
-
-
-@app.route('/get_data', methods=['POST'])
-def get_data_function():
-    user = request.form['user']
-
-    if user == 'two':
-
-        json_file = file_dir + r'data_set_2.json'
-
-        with open(json_file) as f:
-            js_object = json.load(f)
-            return jsonify(js_object)
-
-    else:
-        json_file = file_dir + r'data_set_1.json'
-
-        with open(json_file) as f:
-            js_object = json.load(f)
-            return jsonify(js_object)
-
-
-parser = reqparse.RequestParser()
-parser.add_argument("query", type=str, required=True, help="query parameter is Required ")
-
-# api.add_resource(Controller, "/autocomplete")
 
 if __name__ == '__main__':
     app.run(debug=True, port=4000)
