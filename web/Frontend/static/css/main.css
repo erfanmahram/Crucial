@@ -1,0 +1,20 @@
+table {
+    table-layout: responsive-sm;
+    margin: auto;
+    border: 2px solid #58585a;
+    background-color: whitesmoke;
+}
+
+thead th {
+    background-color: #FFA500;
+    color: white;
+}
+
+td {
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+.fixed-button-size {
+    width: 100px !important
+}
