@@ -124,6 +124,13 @@ def name():
     return dict(result=result)
 
 
+@app.route('/product', methods=['GET', 'POST'])
+def product():
+    id = request.args.get('id', None)
+    model = db.session.query(Model.SuggestInfo).filter(Model.Id == id).first()
+    return json.dumps(model, ensure_ascii=False)
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     name = request.args.get('name', None)
@@ -139,8 +146,10 @@ def search():
         Brand, Brand.Id == Category.BrandId).filter(Model.Id.in_([i['key'] for i in result])).all()
     for model in model_result:
         json_result.append(
-            dict(ModelName=model.Model.ModelName, MaximumMemory=model.Model.MaximumMemory, Slots=model.Model.Slots,
-                 StandardMemory=model.Model.StandardMemory, StrgType=model.Model.StrgType, CategoryName=model.Category.CategoryName,
+            dict(ModelId=model.Model.Id, ModelName=model.Model.ModelName, MaximumMemory=model.Model.MaximumMemory,
+                 Slots=model.Model.Slots,
+                 StandardMemory=model.Model.StandardMemory, StrgType=model.Model.StrgType,
+                 CategoryName=model.Category.CategoryName,
                  BrandName=model.Brand.BrandName, ModelUrl=model.Model.ModelUrl, MoreInfo=model.Model.SuggestInfo))
     print(json_result)
     return json.dumps(json_result, ensure_ascii=False)

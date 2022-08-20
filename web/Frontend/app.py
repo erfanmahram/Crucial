@@ -14,7 +14,12 @@ def index():
 
 @app.route('/products', methods=["GET", "POST"])
 def products():
-    return render_template('products.html')
+    id = request.form.get('id')
+    payload = {}
+    headers = {}
+    url = "http://127.0.0.1:4000/product?query=" + str(id)
+    response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
+    return render_template('products.html', result=json.dumps(response.json()))
 
 
 @app.route('/table', methods=["GET", "POST"])
