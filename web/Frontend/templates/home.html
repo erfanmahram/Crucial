@@ -90,7 +90,7 @@
                 var _ = []
 
                 $.each(data, (index, value) => {
-                    _.push(value.key.replace(/\W[^\S]/g, ''))
+                    _.push(value.key)
                 });
                 console.log('list =======>',_)
                 $("#source_brand").autocomplete({
@@ -154,7 +154,6 @@
                     $('#jds-example').append(column_data),
                         $('th').css({'background-color': '#FFA500', 'color': 'white'});
                     var nameCounter = 1
-                    var moreInfoCounter = 1
                     var row_data = '';
                     for (var arr in data) {
                         var obj = data[arr];
@@ -169,7 +168,7 @@
                                 continue;
                                 }
                             else if (key.includes('MoreInfo')) {
-                                row_data += '<td><a onclick="newpage()" href="/products" target="_blank" type="button" id="'+ obj["ModelId"] +'" class="btn btn-info fixed-button-size">view suggestion</a></td>';
+                                row_data += '<td><a onclick="newpage(this.id)" href="/products" target="_blank" type="button" id="'+ obj["ModelId"] +'" class="btn btn-info fixed-button-size">view suggestion</a></td>';
                                 console.log('thisid', this.id )
                             }else {
                                 var value = obj[key];
@@ -188,40 +187,21 @@
                 error: function (data) {
                     console.log('Error Hit');
                     console.log(data);
-                },
-                complete: function () {
-                    links();
                 }
             });
 
         });
     });
 
-    function links() {
-        var tble = document.getElementById('jds-example');
-        console.log('tble', tble);
-        var row = tble.rows;
-        // for (var j = 1; j < row.length; j++) {
-        //     console.log('start', j)
-        //     var mName = document.getElementById('modelName' + j);
-        //     console.log('mName', mName);
-        //     var mUrl = document.getElementById('url' + j).href;
-        //     console.log('murl', mUrl);
-        //     console.log(mName.href);
-        //     mName.href = mUrl
-        //     console.log(mName.href);
-        // }
-        // ;
-    };
-
-
-    function newpage() {
+    function newpage(elemId) {
         $.ajax({
             url: '/products',
             type: 'POST',
-            data: $(this.id),
+            data: {'data': elemId},
             success: function (data) {
-                clicked(open())
+                console.log('success == ', elemId)
+                // open(data)
+
             }
         })
     }

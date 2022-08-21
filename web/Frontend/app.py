@@ -4,7 +4,6 @@ import os
 import json
 
 app = Flask(__name__)
-project_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -14,12 +13,15 @@ def index():
 
 @app.route('/products', methods=["GET", "POST"])
 def products():
-    id = request.form.get('id')
-    payload = {}
-    headers = {}
-    url = "http://127.0.0.1:4000/product?query=" + str(id)
-    response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
-    return render_template('products.html', result=json.dumps(response.json()))
+    if request.method == "POST":
+        id = request.form.get('data')
+        payload = {}
+        headers = {}
+        url = "http://127.0.0.1:4000/product?query=" + str(id)
+        response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
+        print(response.json())
+        return render_template('products.html', content=json.dumps(response.json()))
+    return render_template('products.html')
 
 
 @app.route('/table', methods=["GET", "POST"])

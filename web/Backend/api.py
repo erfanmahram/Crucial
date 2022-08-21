@@ -126,9 +126,9 @@ def name():
 
 @app.route('/product', methods=['GET', 'POST'])
 def product():
-    id = request.args.get('id', None)
-    model = db.session.query(Model.SuggestInfo).filter(Model.Id == id).first()
-    return json.dumps(model, ensure_ascii=False)
+    id = request.args.get('query', None)
+    model = db.session.query(Model).filter(Model.Id == int(id)).first()
+    return json.dumps(model.SuggestInfo, ensure_ascii=False)
 
 
 @app.route('/search', methods=['GET', 'POST'])

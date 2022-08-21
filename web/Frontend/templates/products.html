@@ -39,11 +39,12 @@
 
 <script>
     window.onload = make_table;
+    var json =
     function make_table() {
         var ram = [];
         var ssd = [];
         var extssd = [];
-        var json = localStorage.getItem('json').slice(1, -1);
+
         var suggestion = JSON.parse(json)
         console.log('Success Hit');
         for (var item in suggestion){
