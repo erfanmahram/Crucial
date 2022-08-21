@@ -1,6 +1,7 @@
 from flask import request, render_template, Flask
 import requests
 import os
+import pandas as pd
 import json
 
 app = Flask(__name__)
@@ -11,17 +12,29 @@ def index():
     return render_template('home.html')
 
 
-@app.route('/products', methods=["GET", "POST"])
-def products():
-    if request.method == "POST":
-        id = request.form.get('data')
-        payload = {}
-        headers = {}
-        url = "http://127.0.0.1:4000/product?query=" + str(id)
-        response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
-        print(response.json())
-        return render_template('products.html', content=json.dumps(response.json()))
+@app.route('/product', methods=["GET", "POST"])
+def product():
     return render_template('products.html')
+
+
+@app.route('/products/<id>', methods=["GET", "POST"])
+def products(id):
+    payload = {}
+    headers = {}
+    url = "http://127.0.0.1:4000/product?query=" + str(id)
+    response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
+    ram = list()
+    ssd = list()
+    extssd = list()
+    print(response.json())
+    for item in response.json():
+        if item['Category'] == 'RAM' or item['Category'] == 'ram':
+            ram.append(item)
+        elif item['Category'] == 'SSD' or item['Category'] == 'ssd':
+            ssd.append(item)
+        else:
+            extssd.append(item)
+    return render_template('products.html', data={'ram': ram, 'ssd': ssd, 'extssd': extssd})
 
 
 @app.route('/table', methods=["GET", "POST"])

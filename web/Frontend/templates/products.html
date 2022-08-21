@@ -25,173 +25,68 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
-
 <div style="background-color: white; overflow-x: auto" class="jumbotron ui-widget">
     <h4 style="text-align: center;padding: 20px;">Recommended Products</h4>
-    <table id="ram" class="table" >
+    <table id="ram" class="table">
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >RAM</th>
+
+        <tr style="text-align: center">
+            {% for key in data['ram'][0] %}
+            <th scope="col"> {{ key }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for value in data['ram'] %}
+        <tr style="text-align: center">
+                {% for k in value %}
+            <td scope="row">{{ value[k] }}</td>
+                {% endfor %}
+        </tr>
+            {% endfor %}
+    </tbody>
     </table>
-    <table id="ssd" class="table" >
+    <table id="ssd" class="table">
+                <thead>
+        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >SSD</th>
+
+        <tr style="text-align: center">
+            {% for key in data['ssd'][0] %}
+            <th scope="col"> {{ key }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for value in data['ssd'] %}
+        <tr style="text-align: center">
+                {% for k in value %}
+            <td scope="row">{{ value[k] }}</td>
+                {% endfor %}
+        </tr>
+            {% endfor %}
+    </tbody>
     </table>
-    <table id="externalssd" class="table" >
+    <table id="externalssd" class="table">
+                <thead>
+        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >External SSD</th>
+
+        <tr style="text-align: center">
+            {% for key in data['extssd'][0] %}
+            <th scope="col"> {{ key }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            {% for value in data['extssd'] %}
+        <tr style="text-align: center">
+                {% for k in value %}
+            <td scope="row">{{ value[k] }}</td>
+                {% endfor %}
+        </tr>
+            {% endfor %}
+    </tbody>
     </table>
 </div>
-
-
-<script>
-    window.onload = make_table;
-    var json =
-    function make_table() {
-        var ram = [];
-        var ssd = [];
-        var extssd = [];
-
-        var suggestion = JSON.parse(json)
-        console.log('Success Hit');
-        for (var item in suggestion){
-            for (var i in suggestion[item]){
-
-                if (suggestion[item]['Category'].includes('RAM') || suggestion[item]['Category'].includes('memory')){
-                    // console.log('ram',suggestion[item])
-                    // console.log('ram',suggestion[item]['Category'])
-                    ram.push(suggestion[item])
-                    { break; }
-                }
-                else if (suggestion[item]['Category'].includes('ExternalSSD') || suggestion[item]['Category'].includes('Externalssd')){
-                    console.log('extssd',suggestion[item])
-                    console.log('extssd',suggestion[item]['Category'])
-                    extssd.push(suggestion[item])
-                    { break; }
-                }
-                else {
-                    console.log('ssd',suggestion[item])
-                    console.log('ssd',suggestion[item]['Category'])
-                    ssd.push(suggestion[item])
-                    { break; }
-                }
-            }
-        }
-        console.log('ram list-----', ram)
-        console.log('ssd list-----', ssd)
-        console.log('extssd list-----', extssd)
-        $('#ram').html('');
-
-        var column_data = '';
-        column_data += '<tr>';
-        column_data += '<th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >RAM</th>'
-        column_data += '</tr>';
-        column_data += '<tr>';
-        // console.log(column_data);
-
-        for (var key in ram[0]) {
-            console.log(key);
-            column_data += '<th style="text-align:center; border-bottom: 2px solid #58585a" >' + key + '</th>';
-        }
-        ;
-
-        column_data += '</tr>';
-        $('#ram').append(column_data),
-            $('th').css({'background-color': '#FFA500', 'color': 'white'});
-
-        var row_data = '';
-        for (var arr in ram) {
-            var obj = ram[arr];
-            row_data += '<tr>';
-            for (var key in obj) {
-
-                if (key.includes('Url')) {
-                    console.log(obj[key])
-                    var value = obj[key]
-                    row_data += '<td><a href=' + value + ' target="_blank" type="button" id="" class="btn btn-secondary fixed-button-size">click</a></td>';
-                } else {
-                    var value = obj[key];
-                    row_data += '<td style="text-align: center">' + value + '</td>';
-                }
-            }
-            ;
-            row_data += '</tr>'
-        }
-        ;
-        $('#ram').append(row_data);
-
-        $('#ssd').html('');
-
-        var column_data = '';
-        column_data += '<tr>';
-        column_data += '<th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >SSD</th>'
-        column_data += '</tr>';
-        column_data += '<tr>';
-        console.log(column_data);
-        for (var key in ssd[0]) {
-            column_data += '<th style="text-align:center; border-bottom: 2px solid #58585a">' + key + '</th>';
-        }
-        ;
-
-        column_data += '</tr>';
-        $('#ssd').append(column_data),
-            $('th').css({'background-color': '#FFA500', 'color': 'white'});
-
-        var row_data = '';
-        for (var arr in ssd) {
-            var obj = ssd[arr];
-            row_data += '<tr>';
-            for (var key in obj) {
-
-                if (key.includes('Url')) {
-                    console.log(obj[key])
-                    var value = obj[key]
-                    row_data += '<td><a href=' + value + ' target="_blank" type="button" id="" class="btn btn-secondary fixed-button-size">click</a></td>';
-                } else {
-                    var value = obj[key];
-                    row_data += '<td style="text-align: center">' + value + '</td>';
-                }
-            }
-            ;
-            row_data += '</tr>'
-        }
-        ;
-        $('#ssd').append(row_data);
-
-        $('#externalssd').html('');
-
-        var column_data = '';
-        column_data += '<tr>';
-        column_data += '<th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >External SSD</th>'
-        column_data += '</tr>';
-        column_data += '<tr>';
-        console.log(column_data);
-        for (var key in extssd[0]) {
-            column_data += '<th style="text-align:center; border-bottom: 2px solid #58585a">' + key + '</th>';
-        }
-        ;
-
-        column_data += '</tr>';
-        $('#externalssd').append(column_data),
-            $('th').css({'background-color': '#FFA500', 'color': 'white'});
-
-        var row_data = '';
-        for (var arr in extssd) {
-            var obj = extssd[arr];
-            row_data += '<tr>';
-            for (var key in obj) {
-
-                if (key.includes('Url')) {
-                    console.log(obj[key])
-                    var value = obj[key]
-                    row_data += '<td><a href=' + value + ' target="_blank" type="button" id="" class="btn btn-secondary fixed-button-size">click</a></td>';
-                } else {
-                    var value = obj[key];
-                    row_data += '<td style="text-align: center">' + value + '</td>';
-                }
-            }
-            ;
-            row_data += '</tr>'
-        }
-        ;
-        $('#externalssd').append(row_data);
-    }
-
-
-
-</script>
 </body>
 </html>

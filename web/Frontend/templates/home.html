@@ -26,7 +26,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
 
-<div style="height: 55vh;overflow-x: auto" class="jumbotron ui-widget">
+<div style="overflow-x: auto" class="">
     <h4 style="text-align: center;padding: 20px;">System Upgrade Recommender</h4>
     <div style="position:absolute; left: 20%;top: 20%">
         <label for="source_brand">Brand Name:</label><br>
@@ -168,8 +168,7 @@
                                 continue;
                                 }
                             else if (key.includes('MoreInfo')) {
-                                row_data += '<td><a onclick="newpage(this.id)" href="/products" target="_blank" type="button" id="'+ obj["ModelId"] +'" class="btn btn-info fixed-button-size">view suggestion</a></td>';
-                                console.log('thisid', this.id )
+                                row_data += '<td><a onclick="newpage(this.id)" type="button" id="'+ obj["ModelId"] +'" class="btn btn-info fixed-button-size">view suggestion</a></td>';
                             }else {
                                 var value = obj[key];
                                 row_data += '<td>' + value + '</td>';
@@ -195,12 +194,12 @@
 
     function newpage(elemId) {
         $.ajax({
-            url: '/products',
+            url: '/products/'+elemId,
             type: 'POST',
             data: {'data': elemId},
-            success: function (data) {
+            success: function () {
                 console.log('success == ', elemId)
-                // open(data)
+                open('/products/'+elemId)
 
             }
         })
