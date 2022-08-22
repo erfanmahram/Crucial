@@ -45,7 +45,20 @@ def get_query(name, brandName):
         baseQuery = {
             "query": {
                 "match": {
-                    "brand_name": "{}*".format(brandName)
+                    "brand_name": {
+                        "query": "{}*".format(brandName)
+                    }
+                }
+            },
+            "aggs": {
+                "auto_complete": {
+                    "terms": {
+                        "field": "brand_id",
+                        "order": {
+                            "_count": "desc"
+                        },
+                        "size": 25
+                    }
                 }
             }
         }
@@ -74,7 +87,7 @@ def get_query(name, brandName):
             "aggs": {
                 "auto_complete": {
                     "terms": {
-                        "field": "id",
+                        "field": "brand_id",
                         "order": {
                             "_count": "desc"
                         },
@@ -89,36 +102,13 @@ def get_query(name, brandName):
 @app.route('/brand-name', methods=['GET'])
 def brand_name():
     query = request.args.get('query', None)
-    # baseQuery = {
-    #     "query": {
-    #         "match": {
-    #             "brand_name": {
-    #                 "query": "{}*".format(query)
-    #             }
-    #         }
-    #     },
-    #     "aggs": {
-    #         "auto_complete": {
-    #             "terms": {
-    #                 "field": "brand_id",
-    #                 "order": {
-    #                     "_count": "desc"
-    #                 },
-    #                 "size": 25
-    #             }
-    #         }
-    #     }
-    # }
     baseQuery = get_query(None, query)
-    res = es.search(index=NODE_NAME, size=15, body=baseQuery)
-    result = list()
-    res2 = list()
-    for i in res['hits']['hits']:
-        if i['_source']['brand_name'] not in result:
-            result.append(i['_source']['brand_name'])
-    for index, item in enumerate(result):
-        res2.append(dict(doc_count=index, key=item))
-    return dict(result=res2)
+    es_result = es.search(index=NODE_NAME, size=15, body=baseQuery)
+    agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
+        Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
+    agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in es_result['aggregations']['auto_complete']['buckets']}
+    result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+    return dict(result=result)
 
 
 @app.route('/name', methods=['GET'])

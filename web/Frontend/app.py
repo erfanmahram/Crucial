@@ -1,7 +1,5 @@
 from flask import request, render_template, Flask
 import requests
-import os
-import pandas as pd
 import json
 
 app = Flask(__name__)
@@ -10,11 +8,6 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def index():
     return render_template('home.html')
-
-
-# @app.route('/product', methods=["GET", "POST"])
-# def product():
-#     return render_template('products.html')
 
 
 @app.route('/products/<id>', methods=["GET", "POST"])

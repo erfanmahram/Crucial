@@ -29,13 +29,15 @@
     <h4 style="text-align: center;padding: 20px;">Recommended Products</h4>
     <table id="ram" class="table">
         <thead>
-        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke;l border-bottom: 2px solid #58585a" >RAM</th>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >RAM</th>
 
         <tr style="text-align: center">
+            {% if data['ram'] != [] %}
             <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['ram'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -55,11 +57,13 @@
         <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >SSD</th>
 
         <tr style="text-align: center">
+            {% if data['ssd'] != [] %}
             <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
 
             {% for key in data['ssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -79,10 +83,12 @@
         <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">External SSD</th>
 
         <tr style="text-align: center">
+            {% if data['extssd'] != [] %}
             <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['extssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
+            {% endif %}
         </tr>
         </thead>
         <tbody>
