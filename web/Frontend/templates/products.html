@@ -29,19 +29,22 @@
     <h4 style="text-align: center;padding: 20px;">Recommended Products</h4>
     <table id="ram" class="table">
         <thead>
-        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >RAM</th>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke;l border-bottom: 2px solid #58585a" >RAM</th>
 
         <tr style="text-align: center">
+            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['ram'][0] %}
-            <th scope="col"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
             {% for value in data['ram'] %}
         <tr style="text-align: center">
-                {% for k in value %}
+            <td>{{ loop.index }}</td>
+            {% for k in value %}
             <td scope="row">{{ value[k] }}</td>
+
                 {% endfor %}
         </tr>
             {% endfor %}
@@ -49,37 +52,43 @@
     </table>
     <table id="ssd" class="table">
                 <thead>
-        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >SSD</th>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >SSD</th>
 
         <tr style="text-align: center">
+            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
+
             {% for key in data['ssd'][0] %}
-            <th scope="col"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
             {% for value in data['ssd'] %}
         <tr style="text-align: center">
+            <td>{{ loop.index }}</td>
                 {% for k in value %}
             <td scope="row">{{ value[k] }}</td>
+
                 {% endfor %}
         </tr>
             {% endfor %}
     </tbody>
     </table>
     <table id="externalssd" class="table">
-                <thead>
-        <th class="table" colSpan="100%" style="text-align:center; border-bottom: 2px solid #58585a" >External SSD</th>
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">External SSD</th>
 
         <tr style="text-align: center">
+            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['extssd'][0] %}
-            <th scope="col"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
             {% for value in data['extssd'] %}
         <tr style="text-align: center">
+            <td>{{ loop.index }}</td>
                 {% for k in value %}
             <td scope="row">{{ value[k] }}</td>
                 {% endfor %}

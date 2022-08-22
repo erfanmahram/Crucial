@@ -25,17 +25,17 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
-
+<form class="needs-validation" novalidate>
 <div style="overflow-x: auto" class="">
     <h4 style="text-align: center;padding: 20px;">System Upgrade Recommender</h4>
     <div style="position:absolute; left: 20%;top: 20%">
-        <label for="source_brand">Brand Name:</label><br>
-        <input id="source_brand"/>
+        <label class="form-label" for="source_brand">Brand name</label><br>
+        <input type="text" id="source_brand" class="form-control" >
         <div id="result_brand"></div>
     </div>
     <div style="position:absolute; left: 40%;top: 20%">
-        <label for="source_name">Model Name:</label><br>
-        <input id="source_name" class="form-control" style="width: 500px" required>
+        <label class="form-label" for="source_name">Model name</label><br>
+        <input type="text" id="source_name" class="form-control" style="width: 500px">
         <div id="result_name"></div>
         <button type="button" id="ajax_data_load" style="position: absolute; top: 50%;left: 120%"
                 class="btn btn-primary fixed-button-size">Search
@@ -67,6 +67,7 @@
         </tbody>
     </table>
 </div>
+</form>
 
 
 <script>
@@ -140,7 +141,7 @@
                     $('#jds-example').html('');
 
                     var column_data = '';
-                    column_data += '<tr>';
+                    column_data += '<tr><th>#</th>';
                     // console.log(column_data);
                     for (var key in data[0]) {
                         console.log('key', key)
@@ -157,7 +158,7 @@
                     var row_data = '';
                     for (var arr in data) {
                         var obj = data[arr];
-                        row_data += '<tr>';
+                        row_data += '<tr><td>'+nameCounter+'</td>';
                         for (var key in obj) {
                             if (key.includes('ModelName')) {
                                 var value = obj[key]

@@ -12,9 +12,9 @@ def index():
     return render_template('home.html')
 
 
-@app.route('/product', methods=["GET", "POST"])
-def product():
-    return render_template('products.html')
+# @app.route('/product', methods=["GET", "POST"])
+# def product():
+#     return render_template('products.html')
 
 
 @app.route('/products/<id>', methods=["GET", "POST"])
@@ -28,7 +28,7 @@ def products(id):
     extssd = list()
     print(response.json())
     for item in response.json():
-        if item['Category'] == 'RAM' or item['Category'] == 'ram':
+        if item['Category'] == 'RAM' or item['Category'] == 'memory':
             ram.append(item)
         elif item['Category'] == 'SSD' or item['Category'] == 'ssd':
             ssd.append(item)

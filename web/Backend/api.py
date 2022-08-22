@@ -41,6 +41,14 @@ def get_query(name, brandName):
                 }
             }
         }
+    elif name is None or len(name.strip()) == 0:
+        baseQuery = {
+            "query": {
+                "match": {
+                    "brand_name": "{}*".format(brandName)
+                }
+            }
+        }
     else:
         baseQuery = {
             "query": {
@@ -81,26 +89,27 @@ def get_query(name, brandName):
 @app.route('/brand-name', methods=['GET'])
 def brand_name():
     query = request.args.get('query', None)
-    baseQuery = {
-        "query": {
-            "match": {
-                "brand_name": {
-                    "query": "{}*".format(query)
-                }
-            }
-        },
-        "aggs": {
-            "auto_complete": {
-                "terms": {
-                    "field": "brand_id",
-                    "order": {
-                        "_count": "desc"
-                    },
-                    "size": 25
-                }
-            }
-        }
-    }
+    # baseQuery = {
+    #     "query": {
+    #         "match": {
+    #             "brand_name": {
+    #                 "query": "{}*".format(query)
+    #             }
+    #         }
+    #     },
+    #     "aggs": {
+    #         "auto_complete": {
+    #             "terms": {
+    #                 "field": "brand_id",
+    #                 "order": {
+    #                     "_count": "desc"
+    #                 },
+    #                 "size": 25
+    #             }
+    #         }
+    #     }
+    # }
+    baseQuery = get_query(None, query)
     res = es.search(index=NODE_NAME, size=15, body=baseQuery)
     result = list()
     res2 = list()
