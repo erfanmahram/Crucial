@@ -1,8 +1,15 @@
 from flask import request, render_template, Flask
 import requests
 import json
+import inflection
+
+
+def headings(key):
+    return inflection.titleize(key)
+
 
 app = Flask(__name__)
+app.jinja_env.filters.update(headings = headings)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -37,7 +44,7 @@ def update_table():
     params = {'name': name, 'brand': brand}
     payload = {}
     headers = {}
-    url = "http://127.0.0.1:4000/search?query="
+    url = "http://127.0.0.1:4000/search?"
     response = requests.request("GET", url, headers=headers, data=payload, params=params, timeout=60)
     return json.dumps(response.json())
 

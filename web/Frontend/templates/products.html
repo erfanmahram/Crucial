@@ -35,7 +35,7 @@
             {% if data['ram'] != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['ram'][0] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             {% endif %}
         </tr>
@@ -61,7 +61,7 @@
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
 
             {% for key in data['ssd'][0] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             {% endif %}
         </tr>
@@ -86,7 +86,7 @@
             {% if data['extssd'] != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['extssd'][0] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings  }}</th>
             {% endfor %}
             {% endif %}
         </tr>

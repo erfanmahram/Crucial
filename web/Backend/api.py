@@ -120,7 +120,7 @@ def name():
     res = es.search(index=NODE_NAME, size=15, body=baseQuery)
     result = list()
     for index, item in enumerate(res['hits']['hits']):
-        result.append(dict(doc_count=index, key=item['_source']['name']))
+        result.append(item['_source']['name'])
     return dict(result=result)
 
 
@@ -151,13 +151,13 @@ def search():
 
     for model in model_result:
         json_result.append(
-            dict(ModelId=model.Model.Id, ModelName=model.Model.ModelName, MaximumMemory=model.Model.MaximumMemory,
-                 Slots=model.Model.Slots,
-                 StandardMemory=model.Model.StandardMemory, StrgType=model.Model.StrgType,
-                 CategoryName=model.Category.CategoryName,
-                 BrandName=model.Brand.BrandName, ModelUrl=model.Model.ModelUrl, MoreInfo=model.Model.SuggestInfo))
+            dict(modelId=model.Model.Id, modelName=model.Model.ModelName, maximumMemory=model.Model.MaximumMemory,
+                 slots=model.Model.Slots,
+                 standardMemory=model.Model.StandardMemory, storageType=model.Model.StrgType,
+                 categoryName=model.Category.CategoryName,
+                 brandName=model.Brand.BrandName, modelUrl=model.Model.ModelUrl))
 
-    json_result.sort(key=lambda x: result2[x["ModelId"]])
+    json_result.sort(key=lambda x: result2[x["modelId"]])
     return json.dumps(json_result, ensure_ascii=False)
 
 
