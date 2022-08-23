@@ -37,3 +37,7 @@ sudo docker-compose --project-name crucial_crawler down
 ```shell
 celery -A app worker -l INFO -c1 -P solo -Q crucial,memorycow
 ```
+# Get number of workers
+```shell
+celery -A app status
+```

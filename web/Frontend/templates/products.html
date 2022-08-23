@@ -26,14 +26,14 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
 <div style="background-color: white; overflow-x: auto" class="jumbotron ui-widget">
-    <h4 style="text-align: center;padding: 20px;">Recommended Products</h4>
+    <h4 style="text-align: center; text-shadow: 2px 2px 3px #4d5d4b;padding: 20px;">Recommended Products</h4>
     <table id="ram" class="table">
         <thead>
         <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >RAM</th>
 
         <tr style="text-align: center">
             {% if data['ram'] != [] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['ram'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}
@@ -58,7 +58,7 @@
 
         <tr style="text-align: center">
             {% if data['ssd'] != [] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
 
             {% for key in data['ssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
@@ -84,7 +84,7 @@
 
         <tr style="text-align: center">
             {% if data['extssd'] != [] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a">#</th>
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
             {% for key in data['extssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key }}</th>
             {% endfor %}

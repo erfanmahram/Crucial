@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 
 # ------------------------------------------------------------------------------------------------------------
 
-NODE_NAME = 'crucial'
+NODE_NAME = 'crucial3'
 es = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                    ssl_show_warn=False)
 
@@ -43,6 +43,7 @@ def get_query(name, brandName):
         }
     elif name is None or len(name.strip()) == 0:
         baseQuery = {
+            "min_score": 20,
             "query": {
                 "match": {
                     "brand_name": {
@@ -64,6 +65,7 @@ def get_query(name, brandName):
         }
     else:
         baseQuery = {
+            "min_score": 20,
             "query": {
                 "bool": {
                     "must": [
@@ -106,7 +108,8 @@ def brand_name():
     es_result = es.search(index=NODE_NAME, size=15, body=baseQuery)
     agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
         Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
-    agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in es_result['aggregations']['auto_complete']['buckets']}
+    agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in
+                es_result['aggregations']['auto_complete']['buckets']}
     result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
     return dict(result=result)
 
@@ -137,12 +140,17 @@ def search():
     baseQuery = get_query(name, brandName)
     res = es.search(index=NODE_NAME, size=100, body=baseQuery)
     result = list()
+    result2 = dict()
+    max_score = res['hits']['max_score'] if res['hits']['max_score'] is not None else 0
     for index, item in enumerate(res['hits']['hits']):
-        result.append(dict(doc_count=index, key=item['_source']['id']))
+        if item['_score'] > (max_score * 0.5):
+            result.append(dict(doc_count=index, key=item['_source']['id']))
+            result2[item['_source']['id']] = index
     json_result = list()
     model_result = db.session.query(Model, Brand, Category).join(
         Category, Category.Id == Model.CategoryId).join(
         Brand, Brand.Id == Category.BrandId).filter(Model.Id.in_([i['key'] for i in result])).all()
+
     for model in model_result:
         json_result.append(
             dict(ModelId=model.Model.Id, ModelName=model.Model.ModelName, MaximumMemory=model.Model.MaximumMemory,
@@ -150,7 +158,8 @@ def search():
                  StandardMemory=model.Model.StandardMemory, StrgType=model.Model.StrgType,
                  CategoryName=model.Category.CategoryName,
                  BrandName=model.Brand.BrandName, ModelUrl=model.Model.ModelUrl, MoreInfo=model.Model.SuggestInfo))
-    print(json_result)
+
+    json_result.sort(key=lambda x: result2[x["ModelId"]])
     return json.dumps(json_result, ensure_ascii=False)
 
 

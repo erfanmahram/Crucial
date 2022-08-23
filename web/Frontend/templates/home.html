@@ -25,9 +25,8 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <body>
-<form class="needs-validation" novalidate>
     <div style="overflow-x: auto" class="">
-        <h4 style="text-align: center;padding: 20px;">System Upgrade Recommender</h4>
+            <h4 style="text-shadow: 2px 2px 3px #4d5d4b; text-align: center;padding: 20px;">System Upgrade Recommender</h4>
         <div style="position:absolute; left: 20%;top: 20%">
             <label class="form-label" for="source_brand">Brand name</label><br>
             <input type="text" id="source_brand" class="form-control">
@@ -42,7 +41,7 @@
             </button>
 
         </div>
-        <table id="jds-example" class="table" style="position: absolute; top: 40%; margin: auto">
+        <table id="jds-example" class="table" style="position: absolute; text-align: center; width: 95%; margin-left: 2.5%; margin-right: 2.5%; top: 40%; ">
             <thead>
             <tr>
 
@@ -67,7 +66,6 @@
             </tbody>
         </table>
     </div>
-</form>
 
 
 <script>
@@ -136,7 +134,6 @@
 
                     var column_data = '';
                     column_data += '<tr><th>#</th>';
-                    // console.log(column_data);
                     for (var key in data[0]) {
                         console.log('key', key)
                         if (key.includes('ModelUrl') || key.includes('ModelId')) {
@@ -164,7 +161,7 @@
                             } else if (key.includes('ModelUrl') || key.includes('ModelId')) {
                                 continue;
                             } else if (key.includes('MoreInfo')) {
-                                row_data += '<td><a onclick="newpage(this.id)" type="button" id="' + obj["ModelId"] + '" class="btn btn-info fixed-button-size">view suggestion</a></td>';
+                                row_data += '<td><a onclick="newpage(this.id)" type="button" id="' + obj["ModelId"] + '" class="btn btn-info">view suggestion</a></td>';
                             } else {
                                 var value = obj[key];
                                 row_data += '<td>' + value + '</td>';
