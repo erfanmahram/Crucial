@@ -43,7 +43,6 @@ def get_query(name, brandName):
         }
     elif name is None or len(name.strip()) == 0:
         baseQuery = {
-            "min_score": 20,
             "query": {
                 "match": {
                     "brand_name": {
@@ -65,7 +64,6 @@ def get_query(name, brandName):
         }
     else:
         baseQuery = {
-            "min_score": 20,
             "query": {
                 "bool": {
                     "must": [
