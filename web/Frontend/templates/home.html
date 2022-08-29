@@ -21,9 +21,9 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="shortcut icon" href="#">
 <body>
     <div style="overflow-x: auto" class="">
             <h4 style="text-shadow: 2px 2px 3px #4d5d4b; text-align: center;padding: 20px;">System Upgrade Recommender</h4>
@@ -41,23 +41,24 @@
             </button>
 
         </div>
-        <table id="jds-example" class="table" style="position: absolute; text-align: center; width: 95%; margin-left: 2.5%; margin-right: 2.5%; top: 40%; ">
+        <table id="main-table" class="table sortable" style="position: absolute; text-align: center; width: 95%; margin-left: 2.5%; margin-right: 2.5%; top: 40%; ">
             <thead>
             <tr>
+                <th scope="col">#</th>
 
-                <th scope="col"> modelName</th>
+                <th scope="col">modelName</th>
 
-                <th scope="col"> maximumMemory</th>
+                <th scope="col">maximumMemory</th>
 
-                <th scope="col"> slots</th>
+                <th scope="col">slots</th>
 
-                <th scope="col"> standardMemory</th>
+                <th scope="col">standardMemory</th>
 
-                <th scope="col"> storageType</th>
+                <th scope="col">storageType</th>
 
-                <th scope="col"> categoryName</th>
+                <th scope="col">categoryName</th>
 
-                <th scope="col"> brandName</th>
+                <th scope="col">brandName</th>
 
                 <th scope="col">suggestInfo</th>
             </tr>
@@ -125,7 +126,7 @@
                 success: function (data) {
                     console.log('Success Hit');
                     console.log(data);
-                    $('#jds-example').html('');
+                    $('#main-table').html('');
 
                     var column_data = '';
                     console.log('data.length', Object.keys(data).length)
@@ -144,7 +145,7 @@
                         column_data += '<th> suggestInfo </th>'
                     }
                     column_data += '</tr>';
-                    $('#jds-example').append(column_data),
+                    $('#main-table').append(column_data),
                         $('th').css({'background-color': '#FFA500', 'color': 'white'});
                     var nameCounter = 1
                     var row_data = '';
@@ -170,7 +171,7 @@
                     ;
 
 
-                    $('#jds-example').append(row_data);
+                    $('#main-table').append(row_data);
 
                 },
                 error: function (data) {

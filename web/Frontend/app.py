@@ -9,7 +9,7 @@ def headings(key):
 
 
 app = Flask(__name__)
-app.jinja_env.filters.update(headings = headings)
+app.jinja_env.filters.update(headings=headings)
 
 
 @app.route('/', methods=["GET", "POST"])

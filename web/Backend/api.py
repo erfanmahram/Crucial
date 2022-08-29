@@ -1,21 +1,13 @@
-try:
-    from flask import app, Flask, Response, request, jsonify
-    from flask_restful import Resource, Api, reqparse
-    import elasticsearch
-    from elasticsearch import Elasticsearch
-    import datetime
-    import concurrent.futures
-    import requests
-    import json
-    import es_config
-    from logzero import logger
-    from flask import Flask
-    from flask_sqlalchemy import SQLAlchemy
-    import db_config
-    from models import Resource, Model, Category, Brand, PageStatus
-    import os
-except Exception as e:
-    print("Modules Missing {}".format(e))
+from flask import Flask, request
+from flask_restful import Api
+from elasticsearch import Elasticsearch
+import json
+import es_config
+from logzero import logger
+from flask_sqlalchemy import SQLAlchemy
+import db_config
+from models import Model, Category, Brand
+
 
 app = Flask(__name__)
 api = Api(app)

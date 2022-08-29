@@ -108,12 +108,22 @@
     "Category": "ssd"
   },
   {
-    "Title": "Crucial X8 1TB Portable SSD",
+    "Title": "Crucial X6 4TB Portable SSD",
+    "Capacity": "4TB",
+    "Specs": [
+      "SSD portable Crucial X6 4TB",
+      "USB 3.1 Gen-2",
+      "Up to 800MB/s sequential read"
+    ],
+    "Category": "Externalssd"
+  },
+  {
+    "Title": "Crucial X6 1TB Portable SSD",
     "Capacity": "1TB",
     "Specs": [
-      "SSD portable Crucial X8 1TB",
+      "SSD portable Crucial X6 1TB",
       "USB 3.1 Gen-2",
-      "Up to 1050MB/s sequential read"
+      "Up to 800MB/s sequential read"
     ],
     "Category": "Externalssd"
   },
@@ -148,22 +158,12 @@
     "Category": "Externalssd"
   },
   {
-    "Title": "Crucial X6 1TB Portable SSD",
+    "Title": "Crucial X8 1TB Portable SSD",
     "Capacity": "1TB",
     "Specs": [
-      "SSD portable Crucial X6 1TB",
+      "SSD portable Crucial X8 1TB",
       "USB 3.1 Gen-2",
-      "Up to 800MB/s sequential read"
-    ],
-    "Category": "Externalssd"
-  },
-  {
-    "Title": "Crucial X6 4TB Portable SSD",
-    "Capacity": "4TB",
-    "Specs": [
-      "SSD portable Crucial X6 4TB",
-      "USB 3.1 Gen-2",
-      "Up to 800MB/s sequential read"
+      "Up to 1050MB/s sequential read"
     ],
     "Category": "Externalssd"
   }

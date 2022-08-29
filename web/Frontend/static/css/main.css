@@ -1,7 +1,7 @@
 table {
     border: 2px solid #58585a;
     background-color: whitesmoke;
-
+    vertical-align: middle !important;
 }
 
 thead th {
@@ -9,15 +9,11 @@ thead th {
     color: white;
     border-bottom: 2px solid #58585a;
     border-top: 2px solid #58585a;
+    vertical-align: middle !important;
 }
 
 td {
     white-space: normal !important;
     word-wrap: break-word;
-    /*border-left: 2px solid #58585a;*/
-    /*border-right: 2px solid #58585a;*/
+    vertical-align: middle !important;
 }
-
-/*.fixed-button-size {*/
-/*    width: 100px !important*/
-/*}*/
