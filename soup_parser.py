@@ -62,7 +62,11 @@ def get_crucial_category(soup):
     category = list()
     categories = soup.find_all('a', class_='small text-left button hollow secondary element_item')
     for i in categories:
-        category.append({"category_name": i.text, "category_url": 'https://www.crucial.com' + i['href']})
+        try:
+            category.append({"category_name": i.text, "category_url": 'https://www.crucial.com' + i['href']})
+        except Exception as e:
+            logger.error('https://www.crucial.com: %s', i.text)
+            logger.exception(e)
     return category
 
 
@@ -115,15 +119,19 @@ def get_memorycow_model_info(soup):
 
 def guess_memorycow_memory(soup):
     guessed_info = list()
-    rows = soup.find_all('td')
-    for i in range(0, len(rows), 2):
-        if 'memory' in rows[i].text.lower():
-            key = rows[i].text.strip()
-            key = key if key[-1] != ':' else key[:-1]
-            value = rows[i + 1].text.strip()
-            value = value if value[-1] != ':' else value[:-1]
-            guessed_info.append(dict(key=key, value=value))
-    return guessed_info
+    try:
+        rows = soup.find_all('td')
+        for i in range(0, len(rows), 2):
+            if 'memory' in rows[i].text.lower():
+                key = rows[i].text.strip()
+                key = key if key[-1] != ':' else key[:-1]
+                value = rows[i + 1].text.strip()
+                value = value if value[-1] != ':' else value[:-1]
+                guessed_info.append(dict(key=key, value=value))
+    except Exception as e:
+        logger.exception(e)
+    finally:
+        return guessed_info
 
 
 def guess_crucial_memory(soup):

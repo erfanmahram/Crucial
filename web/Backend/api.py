@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 import db_config
 from models import Model, Category, Brand
 
-
 app = Flask(__name__)
 api = Api(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = db_config.connection_string
@@ -119,8 +118,13 @@ def name():
 @app.route('/product', methods=['GET', 'POST'])
 def product():
     id = request.args.get('query', None)
-    model = db.session.query(Model).filter(Model.Id == int(id)).first()
-    return json.dumps(model.SuggestInfo, ensure_ascii=False)
+    if id is None:
+        return "not found", 404
+    model = db.session.query(Model).filter(Model.Id == int(id)).filter(Model.Status == 100).first()
+    if model is None:
+        return "not found", 404
+    json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
+    return json.dumps(json_result, ensure_ascii=False)
 
 
 @app.route('/search', methods=['GET', 'POST'])

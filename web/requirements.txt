@@ -9,3 +9,10 @@ SQLAlchemy==1.4.35
 psycopg2-binary==2.9.3
 python-dotenv~=0.20.0
 logzero==1.7.0
+uvicorn==0.18.2
+fastapi==0.78.0
+strawberry-graphql==0.117.1
+pydantic==1.9.1
+asyncpg==0.26.0
+
+

@@ -25,48 +25,49 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="shortcut icon" href="#">
 <body>
-    <div style="overflow-x: auto" class="">
-            <h4 style="text-shadow: 2px 2px 3px #4d5d4b; text-align: center;padding: 20px;">System Upgrade Recommender</h4>
-        <div style="position:absolute; left: 20%;top: 20%">
-            <label class="form-label" for="source_brand">Brand name</label><br>
-            <input type="text" id="source_brand" class="form-control">
-            <div id="result_brand"></div>
-        </div>
-        <div style="position:absolute; left: 40%;top: 20%">
-            <label class="form-label" for="source_name">Model name</label><br>
-            <input type="text" id="source_name" class="form-control" style="width: 500px" required>
-            <div id="result_name"></div>
-            <button type="button" id="ajax_data_load" style="position: absolute; top: 50%;left: 120%"
-                    class="btn btn-primary fixed-button-size">Search
-            </button>
-
-        </div>
-        <table id="main-table" class="table sortable" style="position: absolute; text-align: center; width: 95%; margin-left: 2.5%; margin-right: 2.5%; top: 40%; ">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-
-                <th scope="col">modelName</th>
-
-                <th scope="col">maximumMemory</th>
-
-                <th scope="col">slots</th>
-
-                <th scope="col">standardMemory</th>
-
-                <th scope="col">storageType</th>
-
-                <th scope="col">categoryName</th>
-
-                <th scope="col">brandName</th>
-
-                <th scope="col">suggestInfo</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+<div style="overflow-x: auto" class="">
+    <h4 style="text-shadow: 2px 2px 3px #4d5d4b; text-align: center;padding: 20px;">System Upgrade Recommender</h4>
+    <div style="position:absolute; left: 20%;top: 20%">
+        <label class="form-label" for="source_brand">Brand name</label><br>
+        <input type="text" id="source_brand" class="form-control">
+        <div id="result_brand"></div>
     </div>
+    <div style="position:absolute; left: 40%;top: 20%">
+        <label class="form-label" for="source_name">Model name</label><br>
+        <input type="text" id="source_name" class="form-control" style="width: 500px" required>
+        <div id="result_name"></div>
+        <button type="button" id="ajax_data_load" style="position: absolute; top: 50%;left: 120%"
+                class="btn btn-primary fixed-button-size">Search
+        </button>
+
+    </div>
+    <table id="main-table" class="table sortable"
+           style="position: absolute; text-align: center; width: 95%; margin-left: 2.5%; margin-right: 2.5%; top: 40%; ">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+
+            <th scope="col">modelName</th>
+
+            <th scope="col">maximumMemory</th>
+
+            <th scope="col">slots</th>
+
+            <th scope="col">standardMemory</th>
+
+            <th scope="col">storageType</th>
+
+            <th scope="col">categoryName</th>
+
+            <th scope="col">brandName</th>
+
+            <th scope="col">suggestInfo</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
 
 
 <script>
@@ -80,7 +81,7 @@
         resultBrandValue = e.target.value
         // console.log("======", resultBrandValue)
         $.ajax({
-            url: "/pipe",
+            url: "/brand_name",
             type: 'POST',
             cache: false,
             data: {'data': resultBrandValue},
@@ -100,7 +101,7 @@
         console.log("======", resultNameValue)
 
         $.ajax({
-            url: "/pipes",
+            url: "/model_name",
             type: 'POST',
             cache: false,
             data: {'data': resultNameValue, "brand": resultBrandValue},

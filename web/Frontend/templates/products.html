@@ -26,22 +26,25 @@
     <link rel="shortcut icon" href="#">
 <body>
 <div style="background-color: white; overflow-x: auto" class="jumbotron ui-widget">
-    <h4 style="text-align: center; text-shadow: 2px 2px 3px #4d5d4b;padding: 20px;">Recommended Products</h4>
+    <h4 style="text-align: center; text-shadow: 2px 2px 3px #4d5d4b;padding: 20px;">Recommended Products for {{
+        data['name'] }}</h4>
     <table id="ram" class="table">
         <thead>
-        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >RAM</th>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            RAM
+        </th>
 
         <tr style="text-align: center">
-            {% if data['ram'] != [] %}
+            {% if data['suggestion'].get('ram', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
-            {% for key in data['ram'][0] %}
+            {% for key in data['suggestion']['ram'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             {% endif %}
         </tr>
         </thead>
         <tbody>
-            {% for value in data['ram'] %}
+        {% for value in data['suggestion']['ram'] %}
         <tr>
             <td>{{ loop.index }}</td>
             {% for k in value %}
@@ -55,30 +58,32 @@
                 {% endif %}
             </td>
 
-                {% endfor %}
-        </tr>
             {% endfor %}
-    </tbody>
+        </tr>
+        {% endfor %}
+        </tbody>
     </table>
     <table id="ssd" class="table">
-                <thead>
-        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a" >SSD</th>
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            SSD
+        </th>
 
         <tr style="text-align: center">
-            {% if data['ssd'] != [] %}
+            {% if data['suggestion'].get('ssd', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
 
-            {% for key in data['ssd'][0] %}
+            {% for key in data['suggestion']['ssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             {% endif %}
         </tr>
         </thead>
         <tbody>
-            {% for value in data['ssd'] %}
+        {% for value in data['suggestion']['ssd'] %}
         <tr style="text-align: center">
             <td>{{ loop.index }}</td>
-                {% for k in value %}
+            {% for k in value %}
             <td scope="row">
                 {% if value[k].__class__.__name__ == 'list' %}
                 {% for item in value[k] %}
@@ -89,29 +94,31 @@
                 {% endif %}
             </td>
 
-                {% endfor %}
-        </tr>
             {% endfor %}
-    </tbody>
+        </tr>
+        {% endfor %}
+        </tbody>
     </table>
     <table id="externalssd" class="table">
         <thead>
-        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">External SSD</th>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            External SSD
+        </th>
 
         <tr style="text-align: center">
-            {% if data['extssd'] != [] %}
+            {% if data['suggestion'].get('externalSsd', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
-            {% for key in data['extssd'][0] %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings  }}</th>
+            {% for key in data['suggestion']['externalSsd'][0] %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             {% endif %}
         </tr>
         </thead>
         <tbody>
-            {% for value in data['extssd'] %}
+        {% for value in data['suggestion']['externalSsd'] %}
         <tr style="text-align: center">
             <td>{{ loop.index }}</td>
-                {% for k in value %}
+            {% for k in value %}
             <td scope="row">
                 {% if value[k].__class__.__name__ == 'list' %}
                 {% for item in value[k] %}
@@ -121,10 +128,10 @@
                 {{ value[k] }}
                 {% endif %}
             </td>
-                {% endfor %}
-        </tr>
             {% endfor %}
-    </tbody>
+        </tr>
+        {% endfor %}
+        </tbody>
     </table>
 </div>
 </body>
