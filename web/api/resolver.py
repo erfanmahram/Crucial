@@ -1,10 +1,10 @@
 from sqlalchemy import select
+import strawberry
 from sqlalchemy.orm import load_only
 from session import get_session
 from helper import get_only_selected_fields, get_valid_data, popper
-from models import Model, Brand, Category
-from scalar import Modelql, SuggestInfo
-
+from models import Model, Brand, Category, traverse
+from scalar import Modelql, SuggestInfo, ModelqlType, Ram, Ssd, ExternalSsd
 
 
 async def get_models(info):
@@ -21,10 +21,8 @@ async def get_models(info):
         model_dict = get_valid_data(model.Model, Model)
         model_dict["categoryName"] = model.Category.CategoryName
         model_dict["brandName"] = model.Brand.BrandName
-        model_dict = popper(model_dict, selected_fields)
-        if "suggestInfo" in model_dict:
-            model_dict['suggestInfo'] = SuggestInfo(**model_dict['suggestInfo'])
-        models_data_list.append(Modelql(**model_dict))
+        # model_dict = popper(model_dict, selected_fields)
+        models_data_list.append(ModelqlType.from_pydantic(Modelql.parse_obj(traverse(model_dict))))
 
     return models_data_list
 
@@ -40,7 +38,4 @@ async def get_model(model_id, info):
     model_dict = get_valid_data(db_model.Model, Model)
     model_dict["categoryName"] = db_model.Category.CategoryName
     model_dict["brandName"] = db_model.Brand.BrandName
-    model_dict = popper(model_dict, selected_fields)
-    if "suggestInfo" in model_dict:
-        model_dict['suggestInfo'] = SuggestInfo(**model_dict['suggestInfo'])
-    return Modelql(**model_dict)
+    return ModelqlType.from_pydantic(Modelql.parse_obj(traverse(model_dict)))

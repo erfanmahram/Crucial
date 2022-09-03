@@ -1,423 +1,702 @@
-{
-  "ram": [
-    {
-      "Title": "2GB DDR2 PC2-5300 667MT/s 200-pin SODIMM Non ECC Memory RAM ",
-      "Capacity": "2GB",
-      "Speed": "667MT/s (PC2-5300)",
-      "ManufactureTech": "DDR2",
-      "ModuleType": "SODIMM",
-      "Voltage": "1.8v",
-      "Specs": [
-        "CL5",
-        "1.8v",
-        "SODIMM",
-        "Non-ECC",
-        "200 Pin",
-        "1R (Single Rank)",
-        "no info",
-        "DDR2",
-        "667MT/s (PC2-5300)"
-      ],
-      "Category": "RAM"
-    },
-    {
-      "Title": "1GB DDR2 PC2-5300 667MT/s 200-pin SODIMM Non ECC Memory RAM ",
-      "Capacity": "1GB",
-      "Speed": "667MT/s (PC2-5300)",
-      "ManufactureTech": "DDR2",
-      "ModuleType": "SODIMM",
-      "Voltage": "1.8v",
-      "Specs": [
-        "CL5",
-        "1.8v",
-        "SODIMM",
-        "Non-ECC",
-        "200 Pin",
-        "no info",
-        "no info",
-        "DDR2",
-        "667MT/s (PC2-5300)"
-      ],
-      "Category": "RAM"
-    }
+ram=[
+  Ram(title=
+  '2GB DDR2 PC2-6400 800MT/s 200-pin SODIMM Non ECC Memory RAM ',
+  capacity=
+  '2GB',
+  speed=
+  '800MT/s (PC2-6400)',
+  manufactureTech=
+  'DDR2',
+  moduleType=
+  'SODIMM',
+  voltage=
+  '1.8v',
+  specs=
+  [
+    'CL6',
+    '1.8v',
+    'SODIMM',
+    'Non-ECC',
+    '200 Pin',
+    '1R (Single Rank)',
+    'no info',
+    'DDR2',
+    '800MT/s (PC2-6400)'
   ],
-  "ssd": [
-    {
-      "Title": "SanDisk Plus 2TB (2000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 545MB/s R, 450MB/s W ",
-      "Capacity": "2.0TB (2000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 545MB/s",
-        "Up To 445MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "SanDisk Plus 1TB (1000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 535MB/s R, 450MB/s W ",
-      "Capacity": "1.0TB (1000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.0TB (1000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 535MB/s",
-        "Up To 450MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "SanDisk Plus 480GB SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 535MB/s R, 445MB/s W ",
-      "Capacity": "480GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "480GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 535MB/s",
-        "Up To 445MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "SanDisk Plus 240GB SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 530MB/s R, 440MB/s W ",
-      "Capacity": "240GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "240GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 530MB/s",
-        "Up To 440MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "SanDisk Ultra 3D 4TB (4000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 560MB/s R, 530MB/s W ",
-      "Capacity": "4.0TB (4000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "4.0TB (4000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 560MB/s",
-        "Up To 530MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "SanDisk Ultra 3D 2TB (2000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 560MB/s R, 530MB/s W ",
-      "Capacity": "2.0TB (2000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 560MB/s",
-        "Up To 530MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 2TB (2048GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ",
-      "Capacity": "2.0TB (2048GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2048GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 1TB (1024GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ",
-      "Capacity": "1.0TB (1024GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.0TB (1024GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 512GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ",
-      "Capacity": "512GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "512GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 256GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 500MB/s W, (Bundle) ",
-      "Capacity": "256GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "256GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 4TB (4000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ",
-      "Capacity": "4.0TB (4000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "4.0TB (4000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 510MB/s",
-        "Up To 560MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 2TB (2000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ",
-      "Capacity": "2.0TB (2000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 510MB/s",
-        "Up To 560MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 1TB (1000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ",
-      "Capacity": "1.0TB (1000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.0TB (1000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 510MB/s",
-        "Up To 560MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 500GB MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ",
-      "Capacity": "500GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "500GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 510MB/s",
-        "Up To 560MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 250GB MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ",
-      "Capacity": "250GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "250GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 510MB/s",
-        "Up To 560MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 2TB (2000GB) BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ",
-      "Capacity": "2.0TB (2000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 540MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 1TB (1000GB) BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ",
-      "Capacity": "1.0TB (1000GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.0TB (1000GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 540MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 480GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ",
-      "Capacity": "480GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "480GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 540MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 500GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ",
-      "Capacity": "500GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "500GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 540MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Crucial 240GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ",
-      "Capacity": "240GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "240GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 540MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 1.92TB (1920GB) A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ",
-      "Capacity": "1.92TB (1920GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.92TB (1920GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 500MB/s",
-        "Up To 450MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 960GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ",
-      "Capacity": "960GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "960GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 500MB/s",
-        "Up To 450MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 480GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ",
-      "Capacity": "480GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "480GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 500MB/s",
-        "Up To 450MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 120GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 320MB/s W ",
-      "Capacity": "120GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "120GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 500MB/s",
-        "Up To 320MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 240GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 350MB/s W ",
-      "Capacity": "240GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "240GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 500MB/s",
-        "Up To 350MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 2TB (2048GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ",
-      "Capacity": "2.0TB (2048GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "2.0TB (2048GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 1TB (1024GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ",
-      "Capacity": "1.0TB (1024GB)",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "1.0TB (1024GB)",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 512GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ",
-      "Capacity": "512GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "512GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 520MB/s"
-      ],
-      "Category": "SSD"
-    },
-    {
-      "Title": "Kingston 256GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 500MB/s W ",
-      "Capacity": "256GB",
-      "Interface": "SATA 3.0 (6Gb/s)",
-      "FormFactor": "2.5\" (SATA)",
-      "Specs": [
-        "256GB",
-        "SATA 3.0 (6Gb/s)",
-        "Up To 550MB/s",
-        "Up To 500MB/s"
-      ],
-      "Category": "SSD"
-    }
-  ]
-}
+  category=
+  'RAM'
+  ),
+  Ram(title=
+  '1GB DDR2 PC2-6400 800MT/s 200-pin SODIMM Non ECC Memory RAM ',
+  capacity=
+  '1GB',
+  speed=
+  '800MT/s (PC2-6400)',
+  manufactureTech=
+  'DDR2',
+  moduleType=
+  'SODIMM',
+  voltage=
+  '1.8v',
+  specs=
+  [
+    'CL6',
+    '1.8v',
+    'SODIMM',
+    'Non-ECC',
+    '200 Pin',
+    'no info',
+    'no info',
+    'DDR2',
+    '800MT/s (PC2-6400)'
+  ],
+  category=
+  'RAM'
+  )
+]
+ssd=[
+  Ssd(title=
+  'SanDisk Plus 2TB (2000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 545MB/s R, 450MB/s W ',
+  capacity=
+  '2.0TB (2000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 545MB/s',
+    'Up To 445MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'SanDisk Plus 1TB (1000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 535MB/s R, 450MB/s W ',
+  capacity=
+  '1.0TB (1000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.0TB (1000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 535MB/s',
+    'Up To 450MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'SanDisk Plus 480GB SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 535MB/s R, 445MB/s W ',
+  capacity=
+  '480GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '480GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 535MB/s',
+    'Up To 445MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'SanDisk Plus 240GB SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 530MB/s R, 440MB/s W ',
+  capacity=
+  '240GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '240GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 530MB/s',
+    'Up To 440MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'SanDisk Ultra 3D 4TB (4000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 560MB/s R, 530MB/s W ',
+  capacity=
+  '4.0TB (4000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '4.0TB (4000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 560MB/s',
+    'Up To 530MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'SanDisk Ultra 3D 2TB (2000GB) SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 560MB/s R, 530MB/s W ',
+  capacity=
+  '2.0TB (2000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 560MB/s',
+    'Up To 530MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 2TB (2048GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ',
+  capacity=
+  '2.0TB (2048GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2048GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 1TB (1024GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ',
+  capacity=
+  '1.0TB (1024GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.0TB (1024GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 512GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W, (Bundle) ',
+  capacity=
+  '512GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '512GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 256GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 500MB/s W, (Bundle) ',
+  capacity=
+  '256GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '256GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 4TB (4000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ',
+  capacity=
+  '4.0TB (4000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '4.0TB (4000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 510MB/s',
+    'Up To 560MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 2TB (2000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ',
+  capacity=
+  '2.0TB (2000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 510MB/s',
+    'Up To 560MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 1TB (1000GB) MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ',
+  capacity=
+  '1.0TB (1000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.0TB (1000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 510MB/s',
+    'Up To 560MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 500GB MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ',
+  capacity=
+  '500GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '500GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 510MB/s',
+    'Up To 560MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 250GB MX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 510MB/s R, 560MB/s W ',
+  capacity=
+  '250GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '250GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 510MB/s',
+    'Up To 560MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 2TB (2000GB) BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ',
+  capacity=
+  '2.0TB (2000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 540MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 1TB (1000GB) BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ',
+  capacity=
+  '1.0TB (1000GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.0TB (1000GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 540MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 480GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ',
+  capacity=
+  '480GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '480GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 540MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 500GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ',
+  capacity=
+  '500GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '500GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 540MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Crucial 240GB BX500 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 540MB/s R, 500MB/s W ',
+  capacity=
+  '240GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '240GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 540MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 1.92TB (1920GB) A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ',
+  capacity=
+  '1.92TB (1920GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.92TB (1920GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 500MB/s',
+    'Up To 450MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 960GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ',
+  capacity=
+  '960GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '960GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 500MB/s',
+    'Up To 450MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 480GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 450MB/s W ',
+  capacity=
+  '480GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '480GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 500MB/s',
+    'Up To 450MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 120GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 320MB/s W ',
+  capacity=
+  '120GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '120GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 500MB/s',
+    'Up To 320MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 240GB A400 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 500MB/s R, 350MB/s W ',
+  capacity=
+  '240GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '240GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 500MB/s',
+    'Up To 350MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 2TB (2048GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ',
+  capacity=
+  '2.0TB (2048GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '2.0TB (2048GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 1TB (1024GB) KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ',
+  capacity=
+  '1.0TB (1024GB)',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '1.0TB (1024GB)',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 512GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 520MB/s W ',
+  capacity=
+  '512GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '512GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 520MB/s'
+  ],
+  category=
+  'SSD'
+  ),
+  Ssd(title=
+  'Kingston 256GB KC600 SSD 2.5 Inch 7mm, SATA 3.0 (6Gb/s), 3D TLC, 550MB/s R, 500MB/s W ',
+  capacity=
+  '256GB',
+  interface=
+  'SATA 3.0 (6Gb/s)',
+  formFactor=
+  '2.5" (SATA)',
+  specs=
+  [
+    '256GB',
+    'SATA 3.0 (6Gb/s)',
+    'Up To 550MB/s',
+    'Up To 500MB/s'
+  ],
+  category=
+  'SSD'
+  )
+]
+externalSsd=[
+  ExternalSsd(title=
+  'SanDisk 2TB (2000GB) Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ',
+  capacity=
+  '2TB (2000GB)',
+  specs=
+  [
+    'Read Speed: Up To 520MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 1TB (1000GB) Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ',
+  capacity=
+  '1TB (1000GB)',
+  specs=
+  [
+    'Read Speed: Up To 520MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 480GB Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ',
+  capacity=
+  '480GB',
+  specs=
+  [
+    'Read Speed: Up To 520MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 4TB (4000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ',
+  capacity=
+  '4TB (4000GB)',
+  specs=
+  [
+    'Read Speed: Up To 1050MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 2TB (2000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ',
+  capacity=
+  '2TB (2000GB)',
+  specs=
+  [
+    'Read Speed: Up To 1050MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 1TB (1000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ',
+  capacity=
+  '1TB (1000GB)',
+  specs=
+  [
+    'Read Speed: Up To 1050MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 500GB Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ',
+  capacity=
+  '500GB',
+  specs=
+  [
+    'Read Speed: Up To 1050MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 4TB (4000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ',
+  capacity=
+  '4TB (4000GB)',
+  specs=
+  [
+    'Read Speed: Up To 2000MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 2TB (2000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ',
+  capacity=
+  '2TB (2000GB)',
+  specs=
+  [
+    'Read Speed: Up To 2000MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  ),
+  ExternalSsd(title=
+  'SanDisk 1TB (1000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ',
+  capacity=
+  '1TB (1000GB)',
+  specs=
+  [
+    'Read Speed: Up To 2000MB/s',
+    'Write Speed: N/A'
+  ],
+  category=
+  'ExternalSSD'
+  )
+]
