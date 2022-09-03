@@ -9,7 +9,7 @@ class Ram(BaseModel):
     manufactureTech: typing.Optional[str] = ""
     moduleType: typing.Optional[str] = ""
     voltage: typing.Optional[str] = ""
-    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: list)
+    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
 
 
@@ -28,7 +28,7 @@ class RamType:
 class ExternalSsd(BaseModel):
     title: typing.Optional[str] = ""
     capacity: typing.Optional[str] = ""
-    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: list)
+    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
 
 
@@ -45,7 +45,7 @@ class Ssd(BaseModel):
     capacity: typing.Optional[str] = ""
     interface: typing.Optional[str] = ""
     formFactor: typing.Optional[str] = ""
-    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: list)
+    specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
 
 
@@ -61,11 +61,11 @@ class SsdType:
 
 class SuggestInfo(BaseModel):
     ram: typing.Optional[typing.List[Ram]] = Field(
-        default_factory=lambda: list)
+        default_factory=lambda: [])
     ssd: typing.Optional[typing.List[Ssd]] = Field(
-        default_factory=lambda: list)
+        default_factory=lambda: [])
     externalSsd: typing.Optional[typing.List[ExternalSsd]] = Field(
-        default_factory=lambda: list)
+        default_factory=lambda: [])
 
 
 @strawberry.experimental.pydantic.type(SuggestInfo)
