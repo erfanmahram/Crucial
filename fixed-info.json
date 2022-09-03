@@ -1,14 +1,14 @@
 {
   "ram": [
     {
-      "Title": "2GB DDR2 PC2-6400 800MT/s 200-pin SODIMM Non ECC Memory RAM ",
+      "Title": "2GB DDR2 PC2-5300 667MT/s 200-pin SODIMM Non ECC Memory RAM ",
       "Capacity": "2GB",
-      "Speed": "800MT/s (PC2-6400)",
+      "Speed": "667MT/s (PC2-5300)",
       "ManufactureTech": "DDR2",
       "ModuleType": "SODIMM",
       "Voltage": "1.8v",
       "Specs": [
-        "CL6",
+        "CL5",
         "1.8v",
         "SODIMM",
         "Non-ECC",
@@ -16,19 +16,19 @@
         "1R (Single Rank)",
         "no info",
         "DDR2",
-        "800MT/s (PC2-6400)"
+        "667MT/s (PC2-5300)"
       ],
       "Category": "RAM"
     },
     {
-      "Title": "1GB DDR2 PC2-6400 800MT/s 200-pin SODIMM Non ECC Memory RAM ",
+      "Title": "1GB DDR2 PC2-5300 667MT/s 200-pin SODIMM Non ECC Memory RAM ",
       "Capacity": "1GB",
-      "Speed": "800MT/s (PC2-6400)",
+      "Speed": "667MT/s (PC2-5300)",
       "ManufactureTech": "DDR2",
       "ModuleType": "SODIMM",
       "Voltage": "1.8v",
       "Specs": [
-        "CL6",
+        "CL5",
         "1.8v",
         "SODIMM",
         "Non-ECC",
@@ -36,7 +36,7 @@
         "no info",
         "no info",
         "DDR2",
-        "800MT/s (PC2-6400)"
+        "667MT/s (PC2-5300)"
       ],
       "Category": "RAM"
     }
@@ -418,98 +418,6 @@
         "Up To 500MB/s"
       ],
       "Category": "SSD"
-    }
-  ],
-  "externalSsd": [
-    {
-      "Title": "SanDisk 2TB (2000GB) Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ",
-      "Capacity": "2TB (2000GB)",
-      "Specs": [
-        "Read Speed: Up To 520MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 1TB (1000GB) Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ",
-      "Capacity": "1TB (1000GB)",
-      "Specs": [
-        "Read Speed: Up To 520MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 480GB Portable SSD USB 3.2, Gen2, Type-C/A, 520MB/s R ",
-      "Capacity": "480GB",
-      "Specs": [
-        "Read Speed: Up To 520MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 4TB (4000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ",
-      "Capacity": "4TB (4000GB)",
-      "Specs": [
-        "Read Speed: Up To 1050MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 2TB (2000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ",
-      "Capacity": "2TB (2000GB)",
-      "Specs": [
-        "Read Speed: Up To 1050MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 1TB (1000GB) Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ",
-      "Capacity": "1TB (1000GB)",
-      "Specs": [
-        "Read Speed: Up To 1050MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 500GB Extreme Portable SSD USB 3.1, Type-C/A, 1050MB/s R ",
-      "Capacity": "500GB",
-      "Specs": [
-        "Read Speed: Up To 1050MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 4TB (4000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ",
-      "Capacity": "4TB (4000GB)",
-      "Specs": [
-        "Read Speed: Up To 2000MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 2TB (2000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ",
-      "Capacity": "2TB (2000GB)",
-      "Specs": [
-        "Read Speed: Up To 2000MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
-    },
-    {
-      "Title": "SanDisk 1TB (1000GB) Extreme Pro Portable SSD USB 3.1, Type-C/A, 2000MB/s R ",
-      "Capacity": "1TB (1000GB)",
-      "Specs": [
-        "Read Speed: Up To 2000MB/s",
-        "Write Speed: N/A"
-      ],
-      "Category": "ExternalSSD"
     }
   ]
 }

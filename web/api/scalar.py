@@ -1,13 +1,14 @@
 import strawberry
 from strawberry.scalars import JSON
 from pydantic import typing, Field
+from dataclasses import field
 
 
-# @strawberry.type
-# class suggestInfo:
-#     ram: typing.Optional[JSON] = None
-#     ssd: typing.Optional[JSON] = None
-#     externalSsd: typing.Optional[JSON] = None
+@strawberry.type
+class SuggestInfo:
+    ram: typing.Optional[typing.List[JSON]] = field(default_factory=lambda: [])
+    ssd: typing.Optional[typing.List[JSON]] = field(default_factory=lambda: [])
+    externalSsd: typing.Optional[typing.List[JSON]] = field(default_factory=lambda: [])
 
 
 @strawberry.type
@@ -21,7 +22,15 @@ class Modelql:
     slots: typing.Optional[str] = ""
     standardMemory: typing.Optional[str] = ""
     strgType: typing.Optional[str] = ""
-    suggestInfo: typing.Optional[JSON] = None
-    # suggestInfo: typing.Optional[typing.List[suggestInfo]] = Field(default_factory=list)
+    # suggestInfo: typing.Optional[JSON] = None
+    suggestInfo: typing.Optional[SuggestInfo] = Field(default_factory=SuggestInfo)
     indexed: typing.Optional[int] = 0
     lastUpdate: typing.Optional[str] = ""
+
+
+if __name__ == '__main__':
+    s = SuggestInfo()
+    print(s.externalSsd)
+    print(s.ssd)
+    print(s.ram)
+
