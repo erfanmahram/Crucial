@@ -3,6 +3,7 @@ from pydantic import typing
 from strawberry.types import Info
 from resolver import get_model, get_models
 from scalar import ModelqlType
+from graphql import GraphQLError
 
 
 @strawberry.type
@@ -16,5 +17,9 @@ class Query:
     @strawberry.field
     async def model(self, info: Info, model_id: int) -> ModelqlType:
         """ Get user by id """
-        model_dict = await get_model(model_id, info)
-        return model_dict
+        try:
+            model_dict = await get_model(model_id, info)
+            return model_dict
+        except:
+            info.context['response'].status_code = 401
+            raise GraphQLError('Model Id ' + str(model_id) + ' Not Found!')

@@ -178,4 +178,4 @@ cython_debug/
 /suggestionCache/
 /logs/
 /fixer.py
-
+/fixed-info.json

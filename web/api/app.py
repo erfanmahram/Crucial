@@ -33,7 +33,7 @@ def get_query(name, brand_name):
             "query": {
                 "match": {
                     "brand_name": {
-                        "query": "lg ele"
+                        "query": brand_name
                     }
                 }
             },
@@ -129,6 +129,6 @@ def create_app():
                      brandName=model.Brand.BrandName, modelUrl=model.Model.ModelUrl))
 
         json_result.sort(key=lambda x: result2[x["modelId"]])
-        return json.dumps(json_result, ensure_ascii=False)
-
+        # return json.dumps(json_result, ensure_ascii=False)
+        return json_result
     return app
