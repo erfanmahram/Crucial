@@ -9,7 +9,7 @@ from models import Model, Category, Brand
 
 
 def index_data(engine):
-    index_name = "crucial3"
+    index_name = "crucial"
     es_client = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                               ssl_show_warn=False)
     if not es_client.indices.exists(index=index_name):
@@ -19,7 +19,7 @@ def index_data(engine):
             "tokenizer": {
                 "autocomplete": {"type": "ngram", "min_gram": 2, "max_gram": 12}}}}, "mappings": {"properties": {
             "name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete"},
-            "brand_name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete"}}}})
+            "brand_name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete_search"}}}})
     with Session(engine) as session:
         models = session.query(Model).filter(Model.Status == 100).filter(Model.Indexed == 0).limit(1000).all()
     if len(models) == 0:

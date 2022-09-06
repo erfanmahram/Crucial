@@ -41,7 +41,7 @@ sudo docker-compose --project-name crucial_crawler down
 
 ## Todo
 
-- [ ] Category in json_fixer must fix
+- [X] Category in json_fixer must fix
 - [ ] 'from size' for elasticsearch must add
 
 ## Celery
