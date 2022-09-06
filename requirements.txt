@@ -1,0 +1,13 @@
+#for loading environment variables 
+python-dotenv
+##for email validation            
+#pydantic[email] 
+fastapi
+uvicorn
+#for database
+sqlalchemy         
+#psycopg2
+psycopg2-binary
+
+ 
+
