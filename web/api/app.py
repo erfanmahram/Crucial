@@ -14,7 +14,6 @@ from sqlalchemy.orm import Session
 from models import Model, Category, Brand
 from session import get_session
 
-
 schema = strawberry.Schema(query=Query, config=StrawberryConfig(auto_camel_case=True))
 NODE_NAME = 'crucial'
 es = AsyncElasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False, ssl_show_warn=False)
@@ -25,7 +24,7 @@ def get_query(name, brand_name):
         baseQuery = {
             "query": {
                 "match": {
-                    "name": {'query':name}
+                    "name": {'query': name}
                 }
             }
         }
@@ -71,17 +70,6 @@ def get_query(name, brand_name):
                         }
                     ]
                 }
-            },
-            "aggs": {
-                "auto_complete": {
-                    "terms": {
-                        "field": "brand_id",
-                        "order": {
-                            "_count": "desc"
-                        },
-                        "size": 25
-                    }
-                }
             }
         }
     return baseQuery
@@ -103,8 +91,7 @@ def create_app():
         brands = {brand.Brand.Id: brand.Brand.BrandName for brand in agg_brand_name}
         agg_buck = {brands[item['key']]: item['doc_count'] for item in
                     es_result['aggregations']['auto_complete']['buckets']}
-        ggg = {h:k for h,k in agg_buck.items() if h in [j['_source']['brand_name'] for j in es_result['hits']['hits']]}
-        result = [k for k, v in sorted(ggg.items(), key=lambda item: item[1], reverse=True)]
+        result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
         return dict(result=result)
 
     @app.get('/modelName')
@@ -143,4 +130,5 @@ def create_app():
 
         json_result.sort(key=lambda x: result2[x["modelId"]])
         return json.dumps(json_result, ensure_ascii=False)
+
     return app
