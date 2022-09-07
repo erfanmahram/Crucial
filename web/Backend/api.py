@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 
 # ------------------------------------------------------------------------------------------------------------
 
-NODE_NAME = 'crucial3'
+NODE_NAME = es_config.ES_INDEX_NAME
 es = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                    ssl_show_warn=False)
 
@@ -121,7 +121,7 @@ def product():
         return make_response(jsonify("Page Not Found"), 404)
     model = db.session.query(Model).filter(Model.Id == int(id)).filter(Model.Status == 100).first()
     if model is None:
-        return make_response(jsonify("Page Not Found"), 404)
+        return {"message": "Not Found", "statusCode": 404}, 404
     json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
     return json.dumps(json_result, ensure_ascii=False)
 

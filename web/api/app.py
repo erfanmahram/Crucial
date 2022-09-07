@@ -1,21 +1,16 @@
-import json
 from fastapi import FastAPI
 import strawberry
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema.config import StrawberryConfig
 from schema import Query
-from elasticsearch import Elasticsearch, AsyncElasticsearch
+from elasticsearch import AsyncElasticsearch
 import es_config
 from sqlalchemy import select
-import db_config
-from sqlalchemy import create_engine
-from sqlalchemy.sql.expression import func
-from sqlalchemy.orm import Session
 from models import Model, Category, Brand
 from session import get_session
 
 schema = strawberry.Schema(query=Query, config=StrawberryConfig(auto_camel_case=True))
-NODE_NAME = 'crucial'
+NODE_NAME = es_config.ES_INDEX_NAME
 es = AsyncElasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False, ssl_show_warn=False)
 
 

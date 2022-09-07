@@ -9,7 +9,7 @@ from models import Model, Category, Brand
 
 
 def index_data(engine):
-    index_name = "crucial"
+    index_name = 'crucial'
     es_client = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                               ssl_show_warn=False)
     if not es_client.indices.exists(index=index_name):
@@ -28,7 +28,7 @@ def index_data(engine):
     actions = []
     with Session(engine) as session:
         for row in models:
-            action = {"index": {"_index": 'crucial', "_id": row.Id}}
+            action = {"index": {"_index": index_name, "_id": row.Id}}
             model_doc = {
                 "id": int(row.Id),
                 "name": row.ModelName,
