@@ -28,7 +28,7 @@ def index_data(engine):
     actions = []
     with Session(engine) as session:
         for row in models:
-            action = {"index": {"_index": 'crucial3', "_id": row.Id}}
+            action = {"index": {"_index": 'crucial', "_id": row.Id}}
             model_doc = {
                 "id": int(row.Id),
                 "name": row.ModelName,

@@ -1,9 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, make_response, jsonify
 from flask_restful import Api
 from elasticsearch import Elasticsearch
 import json
 import es_config
-from logzero import logger
 from flask_sqlalchemy import SQLAlchemy
 import db_config
 from models import Model, Category, Brand
@@ -119,10 +118,10 @@ def name():
 def product():
     id = request.args.get('query', None)
     if id is None:
-        return "not found", 404
+        return make_response(jsonify("Page Not Found"), 404)
     model = db.session.query(Model).filter(Model.Id == int(id)).filter(Model.Status == 100).first()
     if model is None:
-        return "not found", 404
+        return make_response(jsonify("Page Not Found"), 404)
     json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
     return json.dumps(json_result, ensure_ascii=False)
 

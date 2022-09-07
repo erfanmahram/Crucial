@@ -1,4 +1,4 @@
-from models import Resource, Model, Category, Brand, PageStatus
+from models import Model, PageStatus
 import db_config
 from sqlalchemy import create_engine
 from sqlalchemy.sql.expression import func

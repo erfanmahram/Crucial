@@ -81,9 +81,9 @@ def create_app():
     app.include_router(graphql_app, prefix="/graphql")
 
     @app.get('/brandName')
-    async def brand_name(query):
+    async def brand_name(query, size=20):
         baseQuery = get_query(None, query)
-        es_result = await es.search(index=NODE_NAME, size=20, body=baseQuery)
+        es_result = await es.search(index=NODE_NAME, size=size, body=baseQuery)
         async with get_session() as session:
             sql = select(Brand).filter(
                 Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']]))
@@ -95,18 +95,18 @@ def create_app():
         return dict(result=result)
 
     @app.get('/modelName')
-    async def model_name(name, brandName=''):
+    async def model_name(name, brandName='', size=20):
         baseQuery = get_query(name, brandName)
-        res = await es.search(index=NODE_NAME, size=15, body=baseQuery)
+        res = await es.search(index=NODE_NAME, size=size, body=baseQuery)
         result = list()
         for index, item in enumerate(res['hits']['hits']):
             result.append(item['_source']['name'])
         return dict(result=result)
 
     @app.get('/search')
-    async def search_models(name='', brandName=''):
+    async def search_models(name='', brandName='', size=100, _from=0):
         baseQuery = get_query(name, brandName)
-        res = await es.search(index=NODE_NAME, size=100, body=baseQuery)
+        res = await es.search(index=NODE_NAME, size=size, from_=_from, body=baseQuery)
         result = list()
         result2 = dict()
         max_score = res['hits']['max_score'] if res['hits']['max_score'] is not None else 0
