@@ -40,6 +40,7 @@
             {% for key in data['suggestion']['ram'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -59,6 +60,14 @@
             </td>
 
             {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=523&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -76,6 +85,7 @@
             {% for key in data['suggestion']['ssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -95,6 +105,14 @@
             </td>
 
             {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=1016&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -111,6 +129,7 @@
             {% for key in data['suggestion']['externalSsd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -129,6 +148,14 @@
                 {% endif %}
             </td>
             {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=243&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>

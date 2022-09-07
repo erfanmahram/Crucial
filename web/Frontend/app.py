@@ -2,6 +2,7 @@ from flask import request, render_template, Flask, abort
 import requests
 import json
 import inflection
+import urllib
 
 
 def headings(key):
@@ -25,16 +26,7 @@ def products(id):
     response = requests.request("GET", url, headers=headers, data=payload, timeout=60)
     if response.status_code == 404:
         abort(404)
-    print(response.json())
-    # for item in response.json():
-    #     if item['Category'] == 'RAM' or item['Category'] == 'memory':
-    #         ram.append(item)
-    #     elif item['Category'] == 'SSD' or item['Category'] == 'ssd':
-    #         ssd.append(item)
-    #     else:
-    #         extssd.append(item)
-
-    return render_template('products.html', data=response.json())
+    return render_template('products.html', data=response.json(), func=urllib)
 
 
 @app.route('/table', methods=["GET", "POST"])
