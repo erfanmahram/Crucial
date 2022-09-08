@@ -81,10 +81,8 @@ def result_from_elastic (name_, brand_name_):
     result=es.search(index=index_, body= base_query ,size=100)
     max_score = result['hits']['max_score'] if result['hits']['max_score'] is not None else 0
     result_ids = list()
-    result2 = dict()
     for index, item in enumerate(result['hits']['hits']):
         if item['_score'] > (max_score * 0.5):
            result_ids.append(dict(doc_count=index, key=item['_source']['id']))
-            #result2[item['_source']['id']] = index
     return result_ids
     
