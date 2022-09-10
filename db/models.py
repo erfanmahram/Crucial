@@ -5,10 +5,39 @@ from datetime import datetime, timedelta
 import enum
 #from db_config import connection_string
 from db.database import Base #.session 
+import arrow
+from inflection import camelize
+from urllib.parse import quote
 #from logzero import logger
 
 
 #Base = declarative_base()
+
+
+def traverse(item: dict) -> dict:
+    if isinstance(item, dict):
+        to_return = dict()
+        for i in item:
+            to_return[camelize(i, False)] = traverse(item[i])
+        return to_return
+    if isinstance(item, str):
+        try:
+            if item.startswith('[') or item.startswith('{'):
+                _d = json.loads(item)
+                return traverse(_d)
+            else:
+                return item
+        except:
+            return item
+    elif isinstance(item, list):
+        to_return = list()
+        for i in item:
+            to_return.append(traverse(i))
+        return to_return
+    elif isinstance(item, datetime):
+        return arrow.get(item).isoformat()
+    else:
+        return item
 
 
 class PageStatus(enum.IntEnum):
@@ -26,7 +55,7 @@ class Resource(Base):
     ResourceUrl = Column(String, default=None)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
-    def __repr__(self):#???
+    def __repr__(self):
         return f"ID: {self.Id}, R_Name: {self.ResourceName}"
 
 
@@ -40,11 +69,11 @@ class Brand(Base):
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
-    def __repr__(self):#???
+    def __repr__(self):
         return f"ID: {self.Id}, B_Name: {self.BrandName}"
 
 
-class Category(Base):#???
+class Category(Base):
     __tablename__ = 'Category'
     Id = Column(INT, primary_key=True)
     ResourceId = Column(INT, nullable=False)
@@ -55,7 +84,7 @@ class Category(Base):#???
     RetryCount = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
-    def __repr__(self):#???
+    def __repr__(self):
         return f"ID: {self.Id}, C_Name: {self.CategoryName}"
 
 
@@ -77,22 +106,31 @@ class Model(Base):
     Indexed = Column(INT, default=0)
     LastUpdate = Column(DateTime, default=datetime.utcnow())
 
-    #def __repr__(self):#???
-    #    return f"ID: {self.Id}, R_ID: {self.ResourceId}, M_Name: {self.ModelName}"
+    def __repr__(self):
+        return f"ID: {self.Id}, R_ID: {self.ResourceId}, M_Name: {self.ModelName}"
 
-    @property#????
+    @property
     def SuggestInfo(self):
-        return json.loads(self._SuggestInfo)
+        data = json.loads(self._SuggestInfo)
+        for i in data.get('ram', []):
+            i['buy'] = f'https://torob.com/search/?category=523&query={quote(i["Title"])}'
+        for i in data.get('ssd', []):
+            i['buy'] = f'https://torob.com/search/?category=1016&query={quote(i["Title"])}'
+        for i in data.get('externalSsd', []):
+            i['buy'] = f'https://torob.com/search/?category=243&query={quote(i["Title"])}'
+        return data
 
-    @SuggestInfo.setter#????
+    @SuggestInfo.setter
     def SuggestInfo(self, a):
         if isinstance(a, str):
             self._SuggestInfo = a
         else:
             self._SuggestInfo = json.dumps(a, ensure_ascii=False)
 
-
-
+    def as_dict(self, expose=False):
+        hide = ['CreateDate', 'TodayLoad', 'WindowHead']
+        d = {c.name: getattr(self, c.name) for c in self.table.columns if (expose or c.name not in hide)}
+        return traverse(d)
 
 
 
