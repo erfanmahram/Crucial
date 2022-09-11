@@ -84,9 +84,13 @@ def create_app():
                 Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']]))
             agg_brand_name = (await session.execute(sql)).all()
         brands = {brand.Brand.Id: brand.Brand.BrandName for brand in agg_brand_name}
-        agg_buck = {brands[item['key']]: item['doc_count'] for item in
-                    es_result['aggregations']['auto_complete']['buckets']}
-        result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+        agg_buck = dict()
+        for item in es_result['aggregations']['auto_complete']['buckets']:
+            if brands[item['key']] not in agg_buck.keys():
+                agg_buck[brands[item['key']]] = item['doc_count']
+            elif agg_buck[brands[item['key']]] < item['doc_count']:
+                agg_buck[brands[item['key']]] = item['doc_count']
+        result = [i for i in agg_buck.keys()]
         return dict(result=result)
 
     @app.get('/modelName')
