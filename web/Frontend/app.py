@@ -38,7 +38,8 @@ def update_table():
     headers = {}
     url = "http://127.0.0.1:4000/search?"
     response = requests.request("GET", url, headers=headers, data=payload, params=params, timeout=60)
-    return json.dumps(response.json())
+    # return response.json()
+    return {"data": response.json(), "keys": list(response.json()[0].keys())}
 
 
 @app.route('/brand_name', methods=["GET", "POST"])

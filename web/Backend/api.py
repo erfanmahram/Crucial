@@ -118,7 +118,7 @@ def name():
 def product():
     id = request.args.get('query', None)
     if id is None:
-        return make_response(jsonify("Page Not Found"), 404)
+        return {"message": "Not Found", "statusCode": 404}, 404
     model = db.session.query(Model).filter(Model.Id == int(id)).filter(Model.Status == 100).first()
     if model is None:
         return {"message": "Not Found", "statusCode": 404}, 404
