@@ -36,10 +36,22 @@ def get_query(name, brand_name):
                 "auto_complete": {
                     "terms": {
                         "field": "brand_id",
-                        "order": {
-                            "_count": "desc"
-                        },
-                        "size": 25
+                        "order": [
+                            {
+                                "score": "desc"
+
+                            }, {
+                                "_count": "desc"
+
+                            }
+                        ]
+                    },
+                    "aggs": {
+                        "score": {
+                            "max": {
+                                "script": "_score"
+                            }
+                        }
                     }
                 }
             }
@@ -130,4 +142,5 @@ def create_app():
         json_result.sort(key=lambda x: result2[x["modelId"]])
         # return json.dumps(json_result, ensure_ascii=False)
         return json_result
+
     return app
