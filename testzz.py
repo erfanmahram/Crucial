@@ -8,7 +8,6 @@ from soup_parser import get_memorycow_model_info, get_crucial_model_info
 import click
 
 
-
 def test_suggestion_extract():
     path = pathlib.Path.cwd().joinpath('test')
     for pth in path.glob('model_*.html'):
@@ -23,6 +22,7 @@ def test_extract_main():
         soup = BeautifulSoup(pth.read_text(), 'lxml')
         result = extract_main(soup)
         print(result)
+
 
 def get_soup(source):
     if isinstance(source, str):
@@ -46,7 +46,7 @@ def decider():
         }, {
             'sourceId': 2,
             'soup': get_soup(pathlib.Path('test/disney-netpal'))
-         }, {
+        }, {
             'sourceId': 2,
             'soup': get_soup(pathlib.Path('test/model_2.html'))
         }, {

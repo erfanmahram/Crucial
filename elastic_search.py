@@ -9,7 +9,7 @@ from models import Model, Category, Brand
 
 
 def index_data(engine):
-    index_name = "crucial"
+    index_name = 'crucial'
     es_client = Elasticsearch(hosts=es_config.elastic_connection_string, verify_certs=False,
                               ssl_show_warn=False)
     if not es_client.indices.exists(index=index_name):
@@ -18,7 +18,7 @@ def index_data(engine):
                          "autocomplete_search": {"tokenizer": "standard", "filter": ["lowercase"]}},
             "tokenizer": {
                 "autocomplete": {"type": "ngram", "min_gram": 2, "max_gram": 12}}}}, "mappings": {"properties": {
-            "name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete_search"},
+            "name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete"},
             "brand_name": {"type": "text", "analyzer": "autocomplete", "search_analyzer": "autocomplete_search"}}}})
     with Session(engine) as session:
         models = session.query(Model).filter(Model.Status == 100).filter(Model.Indexed == 0).limit(1000).all()
@@ -28,7 +28,7 @@ def index_data(engine):
     actions = []
     with Session(engine) as session:
         for row in models:
-            action = {"index": {"_index": 'crucial', "_id": row.Id}}
+            action = {"index": {"_index": index_name, "_id": row.Id}}
             model_doc = {
                 "id": int(row.Id),
                 "name": row.ModelName,
@@ -36,8 +36,6 @@ def index_data(engine):
                     Category.Id == row.CategoryId).first().Brand.BrandName,
                 "brand_id": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
                     Category.Id == row.CategoryId).first().Brand.Id,
-                "category_name": session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
-                    Category.Id == row.CategoryId).first().Category.CategoryName
             }
             actions.append(action)
             actions.append(model_doc)

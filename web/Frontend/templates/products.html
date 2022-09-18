@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+    <title>Recommended Products</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="shortcut icon" href="#">
+<body>
+<div style="background-color: white; overflow-x: auto" class="jumbotron ui-widget">
+    <h4 style="text-align: center; text-shadow: 2px 2px 3px #4d5d4b;padding: 20px;">Recommended Products for {{
+        data['name'] }}</h4>
+    <table id="ram" class="table">
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            RAM
+        </th>
+
+        <tr style="text-align: center">
+            {% if data['suggestion'].get('ram', []) != [] %}
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
+            {% for key in data['suggestion']['ram'][0] %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
+            {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for value in data['suggestion']['ram'] %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            {% for k in value %}
+            <td scope="row">
+                {% if value[k].__class__.__name__ == 'list' %}
+                {% for item in value[k] %}
+                {{ item }}<br>
+                {% endfor %}
+                {% else %}
+                {{ value[k] }}
+                {% endif %}
+            </td>
+
+            {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=523&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="ssd" class="table">
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            SSD
+        </th>
+
+        <tr style="text-align: center">
+            {% if data['suggestion'].get('ssd', []) != [] %}
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
+
+            {% for key in data['suggestion']['ssd'][0] %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
+            {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for value in data['suggestion']['ssd'] %}
+        <tr style="text-align: center">
+            <td>{{ loop.index }}</td>
+            {% for k in value %}
+            <td scope="row">
+                {% if value[k].__class__.__name__ == 'list' %}
+                {% for item in value[k] %}
+                {{ item }}<br>
+                {% endfor %}
+                {% else %}
+                {{ value[k] }}
+                {% endif %}
+            </td>
+
+            {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=1016&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table id="externalssd" class="table">
+        <thead>
+        <th class="table" colSpan="100%" style="text-align:center; color: whitesmoke; border-bottom: 2px solid #58585a">
+            External SSD
+        </th>
+
+        <tr style="text-align: center">
+            {% if data['suggestion'].get('externalSsd', []) != [] %}
+            <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
+            {% for key in data['suggestion']['externalSsd'][0] %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
+            {% endfor %}
+            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for value in data['suggestion']['externalSsd'] %}
+        <tr style="text-align: center">
+            <td>{{ loop.index }}</td>
+            {% for k in value %}
+            <td scope="row">
+                {% if value[k].__class__.__name__ == 'list' %}
+                {% for item in value[k] %}
+                {{ item }}<br>
+                {% endfor %}
+                {% else %}
+                {{ value[k] }}
+                {% endif %}
+            </td>
+            {% endfor %}
+            <td scope="row">
+                {% set query = value['Title'] %}
+                {% set url1 = 'https://torob.com/search/?category=243&query=' %}
+                {% set url2 = '&page=1' %}
+                {% set use_var = url1 + func.parse.quote(query) + url2 %}
+                {% set url = 'href = '+ use_var %}
+                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

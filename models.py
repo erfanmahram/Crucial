@@ -7,9 +7,37 @@ from datetime import datetime, timedelta
 import enum
 from db_config import connection_string
 from logzero import logger
-
+import timedalta_store
+import arrow
+from inflection import camelize
 
 Base = declarative_base()
+
+
+def traverse(item: dict) -> dict:
+    if isinstance(item, dict):
+        to_return = dict()
+        for i in item:
+            to_return[camelize(i, False)] = traverse(item[i])
+        return to_return
+    if isinstance(item, str):
+        try:
+            if item.startswith('[') or item.startswith('{'):
+                _d = json.loads(item)
+                return traverse(_d)
+            else:
+                return item
+        except:
+            return item
+    elif isinstance(item, list):
+        to_return = list()
+        for i in item:
+            to_return.append(traverse(i))
+        return to_return
+    elif isinstance(item, datetime):
+        return arrow.get(item).isoformat()
+    else:
+        return item
 
 
 class PageStatus(enum.IntEnum):
@@ -92,6 +120,11 @@ class Model(Base):
         else:
             self._SuggestInfo = json.dumps(a, ensure_ascii=False)
 
+    def as_dict(self, expose=False):
+        hide = ['CreateDate', 'TodayLoad', 'WindowHead']
+        d = {c.name: getattr(self, c.name) for c in self.table.columns if (expose or c.name not in hide)}
+        return traverse(d)
+
 
 class Politeness(Base):
     __tablename__ = "Politeness"
@@ -121,8 +154,10 @@ if __name__ == '__main__':
         if session.query(Politeness).filter(Politeness.TaskName == var1.TaskName).first() is None:
             session.add(var1)
         logger.info('Adding Sources into Resource table!')
-        r1 = Resource(Id=1, ResourceName='Memorycow', ResourceUrl='https://www.memorycow.co.uk/laptop')
-        r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://www.crucial.com/upgrades')
+        r1 = Resource(Id=1, ResourceName='Memorycow', ResourceUrl='https://www.memorycow.co.uk/laptop',
+                      LastUpdate=datetime.utcnow() - timedalta_store.POLITENESS_RESOURCE_CRAWL_INTERVAL)
+        r2 = Resource(Id=2, ResourceName='Crucial', ResourceUrl='https://www.crucial.com/upgrades',
+                      LastUpdate=datetime.utcnow() - timedalta_store.POLITENESS_RESOURCE_CRAWL_INTERVAL)
         if session.query(Resource).filter(Resource.Id == r1.Id).first() is None:
             session.add(r1)
         else:

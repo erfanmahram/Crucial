@@ -91,7 +91,6 @@ def main(workers_count, model_deque):
                     else:
                         logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
                         continue
-                    time.sleep(60)
                 session.query(Resource).filter(Resource.Id == resource.Id).update(
                     {Resource.LastUpdate: datetime.utcnow()})
                 session.commit()
@@ -116,7 +115,7 @@ def main(workers_count, model_deque):
             logger.exception(np)
             time.sleep(61)
             continue
-        time.sleep(60)
+        time.sleep(10)
     # Crawling on Brands for Categories
     logger.info('Crawling on Brands table to get Categories')
     with Session(engine) as session:
@@ -124,6 +123,9 @@ def main(workers_count, model_deque):
             Brand.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL).filter(
             Brand.Status != PageStatus.Finished).order_by(func.random()).order_by(Brand.RetryCount.asc()).limit(
             5).all()
+        if len(brands) == 0:
+            brands = session.query(Brand).filter(Brand.Status == 0).filter(Brand.RetryCount == 0).limit(
+                5).all()
         logger.info(f"These brands {brands} are going to crawl")
     for brand in brands:
         try:
@@ -171,7 +173,7 @@ def main(workers_count, model_deque):
             logger.exception(np)
             time.sleep(61)
             continue
-        time.sleep(60)
+        time.sleep(10)
 
     # Crawling on Categories for Models
     logger.info('Crawling on Categories table to get Models Name and Url')
@@ -180,6 +182,9 @@ def main(workers_count, model_deque):
             Category.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL).filter(
             Category.Status != PageStatus.Finished).order_by(func.random()).order_by(Category.RetryCount.asc()).limit(
             5).all()
+        if len(categories) == 0:
+            categories = session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+                Category.Status == 0).filter(Category.RetryCount == 0).limit(5).all()
         logger.info(f"These categories {categories} are going to crawl")
     for category in categories:
         try:
@@ -234,14 +239,18 @@ def main(workers_count, model_deque):
             logger.exception(e)
             time.sleep(60)
             continue
-        time.sleep(60)
+        time.sleep(10)
     # Crawling on Models for info
     logger.info('Crawling on Models table to get Models info')
     max_limit = max(0, (workers_count - len(model_deque)))
     with Session(engine) as session:
         models = session.query(Model).filter(
             Model.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL).filter(
-            Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(max_limit).all()
+            Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(
+            max_limit).all()
+        if len(models) == 0:
+            models = session.query(Model).filter(Model.Status == 0).filter(Model.RetryCount == 0).limit(
+                max(5, max_limit)).all()
         # models = session.query(Model).filter(Model.Id == 151131).all()
     logger.info(f"These models {models} are going to crawl")
     for model in models:
@@ -268,11 +277,13 @@ def main(workers_count, model_deque):
                         with Session(engine) as session:
                             session.query(Model).filter(item['model'].Id == Model.Id)
                             if he.response.status_code == 404:
-                                logger.error(f"Error 404 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
+                                logger.error(
+                                    f"Error 404 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
                                 item['model'].Status = PageStatus.NotFound
                                 continue
                             elif he.response.status_code == 500:
-                                logger.error(f"Error 500 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
+                                logger.error(
+                                    f"Error 500 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
                                 item['model'].Status = PageStatus.ServerError
                                 continue
                             else:

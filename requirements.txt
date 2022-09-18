@@ -8,5 +8,7 @@ python-dotenv~=0.20.0
 beautifulsoup4~=4.11.1
 click~=8.1.3
 elasticsearch~=7.17.4
+arrow
 -r app/requirements.txt
 diskcache~=5.4.0
+-r web/requirements.txt
