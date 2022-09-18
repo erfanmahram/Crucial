@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 import strawberry
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema.config import StrawberryConfig
@@ -36,10 +37,22 @@ def get_query(name, brand_name):
                 "auto_complete": {
                     "terms": {
                         "field": "brand_id",
-                        "order": {
-                            "_count": "desc"
-                        },
-                        "size": 25
+                        "order": [
+                            {
+                                "score": "desc"
+
+                            }, {
+                                "_count": "desc"
+
+                            }
+                        ]
+                    },
+                    "aggs": {
+                        "score": {
+                            "max": {
+                                "script": "_score"
+                            }
+                        }
                     }
                 }
             }
@@ -75,6 +88,10 @@ def create_app():
     graphql_app = GraphQLRouter(schema)
     app.include_router(graphql_app, prefix="/graphql")
 
+    @app.get('/', include_in_schema=False)
+    async def route():
+        return RedirectResponse(url='/docs')
+
     @app.get('/brandName')
     async def brand_name(query, size=20):
         baseQuery = get_query(None, query)
@@ -84,9 +101,13 @@ def create_app():
                 Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']]))
             agg_brand_name = (await session.execute(sql)).all()
         brands = {brand.Brand.Id: brand.Brand.BrandName for brand in agg_brand_name}
-        agg_buck = {brands[item['key']]: item['doc_count'] for item in
-                    es_result['aggregations']['auto_complete']['buckets']}
-        result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+        agg_buck = dict()
+        for item in es_result['aggregations']['auto_complete']['buckets']:
+            if brands[item['key']] not in agg_buck.keys():
+                agg_buck[brands[item['key']]] = item['doc_count']
+            elif agg_buck[brands[item['key']]] < item['doc_count']:
+                agg_buck[brands[item['key']]] = item['doc_count']
+        result = [i for i in agg_buck.keys()]
         return dict(result=result)
 
     @app.get('/modelName')
@@ -126,4 +147,5 @@ def create_app():
         json_result.sort(key=lambda x: result2[x["modelId"]])
         # return json.dumps(json_result, ensure_ascii=False)
         return json_result
+
     return app

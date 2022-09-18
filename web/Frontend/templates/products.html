@@ -40,7 +40,6 @@
             {% for key in data['suggestion']['ram'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -50,7 +49,9 @@
             <td>{{ loop.index }}</td>
             {% for k in value %}
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
+                {% if k == 'buy' %}
+                <a type="button" class="btn" target="_blank" href={{ value[k] }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+                {% elif value[k].__class__.__name__ == 'list' %}
                 {% for item in value[k] %}
                 {{ item }}<br>
                 {% endfor %}
@@ -58,16 +59,7 @@
                 {{ value[k] }}
                 {% endif %}
             </td>
-
             {% endfor %}
-            <td scope="row">
-                {% set query = value['Title'] %}
-                {% set url1 = 'https://torob.com/search/?category=523&query=' %}
-                {% set url2 = '&page=1' %}
-                {% set use_var = url1 + func.parse.quote(query) + url2 %}
-                {% set url = 'href = '+ use_var %}
-                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
-            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -85,7 +77,6 @@
             {% for key in data['suggestion']['ssd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -95,7 +86,9 @@
             <td>{{ loop.index }}</td>
             {% for k in value %}
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
+                {% if k == 'buy' %}
+                <a type="button" class="btn" target="_blank" href={{ value[k] }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+                {% elif value[k].__class__.__name__ == 'list' %}
                 {% for item in value[k] %}
                 {{ item }}<br>
                 {% endfor %}
@@ -103,16 +96,7 @@
                 {{ value[k] }}
                 {% endif %}
             </td>
-
             {% endfor %}
-            <td scope="row">
-                {% set query = value['Title'] %}
-                {% set url1 = 'https://torob.com/search/?category=1016&query=' %}
-                {% set url2 = '&page=1' %}
-                {% set use_var = url1 + func.parse.quote(query) + url2 %}
-                {% set url = 'href = '+ use_var %}
-                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
-            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -129,7 +113,6 @@
             {% for key in data['suggestion']['externalSsd'][0] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
-            <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
             {% endif %}
         </tr>
         </thead>
@@ -139,7 +122,9 @@
             <td>{{ loop.index }}</td>
             {% for k in value %}
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
+                {% if k == 'buy' %}
+                <a type="button" class="btn" target="_blank" href={{ value[k] }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
+                {% elif value[k].__class__.__name__ == 'list' %}
                 {% for item in value[k] %}
                 {{ item }}<br>
                 {% endfor %}
@@ -148,14 +133,7 @@
                 {% endif %}
             </td>
             {% endfor %}
-            <td scope="row">
-                {% set query = value['Title'] %}
-                {% set url1 = 'https://torob.com/search/?category=243&query=' %}
-                {% set url2 = '&page=1' %}
-                {% set use_var = url1 + func.parse.quote(query) + url2 %}
-                {% set url = 'href = '+ use_var %}
-                <a type="button" class="btn" target="_blank" {{ url }}><img style="width: 50px" src="{{ url_for('static', filename='torob_logo.png') }}"></a>
-            </td>
+
         </tr>
         {% endfor %}
         </tbody>
