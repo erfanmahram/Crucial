@@ -3,15 +3,10 @@ from sqlalchemy import INT, FLOAT, String, Unicode, DateTime, UnicodeText, BOOLE
 from sqlalchemy import Column, MetaData, ForeignKey
 from datetime import datetime, timedelta
 import enum
-#from db_config import connection_string
 from db.database import Base #.session 
 import arrow
 from inflection import camelize
 from urllib.parse import quote
-#from logzero import logger
-
-
-#Base = declarative_base()
 
 
 def traverse(item: dict) -> dict:

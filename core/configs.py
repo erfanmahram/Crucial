@@ -1,11 +1,5 @@
 import os
 from dotenv import load_dotenv
-
-#from pathlib import Path
-#env_path = Path('.') / '.env'
-#load_dotenv(dotenv_path=env_path)
-#dotenv_path = Path('path/to/.env')
-#load_dotenv(dotenv_path=dotenv_path)
 load_dotenv()
 class Elastic_Settings:
      ES_USER = os.getenv('ES_USER')
