@@ -25,7 +25,7 @@ infos=list()
 
 @app.get("/search/", response_model=List[schemas.ResultShow]) 
 def search_info(name: Union[str, None] = None, brand_name:Union[str, None] = None):
-	ids=searchelastic.ids_from_elastic (name, brand_name, size=100)
+	ids=searchelastic.ids_from_elastic (name, brand_name, size_=100)
 	model_result = session.query(Model, Brand, Category).join(Category, Category.Id == Model.CategoryId).join(
         Brand, Brand.Id == Category.BrandId).filter(Model.Id.in_([i['key'] for i in ids]), Model.Status==100).all()
 	for model in model_result:
@@ -45,7 +45,22 @@ def suggest_info(id :Union[int, None] = None ):
 		return json.dumps({"message": "Not Found", "statusCode": 404}), 404
 	json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
 	return json.dumps(json_result, ensure_ascii=False)
-    
+
+@app.get("/brand-name")
+def brand_info(brand_name:Union[str, None] = None):
+	brands_els = searchelastic.brands_from_elastic ( brand_name, size_=100)
+	#for item in brands_els:
+		#print(item['doc_count'])
+	brand_db=session.query(Brand).filter(Brand.Id.in_([item['key'] for item in brands_els]), Brand.Status==100).all()
+	agg_brand_name=list()
+	for brand in brand_db:
+		agg_brand_name.append(brand.BrandName)
+	result={'Result': agg_brand_name}     
+	return dict(Result=agg_brand_name)
+@app.get("/name")
+def name_info(name:Union[str, None] = None):
+	names_els = searchelastic.names_from_elastic ( name, size_=100)	 
+	return dict(Result=names_els)    
 	
 	
     
