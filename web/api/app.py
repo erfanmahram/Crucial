@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 import strawberry
 from strawberry.fastapi import GraphQLRouter
 from strawberry.schema.config import StrawberryConfig
@@ -86,6 +87,10 @@ def create_app():
     app = FastAPI()
     graphql_app = GraphQLRouter(schema)
     app.include_router(graphql_app, prefix="/graphql")
+
+    @app.get('/', include_in_schema=False)
+    async def route():
+        return RedirectResponse(url='/docs')
 
     @app.get('/brandName')
     async def brand_name(query, size=20):

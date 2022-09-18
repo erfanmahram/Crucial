@@ -251,7 +251,7 @@ def main(workers_count, model_deque):
         if len(models) == 0:
             models = session.query(Model).filter(Model.Status == 0).filter(Model.RetryCount == 0).limit(
                 max(5, max_limit)).all()
-        # models = session.query(Model).filter(Model.Id == 151131).all()
+        # models = session.query(Model).filter(Model.Id == 129494).all()
     logger.info(f"These models {models} are going to crawl")
     for model in models:
         with Session(engine) as session:
@@ -289,12 +289,14 @@ def main(workers_count, model_deque):
                             else:
                                 logger.error(f"Error occurred for {item['model'].Id}")
                                 logger.exception(he)
-                                time.sleep(60)
+                                session.commit()
+                                time.sleep(5)
                                 continue
                     except RequestException as re:
                         logger.error(f"Error occurred for {item['model'].Id}")
                         logger.exception(re)
-                        time.sleep(60)
+                        session.commit()
+                        time.sleep(5)
                         continue
                 elif item['result'].successful():
                     res = item['result'].result
