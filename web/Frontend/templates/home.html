@@ -126,15 +126,12 @@
                 data: {'data': resultNameValue, "brand": resultBrandValue},
                 success: function (data1) {
                     var data = data1.data;
-                    var keys = data1.keys
                     console.log('Success Hit');
                     console.log(data1);
                     $('#main-table').html('');
-
                     var column_data = '';
-                    console.log('data.key', Object.values(keys))
                     console.log('data.val', Object.values(data))
-                    if (Object.values(keys).length > 0) {
+                    if (Object.values(data).length > 0) {
                         column_data += '<tr><th>#</th>';
                         column_data += '<th>modelName</th>'
                         column_data += '<th>maximumMemory</th>'
@@ -144,26 +141,25 @@
                         column_data += '<th>categoryName</th>'
                         column_data += '<th>brandName</th>'
                         column_data += '<th> suggestInfo </th>'
+                        column_data += '</tr>';
                     }
-                    column_data += '</tr>';
                     $('#main-table').append(column_data),
                         $('th').css({'background-color': '#FFA500', 'color': 'white'});
                     var nameCounter = 1
                     var row_data = '';
                     for (var arr in data) {
                         row_data += '<tr><td>' + nameCounter + '</td>';
-                            row_data += '<td><a href="' + data[arr]["modelUrl"] + '" target="_blank" id="modelName' + nameCounter + '">' + data[arr]['modelName'] + '</a></td>'
-                            row_data += '<td>' + data[arr]['maximumMemory'] + '</td>'
-                            row_data += '<td>' + data[arr]['slots'] + '</td>'
-                            row_data += '<td>' + data[arr]['standardMemory'] + '</td>'
-                            row_data += '<td>' + data[arr]['storageType'] + '</td>'
-                            row_data += '<td>' + data[arr]['categoryName'] + '</td>'
-                            row_data += '<td>' + data[arr]['brandName'] + '</td>'
-                            console.log('brand',data[arr]['brandName'])
-                            row_data += '<td><a onclick="newpage(this.id)" type="button" id="' + data[arr]["modelId"] + '" class="btn btn-info">view suggestion</a></td>';
-                            row_data += '</tr>'
-                        }
-                        ;
+                        row_data += '<td><a href="' + data[arr]["modelUrl"] + '" target="_blank" id="modelName' + nameCounter + '">' + data[arr]['modelName'] + '</a></td>'
+                        row_data += '<td>' + data[arr]['maximumMemory'] + '</td>'
+                        row_data += '<td>' + data[arr]['slots'] + '</td>'
+                        row_data += '<td>' + data[arr]['standardMemory'] + '</td>'
+                        row_data += '<td>' + data[arr]['storageType'] + '</td>'
+                        row_data += '<td>' + data[arr]['categoryName'] + '</td>'
+                        row_data += '<td>' + data[arr]['brandName'] + '</td>'
+                        row_data += '<td><a onclick="newpage(this.id)" type="button" id="' + data[arr]["modelId"] + '" class="btn btn-info">view suggestion</a></td>';
+                        row_data += '</tr>'
+                    }
+                    ;
                     $('#main-table').append(row_data);
                 },
                 error: function (data) {

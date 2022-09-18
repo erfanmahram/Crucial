@@ -151,6 +151,7 @@ def search():
                  standardMemory=model.Model.StandardMemory, storageType=model.Model.StrgType,
                  categoryName=model.Category.CategoryName,
                  brandName=model.Brand.BrandName, modelUrl=model.Model.ModelUrl))
+    json_result.sort(key=lambda x: result2[x["modelId"]])
     return json_result
 
 
