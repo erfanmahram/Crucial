@@ -136,14 +136,13 @@
                     console.log('data.val', Object.values(data))
                     if (Object.values(keys).length > 0) {
                         column_data += '<tr><th>#</th>';
-                        for (var key in Object.values(keys)) {
-                            if (keys[key].includes('modelUrl') || keys[key].includes('modelId')) {
-                                continue;
-                            } else {
-                                column_data += '<th>' + keys[key] + '</th>'
-                            }
-                        }
-                        ;
+                        column_data += '<th>modelName</th>'
+                        column_data += '<th>maximumMemory</th>'
+                        column_data += '<th>slots</th>'
+                        column_data += '<th>standardMemory</th>'
+                        column_data += '<th>storageType</th>'
+                        column_data += '<th>categoryName</th>'
+                        column_data += '<th>brandName</th>'
                         column_data += '<th> suggestInfo </th>'
                     }
                     column_data += '</tr>';
@@ -152,20 +151,15 @@
                     var nameCounter = 1
                     var row_data = '';
                     for (var arr in data) {
-                        var dataKeys = Object.keys(data[arr])
                         row_data += '<tr><td>' + nameCounter + '</td>';
-                        for (var key in dataKeys){
-                            var itemKey = keys[key]
-                            var itemValue = data[arr][keys[key]]
-                            if (itemKey.includes('modelName')) {
-                                row_data += '<td><a href="' + data[arr]["modelUrl"] + '" target="_blank" id="modelName' + nameCounter + '">' + itemValue + '</a></td>';
-                                nameCounter += 1
-                            } else if (itemKey.includes('modelUrl') || itemKey.includes('modelId')) {
-
-                            } else {
-                                row_data += '<td>' + itemValue + '</td>';
-                            }
-                            };
+                            row_data += '<td><a href="' + data[arr]["modelUrl"] + '" target="_blank" id="modelName' + nameCounter + '">' + data[arr]['modelName'] + '</a></td>'
+                            row_data += '<td>' + data[arr]['maximumMemory'] + '</td>'
+                            row_data += '<td>' + data[arr]['slots'] + '</td>'
+                            row_data += '<td>' + data[arr]['standardMemory'] + '</td>'
+                            row_data += '<td>' + data[arr]['storageType'] + '</td>'
+                            row_data += '<td>' + data[arr]['categoryName'] + '</td>'
+                            row_data += '<td>' + data[arr]['brandName'] + '</td>'
+                            console.log('brand',data[arr]['brandName'])
                             row_data += '<td><a onclick="newpage(this.id)" type="button" id="' + data[arr]["modelId"] + '" class="btn btn-info">view suggestion</a></td>';
                             row_data += '</tr>'
                         }

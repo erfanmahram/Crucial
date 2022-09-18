@@ -37,7 +37,7 @@
         <tr style="text-align: center">
             {% if data['suggestion'].get('ram', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
-            {% for key in data['suggestion']['ram'][0] %}
+            {% for key in ["Title", "Capacity", "Speed", "ManufactureTech", "ModuleType", "Voltage", "Specs", "Category"] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
@@ -48,18 +48,18 @@
         {% for value in data['suggestion']['ram'] %}
         <tr>
             <td>{{ loop.index }}</td>
-            {% for k in value %}
+            <td scope="row">{{ value['Title'] }}</td>
+            <td scope="row">{{ value['Capacity'] }}</td>
+            <td scope="row">{{ value['Speed'] }}</td>
+            <td scope="row">{{ value['ManufactureTech'] }}</td>
+            <td scope="row">{{ value['ModuleType'] }}</td>
+            <td scope="row">{{ value['Voltage'] }}</td>
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
-                {% for item in value[k] %}
+                {% for item in value['Specs'] %}
                 {{ item }}<br>
                 {% endfor %}
-                {% else %}
-                {{ value[k] }}
-                {% endif %}
             </td>
-
-            {% endfor %}
+            <td scope="row">{{ value['Category'] }}</td>
             <td scope="row">
                 {% set query = value['Title'] %}
                 {% set url1 = 'https://torob.com/search/?category=523&query=' %}
@@ -82,7 +82,7 @@
             {% if data['suggestion'].get('ssd', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
 
-            {% for key in data['suggestion']['ssd'][0] %}
+            {% for key in ["Title", "Capacity", "Interface", "FormFactor", "Specs", "Category"] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
@@ -93,18 +93,16 @@
         {% for value in data['suggestion']['ssd'] %}
         <tr style="text-align: center">
             <td>{{ loop.index }}</td>
-            {% for k in value %}
+            <td scope="row">{{ value['Title'] }}</td>
+            <td scope="row">{{ value['Capacity'] }}</td>
+            <td scope="row">{{ value['Interface'] }}</td>
+            <td scope="row">{{ value['FormFactor'] }}</td>
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
-                {% for item in value[k] %}
+                {% for item in value['Specs'] %}
                 {{ item }}<br>
                 {% endfor %}
-                {% else %}
-                {{ value[k] }}
-                {% endif %}
             </td>
-
-            {% endfor %}
+            <td scope="row">{{ value['Category'] }}</td>
             <td scope="row">
                 {% set query = value['Title'] %}
                 {% set url1 = 'https://torob.com/search/?category=1016&query=' %}
@@ -126,7 +124,7 @@
         <tr style="text-align: center">
             {% if data['suggestion'].get('externalSsd', []) != [] %}
             <th scope="colgroup" style="border-bottom: 2px solid #58585a">#</th>
-            {% for key in data['suggestion']['externalSsd'][0] %}
+            {% for key in ["Title", "Capacity", "Specs", "Category"] %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> {{ key | headings }}</th>
             {% endfor %}
             <th scope="col" style="border-bottom: 2px solid #58585a"> Buy </th>
@@ -137,17 +135,14 @@
         {% for value in data['suggestion']['externalSsd'] %}
         <tr style="text-align: center">
             <td>{{ loop.index }}</td>
-            {% for k in value %}
+            <td scope="row">{{ value['Title'] }}</td>
+            <td scope="row">{{ value['Capacity'] }}</td>
             <td scope="row">
-                {% if value[k].__class__.__name__ == 'list' %}
-                {% for item in value[k] %}
+                {% for item in value['Specs'] %}
                 {{ item }}<br>
                 {% endfor %}
-                {% else %}
-                {{ value[k] }}
-                {% endif %}
             </td>
-            {% endfor %}
+            <td scope="row">{{ value['Category'] }}</td>
             <td scope="row">
                 {% set query = value['Title'] %}
                 {% set url1 = 'https://torob.com/search/?category=243&query=' %}

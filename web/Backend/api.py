@@ -123,7 +123,7 @@ def product():
     if model is None:
         return {"message": "Not Found", "statusCode": 404}, 404
     json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
-    return json.dumps(json_result, ensure_ascii=False)
+    return json_result
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -151,9 +151,7 @@ def search():
                  standardMemory=model.Model.StandardMemory, storageType=model.Model.StrgType,
                  categoryName=model.Category.CategoryName,
                  brandName=model.Brand.BrandName, modelUrl=model.Model.ModelUrl))
-
-    json_result.sort(key=lambda x: result2[x["modelId"]])
-    return json.dumps(json_result, ensure_ascii=False)
+    return json_result
 
 
 if __name__ == '__main__':
