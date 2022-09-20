@@ -1,4 +1,3 @@
-#from elasticsearch import Elasticsearch
 from fastapi import FastAPI
 from typing import List, Union
 import json
@@ -9,16 +8,6 @@ from db.database import SessionLocal, engine
 from db.models import Model, Category, Brand
 import searchelastic
 
-#models.Base.metadata.create_all(bind=engine)
-# Dependency
-#def get_db():
-#    db = SessionLocal()
-#    try:
-#        yield db
-#    finally:
-#        db.close()
-#Session = Depends(get_db)
-#session = Session
 session=SessionLocal()
 app = FastAPI()
 infos=list()
@@ -44,13 +33,11 @@ def suggest_info(id :Union[int, None] = None ):
 	if model is None:
 		return json.dumps({"message": "Not Found", "statusCode": 404}), 404
 	result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
-	return result#json.dumps(json_result, ensure_ascii=False)
+	return result
 
 @app.get("/brand-name")
 def brand_info(brand_name:Union[str, None] = None):
 	brands_els = searchelastic.brands_from_elastic ( brand_name, size_=100)
-	#for item in brands_els:
-                #print(item['doc_count'])
 	brand_db=session.query(Brand).filter(Brand.Id.in_([item['key'] for item in brands_els]), Brand.Status==100).all()
 	agg_brand_name=list()
 	for brand in brand_db:
