@@ -10,6 +10,7 @@ from logzero import logger
 import timedalta_store
 import arrow
 from inflection import camelize
+from urllib.parse import quote
 
 Base = declarative_base()
 
@@ -111,7 +112,14 @@ class Model(Base):
 
     @property
     def SuggestInfo(self):
-        return json.loads(self._SuggestInfo)
+        data = json.loads(self._SuggestInfo)
+        for i in data.get('ram', []):
+            i['buy'] = f'https://torob.com/search/?category=523&query={quote(i["Title"])}'
+        for i in data.get('ssd', []):
+            i['buy'] = f'https://torob.com/search/?category=1016&query={quote(i["Title"])}'
+        for i in data.get('externalSsd', []):
+            i['buy'] = f'https://torob.com/search/?category=243&query={quote(i["Title"])}'
+        return data
 
     @SuggestInfo.setter
     def SuggestInfo(self, a):

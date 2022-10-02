@@ -179,3 +179,4 @@ cython_debug/
 /logs/
 /fixer.py
 /fixed-info.json
+/test/

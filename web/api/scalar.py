@@ -11,6 +11,7 @@ class Ram(BaseModel):
     voltage: typing.Optional[str] = ""
     specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
+    buy: typing.Optional[str] = ""
 
 
 @strawberry.experimental.pydantic.type(Ram)
@@ -23,6 +24,7 @@ class RamType:
     voltage: strawberry.auto
     specs: strawberry.auto
     category: strawberry.auto
+    buy: strawberry.auto
 
 
 class ExternalSsd(BaseModel):
@@ -30,6 +32,7 @@ class ExternalSsd(BaseModel):
     capacity: typing.Optional[str] = ""
     specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
+    buy: typing.Optional[str] = ""
 
 
 @strawberry.experimental.pydantic.type(ExternalSsd)
@@ -38,6 +41,7 @@ class ExternalSsdType:
     capacity: strawberry.auto
     specs: strawberry.auto
     category: strawberry.auto
+    buy: strawberry.auto
 
 
 class Ssd(BaseModel):
@@ -47,6 +51,7 @@ class Ssd(BaseModel):
     formFactor: typing.Optional[str] = ""
     specs: typing.Optional[typing.List[str]] = Field(default_factory=lambda: [])
     category: typing.Optional[str] = ""
+    buy: typing.Optional[str] = ""
 
 
 @strawberry.experimental.pydantic.type(Ssd)
@@ -57,6 +62,7 @@ class SsdType:
     formFactor: strawberry.auto
     specs: strawberry.auto
     category: strawberry.auto
+    buy: strawberry.auto
 
 
 class SuggestInfo(BaseModel):

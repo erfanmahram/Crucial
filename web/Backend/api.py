@@ -36,7 +36,7 @@ def get_query(name, brandName):
             "query": {
                 "match": {
                     "brand_name": {
-                        "query": "{}*".format(brandName)
+                        "query": brand_name
                     }
                 }
             },
@@ -44,10 +44,22 @@ def get_query(name, brandName):
                 "auto_complete": {
                     "terms": {
                         "field": "brand_id",
-                        "order": {
-                            "_count": "desc"
-                        },
-                        "size": 25
+                        "order": [
+                            {
+                                "score": "desc"
+
+                            }, {
+                                "_count": "desc"
+
+                            }
+                        ]
+                    },
+                    "aggs": {
+                        "score": {
+                            "max": {
+                                "script": "_score"
+                            }
+                        }
                     }
                 }
             }
