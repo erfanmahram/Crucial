@@ -1,5 +1,41 @@
 ## **This project is crucial-crawler**
 
+# Crawler
+
+## Celery Workers
+```shell
+celery -A app worker -l INFO -c1 -P solo -Q crucial,memorycow
+```
+
+## Admin
+```shell
+python main.py
+```
+
+## Elastic Indexer
+```shell
+python elastic_search.py
+```
+
+# Graphql API
+```shell
+cd web/api/
+python main.py
+```
+
+# Web
+### Backend
+```shell
+cd ./web/Backend
+python api.py
+```
+
+### Frontend
+```shell
+cd ./web/Frontend
+python app.py
+```
+
 ### Docker images build
 
 use the following to change the user to **desired user**
