@@ -175,3 +175,11 @@ cython_debug/
 /ssss.html
 /join sqlalchemy.txt
 /test.py
+/suggestionCache/
+/logs/
+/fixer.py
+/fixed-info.json
+/test/
+query.txt
+result.txt
+Result_11.json

@@ -11,6 +11,7 @@ PYTHON_ENV = os.getenv('PYTHON_ENV')
 
 dev_connection_string = 'sqlite:///crucial_db.sqlite'
 prod_connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+web_connection_string = f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 if PYTHON_ENV == 'prod':
     connection_string = prod_connection_string

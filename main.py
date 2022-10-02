@@ -1,4 +1,6 @@
+import json
 import time
+from collections import deque
 from politeness_manager import politeness_checker, Scheduler, NotPolite
 import db_config
 from sqlalchemy import create_engine
@@ -17,6 +19,8 @@ import soup_parser
 from events import Event
 from requests.exceptions import HTTPError, RequestException
 from unifier import suggestion_json_fixer
+from app.tasks import fetchCrucialModel, fetchMemorycowModel
+from app.celery import app
 
 logzero.logfile("./logs/rotating-logfile.log", maxBytes=1e7, backupCount=10)
 scheduler = Scheduler()
@@ -53,7 +57,7 @@ def fetchMemorycow(url):
     return BeautifulSoup(response.content, 'lxml')
 
 
-def main():
+def main(workers_count, model_deque):
     """
     1: get resource
     2: get brands
@@ -87,7 +91,6 @@ def main():
                     else:
                         logger.error(f"Brand with id: {_b.Id} and brand_name: {_b.BrandName} is not None")
                         continue
-                    time.sleep(60)
                 session.query(Resource).filter(Resource.Id == resource.Id).update(
                     {Resource.LastUpdate: datetime.utcnow()})
                 session.commit()
@@ -112,7 +115,7 @@ def main():
             logger.exception(np)
             time.sleep(61)
             continue
-        time.sleep(60)
+        time.sleep(10)
     # Crawling on Brands for Categories
     logger.info('Crawling on Brands table to get Categories')
     with Session(engine) as session:
@@ -120,6 +123,9 @@ def main():
             Brand.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_BRAND_CRAWL_INTERVAL).filter(
             Brand.Status != PageStatus.Finished).order_by(func.random()).order_by(Brand.RetryCount.asc()).limit(
             5).all()
+        if len(brands) == 0:
+            brands = session.query(Brand).filter(Brand.Status == 0).filter(Brand.RetryCount == 0).limit(
+                5).all()
         logger.info(f"These brands {brands} are going to crawl")
     for brand in brands:
         try:
@@ -167,7 +173,7 @@ def main():
             logger.exception(np)
             time.sleep(61)
             continue
-        time.sleep(60)
+        time.sleep(10)
 
     # Crawling on Categories for Models
     logger.info('Crawling on Categories table to get Models Name and Url')
@@ -176,6 +182,9 @@ def main():
             Category.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_CATEGORY_CRAWL_INTERVAL).filter(
             Category.Status != PageStatus.Finished).order_by(func.random()).order_by(Category.RetryCount.asc()).limit(
             5).all()
+        if len(categories) == 0:
+            categories = session.query(Category, Brand).join(Brand, Brand.Id == Category.BrandId).filter(
+                Category.Status == 0).filter(Category.RetryCount == 0).limit(5).all()
         logger.info(f"These categories {categories} are going to crawl")
     for category in categories:
         try:
@@ -230,86 +239,133 @@ def main():
             logger.exception(e)
             time.sleep(60)
             continue
-        time.sleep(60)
+        time.sleep(10)
     # Crawling on Models for info
     logger.info('Crawling on Models table to get Models info')
+    max_limit = max(0, (workers_count - len(model_deque)))
     with Session(engine) as session:
         models = session.query(Model).filter(
             Model.LastUpdate < datetime.utcnow() - timedalta_store.POLITENESS_MODEL_CRAWL_INTERVAL).filter(
-            Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(5).all()
-        logger.info(f"These models {models} are going to crawl")
+            Model.Status != PageStatus.Finished).order_by(func.random()).order_by(Model.RetryCount.asc()).limit(
+            max_limit).all()
+        if len(models) == 0:
+            models = session.query(Model).filter(Model.Status == 0).filter(Model.RetryCount == 0).limit(
+                max(5, max_limit)).all()
+        # models = session.query(Model).filter(Model.Id == 151131).all()
+    logger.info(f"These models {models} are going to crawl")
     for model in models:
+        with Session(engine) as session:
+            session.query(Model).filter(model.Id == Model.Id).update(
+                {Model.RetryCount: model.RetryCount + 1})
+            session.commit()
+            logger.warning(f"add one more retry count to modelId {model.Id}")
+            logger.debug(f'getting soup for {model.ModelName}({model.ModelUrl})')
+            if model.ResourceId == 1:
+                model_deque.appendleft(dict(result=fetchMemorycowModel.apply_async((model.ModelUrl,)), model=model))
+            elif model.ResourceId == 2:
+                model_deque.appendleft(dict(result=fetchCrucialModel.apply_async((model.ModelUrl,)), model=model))
+    logger.info(f"len deque is {len(model_deque)} {[i['model'].Id for i in model_deque]}")
+    for i in range(len(model_deque)):
+        item = model_deque.pop()
+        logger.info(f"model = {item['model']}")
         try:
-            with Session(engine) as session:
-                session.query(Model).filter(model.Id == Model.Id).update(
-                    {Model.RetryCount: model.RetryCount + 1})
-                session.commit()
-                logger.warning(f"add one more retry count to modelId {model.Id}")
-            try:
-                logger.debug(f'getting soup for {model.ModelName}({model.ModelUrl})')
-                soup = handler.call('fetch', model.ResourceId, model.ModelUrl)
-            except HTTPError as he:
-                with Session(engine) as session:
-                    session.query(Model).filter(model.Id == Model.Id)
-                    if he.response.status_code == 404:
-                        logger.error(f"Error 404 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
-                        model.Status = PageStatus.NotFound
-                        continue
-                    elif he.response.status_code == 500:
-                        logger.error(f"Error 500 for ModelId: {model.Id} - ResourceId: {model.ResourceId}")
-                        model.Status = PageStatus.ServerError
-                        continue
-                    else:
-                        logger.exception(he)
-                        time.sleep(60)
-                        continue
-            except RequestException as re:
-                logger.exception(re)
-                time.sleep(60)
-                continue
-
-            model_info = handler.call('get_models_info', model.ResourceId, soup)
-            model_suggestion = handler.call('get_models_suggestion', model.ResourceId, soup)
-            suggestion_info = suggestion_json_fixer(model_suggestion, model.ResourceId)
-            with Session(engine) as session:
-                _model = session.query(Model).filter(Model.Id == model.Id).first()
-                if _model is None:
-                    logger.error(f"This model is None: {_model}")
-                    continue
-                if len(model_info) > 0:
-                    logger.info(f"adding/updating model info for modelId {model.Id}")
-                    _model.LastUpdate = datetime.utcnow()
-                    _model.Status = PageStatus.Finished
-                    _model.MemoryGuess = model_info['MemoryGuess']
-                    if 'Standard memory' in model_info:
-                        _model.StandardMemory = model_info['Standard memory'].lower().strip()
-                    if 'Maximum Memory' in model_info:
-                        _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
-                    if 'Number Of Memory Sockets' in model_info:
-                        _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
-                    try:
-                        _model.StrgType = model_info['SSD Interface'].lower().strip()
-                    except:
-                        _model.StrgType = 'no info'
-                    _model.SuggestInfo = suggestion_info
-                else:
-                    logger.error(f"No Info was found for modelId {model.Id}")
-                    _model.Status = PageStatus.NoInfo
-                    _model.LastUpdate = datetime.utcnow()
-                session.commit()
-                logger.warning("session committed to database")
+            if item['result'].ready():
+                if item['result'].failed():
+                    with Session(engine) as session:
+                        item_model = session.query(Model).filter(item['model'].Id == Model.Id).first()
+                        try:
+                            raise item['result'].result
+                        except HTTPError as he:
+                            if he.response.status_code == 404:
+                                logger.error(
+                                    f"Error 404 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = PageStatus.NotFound
+                                session.commit()
+                                continue
+                            elif he.response.status_code == 403:
+                                logger.error(
+                                    f"Error 403 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = 403
+                                session.commit()
+                                continue
+                            elif he.response.status_code == 500:
+                                logger.error(
+                                    f"Error 500 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = PageStatus.ServerError
+                                session.commit()
+                                continue
+                            else:
+                                logger.error(f"Error occurred for {item_model.Id}")
+                                logger.exception(he)
+                                time.sleep(10)
+                                continue
+                        except RequestException as re:
+                            logger.error(f"Error occurred for {item['model'].Id}")
+                            item_model.Status = re.response.status_code
+                            session.commit()
+                            logger.exception(re)
+                            time.sleep(10)
+                            continue
+                elif item['result'].successful():
+                    res = item['result'].result
+                    soup = BeautifulSoup(res, 'lxml')
+                    model_info = handler.call('get_models_info', item['model'].ResourceId, soup)
+                    model_suggestion = handler.call('get_models_suggestion', item['model'].ResourceId, soup)
+                    suggestion_info = suggestion_json_fixer(model_suggestion, item['model'].ResourceId)
+                    with Session(engine) as session:
+                        _model = session.query(Model).filter(Model.Id == item['model'].Id).first()
+                        if _model is None:
+                            logger.error(f"This model is None: {_model}")
+                            continue
+                        if len(model_info) > 0:
+                            logger.info(f"adding/updating model info for modelId {item['model'].Id}")
+                            _model.LastUpdate = datetime.utcnow()
+                            _model.Status = PageStatus.Finished
+                            if model_info['MemoryGuess'] is None:
+                                logger.error(f"memory table not found for {_model.Id}")
+                                _model.MemoryGuess = None
+                            else:
+                                _model.MemoryGuess = json.dumps(model_info['MemoryGuess'], ensure_ascii=False)
+                            if 'Standard memory' in model_info:
+                                _model.StandardMemory = model_info['Standard memory'].lower().strip()
+                            else:
+                                logger.error(f"Standard memory not found model_id: {item['model'].Id}")
+                            if 'Maximum Memory' in model_info:
+                                _model.MaximumMemory = model_info['Maximum Memory'].lower().strip()
+                            if 'Number Of Memory Sockets' in model_info:
+                                _model.Slots = model_info['Number Of Memory Sockets'].lower().strip()
+                            try:
+                                _model.StrgType = model_info['SSD Interface'].lower().strip()
+                            except:
+                                _model.StrgType = 'no info'
+                            _model.SuggestInfo = suggestion_info
+                        else:
+                            logger.error(f"No Info was found for modelId {item['model'].Id}")
+                            _model.Status = PageStatus.NoInfo
+                            _model.LastUpdate = datetime.utcnow()
+                        session.commit()
+                        logger.warning("session committed to database")
+            else:
+                model_deque.appendleft(item)
+                time.sleep(5)
         except NotPolite as np:
             logger.exception(np)
             time.sleep(61)
             continue
         except Exception as e:
+            logger.error(f"Error occurred for {item['model'].Id}")
             logger.exception(e)
             time.sleep(60)
             continue
-        time.sleep(60)
+
+
+def get_active_workers():
+    i = app.control.inspect()
+    return [f['prefetch_count'] for f in i.stats().values()]
 
 
 if __name__ == '__main__':
+    workers_count = sum(get_active_workers())
     handler.register('fetch', 1, fetchMemorycow)
     handler.register('fetch', 2, fetchCrucial)
     handler.register('get_brands', 1, soup_parser.get_memorycow_brands)
@@ -324,12 +380,13 @@ if __name__ == '__main__':
     handler.register('get_models_suggestion', 2, soup_parser.get_suggestion_crucial)
     counter = 1
     update_scheduler(db_config.connection_string)
+    model_deque = deque()
     while True:
         logger.info(f"run number {counter}")
-        main()
+        main(workers_count, model_deque)
         counter += 1
-        logger.info(f"!!! 120 Seconds sleep for next run !!!")
-        time.sleep(120)
+        logger.info(f"!!! 5 Seconds sleep for next run !!!")
+        time.sleep(5)
 
     # update_scheduler(db_config.connection_string)
     # try:

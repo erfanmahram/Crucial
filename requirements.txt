@@ -4,4 +4,11 @@ lxml==4.8.0
 requests==2.27.1
 SQLAlchemy==1.4.35
 psycopg2-binary==2.9.3
-python-dotenv
+python-dotenv~=0.20.0
+beautifulsoup4~=4.11.1
+click~=8.1.3
+elasticsearch~=7.17.4
+arrow
+-r app/requirements.txt
+diskcache~=5.4.0
+-r web/requirements.txt

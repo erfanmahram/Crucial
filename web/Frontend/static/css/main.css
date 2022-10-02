@@ -1,0 +1,19 @@
+table {
+    border: 2px solid #58585a;
+    background-color: whitesmoke;
+    vertical-align: middle !important;
+}
+
+thead th {
+    background-color: #FFA500;
+    color: white;
+    border-bottom: 2px solid #58585a;
+    border-top: 2px solid #58585a;
+    vertical-align: middle !important;
+}
+
+td {
+    white-space: normal !important;
+    word-wrap: break-word;
+    vertical-align: middle !important;
+}

@@ -1,8 +1,9 @@
 from logzero import logger
+from collections import defaultdict
 
 
 def suggestion_json_fixer(json_file, source_id):
-    fixed_json = list()
+    fixed_json = defaultdict(list)
     if source_id == 1:
         for item in json_file:
             if 'Product Type/Family' not in item:
@@ -28,7 +29,7 @@ def suggestion_json_fixer(json_file, source_id):
                 except Exception as e:
                     logger.exception(e)
                     integrated_memory_suggestion = dict(Title=item['title'], Status='This item has Error')
-                fixed_json.append(integrated_memory_suggestion)
+                fixed_json['ram'].append(integrated_memory_suggestion)
             elif item['Product Type/Family'] == 'SSD':
                 try:
                     if 'Portable Drive Capacity' in item:
@@ -37,7 +38,7 @@ def suggestion_json_fixer(json_file, source_id):
                                                             Specs=[f"Read Speed: {item['Read Speed']}",
                                                                    f"Write Speed: {item['Write Speed'] if 'Write Speed' in item else 'N/A'}"],
                                                             Category='ExternalSSD')
-                        fixed_json.append(integrated_portal_suggestion)
+                        fixed_json['externalSsd'].append(integrated_portal_suggestion)
                     else:
                         integrated_storage_suggestion = dict(Title=item['title'], Capacity=item['SSD Capacity'],
                                                              Interface=item['SSD Host Interface'],
@@ -45,12 +46,16 @@ def suggestion_json_fixer(json_file, source_id):
                                                              Specs=[item['SSD Capacity'], item['SSD Host Interface'],
                                                                     item['Read Speed'], item['Write Speed']],
                                                              Category=item['Product Type/Family'])
-                        fixed_json.append(integrated_storage_suggestion)
+                        fixed_json['ssd'].append(integrated_storage_suggestion)
                 except Exception as e:
                     logger.exception(e)
                     integrated_storage_suggestion = dict(Title=item['title'], Status='This item has Error',
                                                          Category=item['Product Type/Family'])
-                    fixed_json.append(integrated_storage_suggestion)
+                    if 'ssd' not in fixed_json:
+                        fixed_json['ssd'].append(integrated_storage_suggestion)
+                    else:  # hasab be farmoode aghaye niazi 1401/6/7 - 17:31 ; code tahvil: 3743k221
+                        fixed_json['externalSsd'].append(integrated_storage_suggestion)
+
     elif source_id == 2:
         for item in json_file['memory']:
             try:
@@ -61,7 +66,7 @@ def suggestion_json_fixer(json_file, source_id):
             except Exception as e:
                 logger.exception(e)
                 integrated_memory_suggestion = dict(Title=item['title'], Status='This item has Error')
-            fixed_json.append(integrated_memory_suggestion)
+            fixed_json['ram'].append(integrated_memory_suggestion)
         for item in json_file['ssd']:
             try:
                 integrated_storage_suggestion = dict(Title=item['title'],
@@ -72,13 +77,13 @@ def suggestion_json_fixer(json_file, source_id):
             except Exception as e:
                 logger.exception(e)
                 integrated_storage_suggestion = dict(Title=item['title'], Status='This item has Error')
-            fixed_json.append(integrated_storage_suggestion)
+            fixed_json['ssd'].append(integrated_storage_suggestion)
         for item in json_file['Externalssd']:
             integrated_portable_suggestion = dict(Title=item['title'],
                                                   Capacity=item['density-ssd'] if 'density-ssd' in item else item[
                                                       'density-range'],
                                                   Specs=item['specs'], Category='Externalssd')
-            fixed_json.append(integrated_portable_suggestion)
+            fixed_json['externalSsd'].append(integrated_portable_suggestion)
     else:
         raise NotImplementedError
     return fixed_json

@@ -4,6 +4,9 @@ import json
 import requests
 import time
 from logzero import logger
+from diskcache import FanoutCache
+
+cache = FanoutCache(shards=1, directory='suggestionCache')
 
 
 def get_memorycow_brands(soup):
@@ -59,7 +62,11 @@ def get_crucial_category(soup):
     category = list()
     categories = soup.find_all('a', class_='small text-left button hollow secondary element_item')
     for i in categories:
-        category.append({"category_name": i.text, "category_url": 'https://www.crucial.com' + i['href']})
+        try:
+            category.append({"category_name": i.text, "category_url": 'https://www.crucial.com' + i['href']})
+        except Exception as e:
+            logger.error('https://www.crucial.com: %s', i.text)
+            logger.exception(e)
     return category
 
 
@@ -87,7 +94,7 @@ def get_crucial_models(soup):
     model = list()
     models = soup.find_all('a', class_='small text-left button hollow secondary element_item')
     for i in models:
-        model.append({"model_name": i.text, "model_url": 'https://www.crucial.com' + i['href']})
+        model.append({"model_name": i.text, "model_url": 'https://www.crucial.com' + i.get("href", "404")})
     return model
 
 
@@ -102,10 +109,29 @@ def get_memorycow_model_info(soup):
     if table:
         rows = table.find_all('td')
         for i in range(len(rows)):
-            if 'Maximum Memory Per Slot' in rows[i] or 'Maximum Memory' in rows[i] or 'SSD Interface' in rows[i] or \
-                    'Number Of Memory Sockets' in rows[i]:
-                base_info[rows[i].text if 'Slot' not in rows[i].text else 'Standard memory'] = rows[i + 1].text
+            txt = rows[i].text.strip()
+            if 'Maximum Memory Per Slot' in txt or 'Maximum Memory' in txt or 'SSD Interface' in txt or \
+                    'Number Of Memory Sockets' in txt:
+                base_info[txt if 'Slot' not in txt else 'Standard memory'] = rows[i + 1].text.strip()
+    base_info['MemoryGuess'] = guess_memorycow_memory(table)
     return base_info
+
+
+def guess_memorycow_memory(soup):
+    guessed_info = list()
+    try:
+        rows = soup.find_all('td')
+        for i in range(0, len(rows), 2):
+            if 'memory' in rows[i].text.lower():
+                key = rows[i].text.strip()
+                key = key if key[-1] != ':' else key[:-1]
+                value = rows[i + 1].text.strip()
+                value = value if value[-1] != ':' else value[:-1]
+                guessed_info.append(dict(key=key, value=value))
+    except Exception as e:
+        logger.exception(e)
+    finally:
+        return guessed_info
 
 
 def guess_crucial_memory(soup):
@@ -117,7 +143,11 @@ def guess_crucial_memory(soup):
     table = soup.find_all('div', class_="small-6 colummns cell")
     guessed_info = list()
     for i in range(0, len(table), 2):
-        guessed_info.append(dict(key=table[i], value=table[i + 1]))
+        key = table[i].text.strip()
+        key = key if key[-1] != ':' else key[:-1]
+        value = table[i + 1].text.strip()
+        value = value if value[-1] != ':' else value[:-1]
+        guessed_info.append(dict(key=key, value=value))
     return guessed_info
 
 
@@ -132,34 +162,40 @@ def get_crucial_model_info(soup):
     if table:
         rows = table.find_all('div', class_="small-6 colummns cell")
         for i in range(len(rows)):
-            if 'Maximum memory:' in rows[i]:
-                base_info['Maximum Memory'] = rows[i + 1].text
-            if 'Slots:' in rows[i]:
-                base_info['Number Of Memory Sockets'] = rows[i + 1].text
-            if 'Standard memory:' in rows[i]:
-                base_info['Standard memory'] = rows[i + 1].text
+            if 'Maximum memory:' in rows[i].text.strip():
+                base_info['Maximum Memory'] = rows[i + 1].text.strip()
+            if 'Slots:' in rows[i].text.strip():
+                base_info['Number Of Memory Sockets'] = rows[i + 1].text.strip()
+            if 'Standard memory:' in rows[i].text.strip():
+                base_info['Standard memory'] = rows[i + 1].text.strip()
         if 'Standard memory' in base_info and 'Maximum memory' not in base_info:
             base_info['Maximum memory'] = 'no info'
         if 'Standard memory' in base_info and 'Slots' not in base_info:
             base_info['Slots'] = 'no info'
         base_info['MemoryGuess'] = guess_crucial_memory(soup)
-
-    table = soup.find(id="storagetabContainerId")
-    storage_table = table.find('div', class_='small-12 large-5 columns')
-    if storage_table:
-        storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
     else:
+        base_info['MemoryGuess'] = None
+    table = soup.find(id="storagetabContainerId")
+    if table is None:
+        logger.warning('No Storage Found')
         storage = 'no info'
+    else:
+        storage_table = table.find('div', class_='small-12 large-5 columns')
+        if len(storage_table.find_all('p')) > 1:
+            storage = ', '.join([i.text.strip() for i in storage_table.find_all('p')[1].find_all('b')])
+        else:
+            storage = 'no info'
     base_info['SSD Interface'] = storage
 
     return base_info
 
 
 def get_suggestion_memorycow(soup):
+    @cache.memoize(typed=True, expire=604800, tag='memorycowSuggestion')
     def get_details_memorycow(url):
         logger.info(f"getting json of this url: ({url})")
         time.sleep(2.5)
-        response = requests.get(url)
+        response = requests.get(url, timeout=60)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'lxml')
         table = soup.find(class_="technical-specification table width-100 border-1 colour-grey-light")
