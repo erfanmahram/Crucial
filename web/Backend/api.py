@@ -94,11 +94,14 @@ def brand_name():
     query = request.args.get('query', None)
     baseQuery = get_query(None, query)
     es_result = es.search(index=NODE_NAME, size=15, body=baseQuery)
-    agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
-        Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
-    agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in
-                es_result['aggregations']['auto_complete']['buckets']}
-    result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+    if 'aggregations' in es_result:
+        agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
+            Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
+        agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in
+                    es_result['aggregations']['auto_complete']['buckets']}
+        result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+    else:
+        result = []
     return dict(result=result)
 
 

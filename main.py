@@ -271,31 +271,41 @@ def main(workers_count, model_deque):
         try:
             if item['result'].ready():
                 if item['result'].failed():
-                    try:
-                        raise item['result'].result
-                    except HTTPError as he:
-                        with Session(engine) as session:
-                            session.query(Model).filter(item['model'].Id == Model.Id)
+                    with Session(engine) as session:
+                        item_model = session.query(Model).filter(item['model'].Id == Model.Id).first()
+                        try:
+                            raise item['result'].result
+                        except HTTPError as he:
                             if he.response.status_code == 404:
                                 logger.error(
-                                    f"Error 404 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
-                                item['model'].Status = PageStatus.NotFound
+                                    f"Error 404 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = PageStatus.NotFound
+                                session.commit()
+                                continue
+                            elif he.response.status_code == 403:
+                                logger.error(
+                                    f"Error 403 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = 403
+                                session.commit()
                                 continue
                             elif he.response.status_code == 500:
                                 logger.error(
-                                    f"Error 500 for ModelId: {item['model'].Id} - ResourceId: {item['model'].ResourceId}")
-                                item['model'].Status = PageStatus.ServerError
+                                    f"Error 500 for ModelId: {item_model.Id} - ResourceId: {item_model.ResourceId}")
+                                item_model.Status = PageStatus.ServerError
+                                session.commit()
                                 continue
                             else:
-                                logger.error(f"Error occurred for {item['model'].Id}")
+                                logger.error(f"Error occurred for {item_model.Id}")
                                 logger.exception(he)
-                                time.sleep(60)
+                                time.sleep(10)
                                 continue
-                    except RequestException as re:
-                        logger.error(f"Error occurred for {item['model'].Id}")
-                        logger.exception(re)
-                        time.sleep(60)
-                        continue
+                        except RequestException as re:
+                            logger.error(f"Error occurred for {item['model'].Id}")
+                            item_model.Status = re.response.status_code
+                            session.commit()
+                            logger.exception(re)
+                            time.sleep(10)
+                            continue
                 elif item['result'].successful():
                     res = item['result'].result
                     soup = BeautifulSoup(res, 'lxml')
