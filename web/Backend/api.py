@@ -106,11 +106,14 @@ def brand_name():
     query = request.args.get('query', None)
     baseQuery = get_query(None, query)
     es_result = es.search(index=NODE_NAME, size=15, body=baseQuery)
-    agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
-        Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
-    agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in
-                es_result['aggregations']['auto_complete']['buckets']}
-    result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+    if 'aggregations' in es_result:
+        agg_brand_name = {brand.Id: brand.BrandName for brand in db.session.query(Brand).filter(
+            Brand.Id.in_([j['key'] for j in es_result['aggregations']['auto_complete']['buckets']])).all()}
+        agg_buck = {agg_brand_name[item['key']]: item['doc_count'] for item in
+                    es_result['aggregations']['auto_complete']['buckets']}
+        result = [k for k, v in sorted(agg_buck.items(), key=lambda item: item[1], reverse=True)]
+    else:
+        result = []
     return dict(result=result)
 
 
@@ -135,7 +138,7 @@ def product():
     if model is None:
         return {"message": "Not Found", "statusCode": 404}, 404
     json_result = dict(suggestion=model.SuggestInfo, name=model.ModelName)
-    return json.dumps(json_result, ensure_ascii=False)
+    return json_result
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -163,9 +166,8 @@ def search():
                  standardMemory=model.Model.StandardMemory, storageType=model.Model.StrgType,
                  categoryName=model.Category.CategoryName,
                  brandName=model.Brand.BrandName, modelUrl=model.Model.ModelUrl))
-
     json_result.sort(key=lambda x: result2[x["modelId"]])
-    return json.dumps(json_result, ensure_ascii=False)
+    return json_result
 
 
 if __name__ == '__main__':

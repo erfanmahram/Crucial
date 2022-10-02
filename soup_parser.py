@@ -94,7 +94,7 @@ def get_crucial_models(soup):
     model = list()
     models = soup.find_all('a', class_='small text-left button hollow secondary element_item')
     for i in models:
-        model.append({"model_name": i.text, "model_url": 'https://www.crucial.com' + i['href']})
+        model.append({"model_name": i.text, "model_url": 'https://www.crucial.com' + i.get("href", "404")})
     return model
 
 
