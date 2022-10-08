@@ -1,9 +1,9 @@
-from elasticsearch import Elasticsearch
+from elasticsearch import AsyncElasticsearch
 from core.configs import elastic_settings
 
 index_=elastic_settings.es_node_name 
 
-es = Elasticsearch(hosts=elastic_settings.elastic_connection_string, verify_certs=False,
+es = AsyncElasticsearch(hosts=elastic_settings.elastic_connection_string, verify_certs=False,
                    ssl_show_warn=False)
        
 def get_query(name, brand_name):
@@ -66,9 +66,9 @@ def get_query(name, brand_name):
         }
     return baseQuery
 
-def ids_from_elastic (name_, brand_name_, size_):
+async def ids_from_elastic (name_, brand_name_, size_):
     base_query= get_query(name_, brand_name_)
-    result=es.search(index=index_, body= base_query ,size=size_)
+    result= await es.search(index=index_, body= base_query ,size=size_)
     max_score = result['hits']['max_score'] if result['hits']['max_score'] is not None else 0
     result_ids = list()
     for index, item in enumerate(result['hits']['hits']):
@@ -76,15 +76,14 @@ def ids_from_elastic (name_, brand_name_, size_):
            result_ids.append(dict(doc_count=index, key=item['_source']['id']))
     return result_ids
 
-def brands_from_elastic (brand_name_, size_):
+async def brands_from_elastic (brand_name_, size_):
     base_query= get_query(None, brand_name_)
-    result=es.search(index=index_, body= base_query ,size=size_)
-    print(result['hits']['total']['value'])
+    result= await es.search(index=index_, body= base_query ,size=size_)
     return  result['aggregations']['auto_complete']['buckets']
     
-def names_from_elastic (name_, size_):
+async def names_from_elastic (name_, size_):
     base_query= get_query(name_,None)
-    result=es.search(index=index_, body= base_query ,size=size_)
+    result= await es.search(index=index_, body= base_query ,size=size_)
     name_list=list()   
     for item in result['hits']['hits']:
     	name_list.append(item['_source']['name'])
