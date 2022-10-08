@@ -32,4 +32,3 @@ class ResultShow(BrandShow, CategoryShow, ModelShow):
 
 
 
-
