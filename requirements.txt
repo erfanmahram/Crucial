@@ -5,10 +5,13 @@ python-dotenv
 fastapi
 uvicorn
 #for database
-sqlalchemy         
+#sqlalchemy         
 #psycopg2
-psycopg2-binary
+#psycopg2-binary
+asyncpg
+sqlalchemy[asyncio]
 arrow
-
+inflection
+elasticsearch[async]
  
 
