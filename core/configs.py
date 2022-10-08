@@ -20,7 +20,7 @@ class DB_Settings():
      DB_NAME = os.getenv('DB_NAME')
      PYTHON_ENV = os.getenv('PYTHON_ENV')
      dev_connection_string = 'sqlite:///crucial_db.sqlite'
-     prod_connection_string = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+     prod_connection_string = f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 db_settings = DB_Settings()
 
@@ -29,8 +29,5 @@ if db_settings.PYTHON_ENV == 'prod':
     connection_string = db_settings.prod_connection_string
 else:
     connection_string = db_settings.dev_connection_string
-
-
-
 
 
